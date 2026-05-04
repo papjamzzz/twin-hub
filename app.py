@@ -71,6 +71,8 @@ def get_daily_fact():
     with open(DAILY_FACT_PATH, 'w') as f:
         json.dump({'fact': fact, 'timestamp': time.time()}, f)
 
+    return fact
+
 
 def get_challenges():
     os.makedirs(os.path.dirname(CHALLENGES_CACHE_PATH), exist_ok=True)
