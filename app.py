@@ -53,16 +53,18 @@ def get_daily_fact():
             messages=[{
                 'role': 'user',
                 'content': (
-                    'Give me one surprising, delightful fact about Hamilton the musical — '
-                    'something even a superfan might not know. One sentence only, no intro, no quotes.'
+                    'Give me one surprising, wild, or funny pop culture fact that a 12-year-old '
+                    'middle schooler would find genuinely interesting — about a trending meme, '
+                    'a popular video game, a viral moment, a celebrity, a movie, or social media. '
+                    'Keep it current and age-appropriate. One sentence only, no intro, no quotes.'
                 )
             }]
         )
         fact = msg.content[0].text.strip()
     except Exception:
         fact = (
-            'Lin-Manuel Miranda wrote the first Hamilton song in 2008 while on vacation '
-            'reading Ron Chernow\'s biography — seven years before it hit Broadway.'
+            'Minecraft has sold over 300 million copies, making it the best-selling video game '
+            'of all time — more than GTA V, Tetris, and Fortnite combined.'
         )
 
     with open(DAILY_FACT_PATH, 'w') as f:
