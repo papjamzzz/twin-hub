@@ -6,53 +6,42 @@
 <title>Twin Hub</title>
 <style>
   :root {
-    --gold: #f0b429;
-    --amber: #f59e0b;
-    --twin1: #a78bfa;
-    --twin2: #34d399;
     --led-green: #39ff14;
     --led-red: #ff3b3b;
-    --pedal-bg: #1d1d1d;
-    --pedal-dark: #141414;
-    --metal: #2e2e2e;
-    --metal-hi: #3d3d3d;
-    --border: #393939;
+    --gold: #f0b429;
+    --bg: #080808;
+    --border: #2e2e2e;
     --text: #e5e7eb;
-    --muted: #6b7280;
-    --screw: #4a4a4a;
+    --muted: #5a5a6a;
+    --surface: #131313;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* PEDALBOARD */
   body {
     min-height: 100vh;
-    background: #080808;
-    background-image:
-      radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background: var(--bg);
+    background-image: radial-gradient(circle, rgba(255,255,255,0.022) 1px, transparent 1px);
     background-size: 18px 18px;
     font-family: 'Segoe UI', system-ui, sans-serif;
     color: var(--text);
-    padding: 24px 16px 48px;
+    padding: 20px 16px 48px;
   }
 
-  /* NAV — looks like a rack unit above the pedal */
+  /* NAV RACK */
   nav {
-    max-width: 920px;
+    max-width: 980px;
     margin: 0 auto 16px;
-    background: #111;
-    border: 1px solid #222;
+    background: #0e0e0e;
+    border: 1px solid #1e1e1e;
     border-radius: 8px;
     padding: 10px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.7);
   }
-  .rack-label {
-    font-size: 11px; font-weight: 700; letter-spacing: 3px;
-    text-transform: uppercase; color: var(--muted);
-  }
+  .rack-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); }
   .nav-links a {
     color: var(--muted); text-decoration: none; font-size: 12px;
     font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
@@ -60,521 +49,331 @@
   }
   .nav-links a:hover { color: var(--gold); }
 
-  /* ─── THE PEDAL ─── */
-  .pedal {
-    max-width: 920px;
+  /* PEDAL BOARD ROW */
+  .board {
+    max-width: 980px;
     margin: 0 auto;
-    background: linear-gradient(165deg, #252525 0%, #1d1d1d 45%, #212121 100%);
-    border: 2px solid #3a3a3a;
-    border-radius: 28px;
-    padding: 20px 22px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  /* ═══ PEDAL ═══ */
+  .pedal {
+    background: linear-gradient(165deg, #212121 0%, #191919 50%, #1e1e1e 100%);
+    border: 2px solid #343434;
+    border-radius: 26px;
+    padding: 18px 18px 20px;
     position: relative;
     box-shadow:
       inset 0 1px 0 rgba(255,255,255,0.06),
       inset 0 -2px 0 rgba(0,0,0,0.4),
-      0 0 0 1px #111,
-      0 40px 100px rgba(0,0,0,0.9),
-      0 8px 24px rgba(0,0,0,0.6);
+      0 0 0 1px #0d0d0d,
+      0 30px 80px rgba(0,0,0,0.85);
   }
 
-  /* Subtle brushed-metal stripe along the top */
+  /* Brushed top highlight */
   .pedal::before {
     content: '';
     position: absolute;
-    top: 0; left: 28px; right: 28px; height: 3px;
+    top: 0; left: 26px; right: 26px; height: 3px;
     background: linear-gradient(90deg,
-      transparent, rgba(255,255,255,0.06) 20%,
-      rgba(255,255,255,0.12) 50%,
-      rgba(255,255,255,0.06) 80%, transparent);
+      transparent, rgba(255,255,255,0.05) 20%,
+      rgba(255,255,255,0.10) 50%,
+      rgba(255,255,255,0.05) 80%, transparent);
     border-radius: 0 0 3px 3px;
   }
 
-  /* CORNER SCREWS */
+  /* ─ Per-pedal color themes ─ */
+  .pedal-lumi  { --p: #a78bfa; --p2: #c084fc; --p3: #7c3aed; --pg: rgba(167,139,250,0.28); --pd: #090614; }
+  .pedal-sloany{ --p: #60a5fa; --p2: #38bdf8; --p3: #1d4ed8; --pg: rgba(96,165,250,0.28);  --pd: #010b18; }
+
+  /* SCREWS */
   .screw {
-    position: absolute;
-    width: 20px; height: 20px;
-    background: radial-gradient(circle at 38% 32%, #5a5a5a, #252525);
+    position: absolute; width: 18px; height: 18px;
+    background: radial-gradient(circle at 38% 32%, #555, #222);
     border-radius: 50%;
-    border: 1px solid #4a4a4a;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.1);
+    border: 1px solid #444;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08);
     z-index: 5;
   }
   .screw::before, .screw::after {
-    content: '';
-    position: absolute;
-    top: 50%; left: 50%;
-    background: #3a3a3a;
+    content: ''; position: absolute; top: 50%; left: 50%; background: #333;
   }
-  .screw::before { width: 12px; height: 2px; transform: translate(-50%, -50%); }
-  .screw::after  { width: 2px; height: 12px; transform: translate(-50%, -50%); }
-  .screw-tl { top: 12px; left: 14px; }
-  .screw-tr { top: 12px; right: 14px; }
-  .screw-bl { bottom: 16px; left: 14px; }
-  .screw-br { bottom: 16px; right: 14px; }
+  .screw::before { width: 11px; height: 2px; transform: translate(-50%,-50%); }
+  .screw::after  { width: 2px; height: 11px; transform: translate(-50%,-50%); }
+  .screw-tl { top: 11px; left: 12px; }
+  .screw-tr { top: 11px; right: 12px; }
+  .screw-bl { bottom: 14px; left: 12px; }
+  .screw-br { bottom: 14px; right: 12px; }
 
   /* NAMEPLATE */
   .nameplate {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 6px 36px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 4px 28px 12px;
     border-bottom: 1px solid var(--border);
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
   .pedal-name {
-    font-size: 28px;
-    font-weight: 900;
-    letter-spacing: 8px;
-    text-transform: uppercase;
-    color: var(--gold);
-    text-shadow: 0 0 30px rgba(240,180,41,0.5), 0 0 60px rgba(240,180,41,0.2);
-    font-style: italic;
+    font-size: 24px; font-weight: 900; letter-spacing: 6px;
+    text-transform: uppercase; font-style: italic;
+    color: var(--p);
+    text-shadow: 0 0 24px var(--pg), 0 0 50px var(--pg);
   }
-  .led-cluster {
-    display: flex; gap: 8px; align-items: center;
-  }
+  .led-cluster { display: flex; gap: 6px; align-items: center; }
   .led {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    box-shadow: 0 0 6px currentColor;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--p); box-shadow: 0 0 7px var(--p);
+    animation: blink 2s ease-in-out infinite;
   }
-  .led-on-red   { background: var(--led-red);   color: var(--led-red);   animation: blink 1.8s ease-in-out infinite; }
-  .led-on-gold  { background: var(--gold);       color: var(--gold);      animation: blink 2.4s ease-in-out infinite; }
-  .led-on-twin1 { background: var(--twin1);      color: var(--twin1); }
-  .led-on-twin2 { background: var(--twin2);      color: var(--twin2); }
-  .led-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
-
-  @keyframes blink {
-    0%,100% { opacity: 1; } 50% { opacity: 0.25; }
+  .led-pwr {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--led-red); box-shadow: 0 0 6px var(--led-red);
+    animation: blink 1.8s ease-in-out infinite;
   }
+  .led-label { font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
-  /* LED FACT DISPLAY */
+  /* LED TICKER */
   .led-display {
-    background: #0a0a00;
-    border: 1px solid #2a2700;
-    border-radius: 6px;
-    padding: 8px 14px;
-    overflow: hidden;
-    margin-bottom: 14px;
-    box-shadow: inset 0 2px 8px rgba(0,0,0,0.6), 0 0 12px rgba(57,255,20,0.05);
+    background: #050505;
+    border: 1px solid #1c1c00;
+    border-radius: 5px; padding: 7px 12px;
+    overflow: hidden; margin-bottom: 12px;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.6), 0 0 10px rgba(57,255,20,0.04);
     position: relative;
+  }
+  .led-ticker-wrap { overflow: hidden; padding-left: 80px; }
+  .led-ticker {
+    display: inline-block; white-space: nowrap;
+    font-family: 'Courier New', monospace; font-size: 11px; font-weight: 700;
+    color: var(--led-green); text-shadow: 0 0 7px var(--led-green);
+    animation: ticker 30s linear infinite; letter-spacing: 0.5px;
   }
   .led-display::before {
-    content: '🔥 POP CULTURE';
-    position: absolute;
-    left: 14px; top: 50%;
-    transform: translateY(-50%);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: rgba(57,255,20,0.4);
+    content: '🔥';
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 11px;
   }
-  .led-ticker-wrap {
-    overflow: hidden;
-    padding-left: 120px;
-  }
-  .led-ticker {
-    display: inline-block;
-    white-space: nowrap;
-    font-family: 'Courier New', monospace;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--led-green);
-    text-shadow: 0 0 8px var(--led-green);
-    animation: ticker 28s linear infinite;
-    letter-spacing: 0.5px;
-  }
-  @keyframes ticker {
-    0%   { transform: translateX(60vw); }
-    100% { transform: translateX(-100%); }
-  }
+  @keyframes ticker { 0%{transform:translateX(50vw)} 100%{transform:translateX(-100%)} }
 
-  /* MID STRIP — boombox + challenge */
-  .mid-strip {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 14px;
-    margin-bottom: 14px;
-    align-items: stretch;
-  }
-
-  /* BOOMBOX SECTION */
-  .boombox-section {
-    background: var(--pedal-dark);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  /* BOOMBOX */
+  .boombox-wrap {
+    background: var(--pd);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 12px 12px 8px;
+    margin-bottom: 12px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
   }
   .boombox-label {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-align: center;
+    font-size: 8px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--muted); text-align: center;
   }
-  .boombox-svg-wrap {
-    display: flex;
-    justify-content: center;
-  }
-  .boombox-svg-wrap svg {
-    width: 220px;
-    height: auto;
-    cursor: pointer;
+  .boombox-wrap svg {
+    width: 100%; max-width: 210px; height: auto;
+    filter: drop-shadow(0 4px 14px var(--pg));
     transition: filter .2s;
-    filter: drop-shadow(0 4px 12px rgba(79,195,247,0.15));
-  }
-  .boombox-svg-wrap svg:hover {
-    filter: drop-shadow(0 4px 20px rgba(79,195,247,0.35));
+    cursor: default;
   }
   .boombox-player {
-    background: #080810;
-    border: 1px dashed rgba(79,195,247,0.25);
-    border-radius: 8px;
-    padding: 10px;
+    width: 100%;
+    background: rgba(0,0,0,0.5);
+    border: 1px dashed rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 8px;
     text-align: center;
-    font-size: 11px;
-    color: rgba(79,195,247,0.5);
+    font-size: 10px;
+    color: rgba(255,255,255,0.25);
     font-family: monospace;
     letter-spacing: 1px;
-    min-height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    min-height: 34px;
+    display: flex; align-items: center; justify-content: center;
   }
 
-  /* CHALLENGE SECTION */
-  .challenge-section {
-    background: var(--pedal-dark);
+  /* CHALLENGE */
+  .challenge-wrap {
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 10px;
-    min-width: 170px;
-  }
-  .challenge-label {
-    font-size: 9px; font-weight: 700; letter-spacing: 3px;
-    text-transform: uppercase; color: var(--muted);
+    gap: 14px;
   }
 
-  /* KNOB */
-  .knob-wrap {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-  }
   .knob {
-    width: 66px; height: 66px;
-    background: radial-gradient(circle at 38% 30%, #4a4a4a, #1a1a1a 70%);
+    flex-shrink: 0;
+    width: 52px; height: 52px;
+    background: radial-gradient(circle at 38% 30%, #484848, #181818 70%);
     border-radius: 50%;
-    border: 2px solid #3a3a3a;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.1);
-    cursor: pointer;
-    position: relative;
-    transition: transform 0.35s cubic-bezier(.4,2,.6,1);
+    border: 2px solid #383838;
+    box-shadow: 0 5px 14px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08);
+    cursor: pointer; position: relative;
+    transition: transform .1s;
   }
-  .knob:active { transform: scale(0.95); }
-  .knob.spinning { animation: knob-spin 0.35s cubic-bezier(.4,2,.6,1); }
-  @keyframes knob-spin { to { transform: rotate(120deg); } }
-
-  /* Indicator dot on knob */
+  .knob:active { transform: scale(0.93); }
+  .knob.spinning { animation: kspin .35s cubic-bezier(.4,2,.6,1); }
+  @keyframes kspin { to { transform: rotate(115deg); } }
   .knob::after {
-    content: '';
-    position: absolute;
-    top: 8px; left: 50%;
-    transform: translateX(-50%);
-    width: 6px; height: 6px;
-    background: var(--gold);
-    border-radius: 50%;
-    box-shadow: 0 0 6px var(--gold);
+    content: ''; position: absolute;
+    top: 7px; left: 50%; transform: translateX(-50%);
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--p); box-shadow: 0 0 5px var(--p);
   }
 
+  .challenge-right { flex: 1; }
+  .challenge-eyebrow {
+    font-size: 8px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--p); opacity: .7; margin-bottom: 4px;
+  }
   .challenge-text {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text);
-    text-align: center;
-    line-height: 1.4;
-    min-height: 52px;
-    display: flex;
-    align-items: center;
-    transition: opacity .2s;
+    font-size: 12px; font-weight: 700; color: var(--text);
+    line-height: 1.4; transition: opacity .15s;
   }
 
-  /* STOMP BUTTON */
+  /* STOMP */
+  .stomp-row {
+    display: flex; justify-content: center; margin-bottom: 12px;
+    flex-direction: column; align-items: center; gap: 5px;
+  }
   .stomp {
-    width: 62px; height: 62px;
-    background: radial-gradient(circle at 40% 30%, #6adb7a, #2a9a3a);
+    width: 56px; height: 56px;
+    background: radial-gradient(circle at 40% 30%, var(--p2), var(--p3));
     border-radius: 50%;
-    border: 3px solid #1e6e2a;
-    box-shadow:
-      0 6px 0 #145020,
-      0 8px 20px rgba(0,0,0,0.6),
-      inset 0 1px 0 rgba(255,255,255,0.3);
+    border: 3px solid var(--p3);
+    box-shadow: 0 5px 0 rgba(0,0,0,0.5), 0 7px 18px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.25);
     cursor: pointer;
-    font-size: 10px;
-    font-weight: 900;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: #fff;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    font-size: 8px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
+    color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     transition: all .1s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     user-select: none;
   }
-  .stomp:active {
-    transform: translateY(5px);
-    box-shadow: 0 1px 0 #145020, 0 3px 8px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.2);
-  }
-  .stomp-label {
-    font-size: 8px; font-weight: 700; letter-spacing: 2px;
-    text-transform: uppercase; color: var(--twin2); text-align: center;
-  }
+  .stomp:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15); }
+  .stomp-label { font-size: 7px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
 
-  /* HUB — twin columns */
-  .hub {
-    display: grid;
-    grid-template-columns: 1fr 1px 1fr;
-    gap: 0;
-    margin-bottom: 14px;
-    background: var(--pedal-dark);
+  /* NOTES */
+  .notes-section {
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  .vs-divider { background: var(--border); }
-
-  .twin-col {
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .col-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid var(--border);
-  }
-  .col-header.t1 { border-color: var(--twin1); }
-  .col-header.t2 { border-color: var(--twin2); }
-
-  .col-title {
-    font-size: 20px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
-  }
-  .col-title.t1 { color: var(--twin1); text-shadow: 0 0 12px rgba(167,139,250,0.4); }
-  .col-title.t2 { color: var(--twin2); text-shadow: 0 0 12px rgba(52,211,153,0.4); }
-
-  .col-led {
-    width: 8px; height: 8px; border-radius: 50%;
-    box-shadow: 0 0 6px currentColor;
-  }
-  .col-led.t1 { background: var(--twin1); color: var(--twin1); }
-  .col-led.t2 { background: var(--twin2); color: var(--twin2); }
-
-  /* POST FORM — jack-plug input */
-  .post-form { display: flex; gap: 8px; }
-  .post-form input[type="text"] {
+    border-radius: 10px;
+    padding: 12px;
+    display: flex; flex-direction: column; gap: 8px;
+    margin-bottom: 12px;
     flex: 1;
-    background: #111;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-size: 13px;
-    padding: 8px 12px;
-    outline: none;
-    transition: border-color .2s;
-    font-family: inherit;
   }
-  .post-form input[type="text"]:focus { border-color: var(--gold); }
-
+  .notes-header {
+    font-size: 8px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--p); opacity: .7;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 7px; margin-bottom: 2px;
+  }
+  .post-form { display: flex; gap: 6px; }
+  .post-form input[type="text"] {
+    flex: 1; background: #0e0e0e; border: 1px solid var(--border);
+    border-radius: 6px; color: var(--text); font-size: 12px;
+    padding: 7px 10px; outline: none; transition: border-color .2s; font-family: inherit;
+  }
+  .post-form input[type="text"]:focus { border-color: var(--p); }
   .post-btn {
-    padding: 8px 14px;
-    border: none;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all .1s;
-    box-shadow: 0 3px 0 rgba(0,0,0,0.4);
+    padding: 7px 12px; border: none; border-radius: 6px;
+    font-size: 10px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; background: var(--p); color: #000;
+    box-shadow: 0 3px 0 var(--p3); transition: all .1s;
   }
-  .post-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.4); }
-  .post-btn-t1 { background: var(--twin1); color: #000; box-shadow: 0 3px 0 #5b3fd8; }
-  .post-btn-t1:active { box-shadow: 0 1px 0 #5b3fd8; }
-  .post-btn-t2 { background: var(--twin2); color: #000; box-shadow: 0 3px 0 #1a7a52; }
-  .post-btn-t2:active { box-shadow: 0 1px 0 #1a7a52; }
+  .post-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--p3); }
 
-  /* NOTES — label tape look */
-  .notes-list { display: flex; flex-direction: column; gap: 7px; }
-
+  .notes-list { display: flex; flex-direction: column; gap: 6px; }
   .note-item {
-    background: #111;
-    border-radius: 5px;
-    padding: 9px 12px;
-    font-size: 13px;
-    line-height: 1.45;
-    border-left: 3px solid var(--border);
-    position: relative;
+    background: #0d0d0d; border-radius: 5px;
+    padding: 8px 10px; font-size: 12px; line-height: 1.4;
+    border-left: 2px solid var(--p);
   }
-  .note-item.t1 { border-left-color: var(--twin1); }
-  .note-item.t2 { border-left-color: var(--twin2); }
+  .note-time { font-size: 9px; color: var(--muted); margin-top: 3px; font-family: monospace; }
+  .empty-state { color: var(--muted); font-size: 11px; text-align: center; padding: 16px 0; font-style: italic; }
 
-  .note-time {
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 4px;
-    font-family: monospace;
-    letter-spacing: 0.5px;
-  }
-
-  .empty-state {
-    color: var(--muted); font-size: 12px; text-align: center;
-    padding: 20px 0; font-style: italic; letter-spacing: 0.5px;
-  }
-
-  /* FOOTER STRIP — jacks + clear */
+  /* FOOTER */
   .pedal-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 36px 4px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 28px 4px;
     border-top: 1px solid var(--border);
-    margin-top: 4px;
   }
-
-  .jack {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 9px; font-weight: 700; letter-spacing: 2px;
-    text-transform: uppercase; color: var(--muted);
-  }
+  .jack { display: flex; align-items: center; gap: 5px; font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
   .jack-hole {
-    width: 14px; height: 14px;
-    background: radial-gradient(circle, #050505, #1a1a1a);
-    border-radius: 50%;
-    border: 2px solid #3a3a3a;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.8);
+    width: 12px; height: 12px;
+    background: radial-gradient(circle, #030303, #161616);
+    border-radius: 50%; border: 2px solid #333;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.9);
   }
-
   .btn-clear {
-    padding: 8px 18px;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--muted);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all .15s;
+    padding: 5px 12px; background: transparent;
+    border: 1px solid var(--border); border-radius: 5px;
+    color: var(--muted); font-size: 9px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all .15s;
   }
   .btn-clear:hover { border-color: var(--led-red); color: var(--led-red); }
 
   /* RUBBER FEET */
-  .feet {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 20px 0;
-  }
+  .feet { display: flex; justify-content: space-between; padding: 10px 16px 0; }
   .foot {
-    width: 36px; height: 10px;
-    background: radial-gradient(ellipse at 50% 20%, #2a2a2a, #111);
-    border-radius: 5px;
-    border: 1px solid #333;
+    width: 32px; height: 9px;
+    background: radial-gradient(ellipse at 50% 20%, #252525, #0e0e0e);
+    border-radius: 5px; border: 1px solid #2a2a2a;
     box-shadow: 0 2px 4px rgba(0,0,0,0.6);
   }
 
-  /* ─── MODALS ─── */
+  /* MODALS */
   .modal-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.8);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(3px);
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.82); z-index: 200;
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
   }
   .modal-overlay.open { display: flex; }
-
   .modal {
-    background: #1d1d1d;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px;
-    max-width: 400px;
-    width: 90%;
+    background: #1a1a1a; border: 1px solid var(--border); border-radius: 14px;
+    padding: 26px; max-width: 380px; width: 90%;
     box-shadow: 0 40px 100px rgba(0,0,0,0.9);
   }
-  .modal h2 { font-size: 18px; margin-bottom: 6px; color: var(--gold); }
-  .modal p  { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
-
+  .modal h2 { font-size: 17px; margin-bottom: 6px; color: var(--gold); }
+  .modal p  { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
   .modal input[type="password"] {
-    width: 100%;
-    background: #111;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-size: 16px;
-    padding: 10px 14px;
-    margin-bottom: 14px;
-    outline: none;
+    width: 100%; background: #111; border: 1px solid var(--border); border-radius: 7px;
+    color: var(--text); font-size: 15px; padding: 10px 13px; margin-bottom: 13px; outline: none;
   }
   .modal input[type="password"]:focus { border-color: var(--gold); }
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
-
-  .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all .15s; }
+  .btn { padding: 9px 18px; border: none; border-radius: 7px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all .15s; }
   .btn-gold { background: var(--gold); color: #000; }
-  .btn-gold:hover { background: var(--amber); }
-  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); }
-  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-gold:hover { background: #f59e0b; }
+  .btn-mo { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+  .btn-mo:hover { border-color: var(--gold); color: var(--gold); }
 
   /* COMPLETE MODAL */
-  #complete-modal .modal { border-color: var(--twin2); text-align: center; }
-  #complete-modal .trophy { font-size: 52px; margin-bottom: 8px; }
-  #complete-modal h2 { text-align: center; color: var(--twin2); font-size: 24px; }
-  #complete-modal .modal-actions { justify-content: center; margin-top: 16px; }
-  .btn-green { background: var(--twin2); color: #000; }
-  .btn-green:hover { opacity: .85; }
+  #complete-modal .modal { text-align: center; }
+  #complete-modal .trophy { font-size: 48px; margin-bottom: 6px; }
+  #complete-modal h2 { text-align: center; color: var(--led-green); }
+  #complete-modal .modal-actions { justify-content: center; margin-top: 14px; }
+  .btn-go { background: var(--led-green); color: #000; }
 
   /* CONFETTI */
   .confetti-piece {
-    position: fixed; top: -20px;
-    border-radius: 2px;
-    pointer-events: none; z-index: 300;
-    animation: confetti-fall linear forwards;
+    position: fixed; top: -20px; pointer-events: none; z-index: 300;
+    border-radius: 2px; animation: cffall linear forwards;
   }
-  @keyframes confetti-fall {
-    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-  }
+  @keyframes cffall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
 
   @media (max-width: 680px) {
-    .mid-strip { grid-template-columns: 1fr; }
-    .hub { grid-template-columns: 1fr; }
-    .vs-divider { display: none; }
-    .pedal { padding: 16px 14px 18px; }
-    .nameplate { padding: 6px 24px 12px; }
-    .pedal-footer { padding: 10px 20px 4px; }
+    .board { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
-<!-- RACK UNIT NAV -->
+<!-- RACK NAV -->
 <nav>
   <div class="rack-label">◉ Twin Hub — v1.0</div>
   <div class="nav-links">
@@ -583,146 +382,125 @@
   </div>
 </nav>
 
-<!-- THE PEDAL -->
-<div class="pedal">
+<div class="board">
 
-  <!-- Corner screws -->
-  <div class="screw screw-tl"></div>
-  <div class="screw screw-tr"></div>
-  <div class="screw screw-bl"></div>
-  <div class="screw screw-br"></div>
+  <!-- ══════════════════════════════════ -->
+  <!--           LUMI  PEDAL             -->
+  <!-- ══════════════════════════════════ -->
+  <div class="pedal pedal-lumi">
+    <div class="screw screw-tl"></div>
+    <div class="screw screw-tr"></div>
+    <div class="screw screw-bl"></div>
+    <div class="screw screw-br"></div>
 
-  <!-- NAMEPLATE -->
-  <div class="nameplate">
-    <div class="pedal-name">⚡ Twin Hub</div>
-    <div class="led-cluster">
-      <div class="led led-on-twin1"></div>
-      <span class="led-label">{{ twin1 }}</span>
-      <div class="led led-on-twin2"></div>
-      <span class="led-label">{{ twin2 }}</span>
-      <div class="led led-on-red" style="margin-left:8px;"></div>
-      <span class="led-label">PWR</span>
-    </div>
-  </div>
-
-  <!-- LED TICKER -->
-  <div class="led-display">
-    <div class="led-ticker-wrap">
-      <span class="led-ticker">{{ fact }} &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp; {{ fact }}</span>
-    </div>
-  </div>
-
-  <!-- MID STRIP: boombox + challenge knob -->
-  <div class="mid-strip">
-
-    <!-- BOOMBOX -->
-    <div class="boombox-section">
-      <div class="boombox-label">◈ Boombox — SF Audio Unit</div>
-      <div class="boombox-svg-wrap">
-        <!-- StreamFader boombox SVG — drop music in below -->
-        <svg viewBox="0 0 200 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="bb-stripe" x1="0" y1="0" x2="200" y2="0" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#4fc3f7"/>
-              <stop offset="42%" stop-color="#c678dd"/>
-              <stop offset="100%" stop-color="#ffb74d"/>
-            </linearGradient>
-            <linearGradient id="bb-sf" x1="72" y1="0" x2="128" y2="0" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#4fc3f7"/>
-              <stop offset="100%" stop-color="#c678dd"/>
-            </linearGradient>
-          </defs>
-          <!-- Body -->
-          <rect x="0.75" y="10" width="198.5" height="76" rx="9" fill="#07080f" stroke="#22253a" stroke-width="1.5"/>
-          <!-- Top stripe -->
-          <rect x="0.75" y="10" width="198.5" height="4" rx="2" fill="url(#bb-stripe)"/>
-          <!-- Antenna -->
-          <line x1="168" y1="10" x2="184" y2="1" stroke="#c678dd" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="184" cy="1" r="2.5" fill="#c678dd" opacity="0.85"/>
-          <!-- LEFT SPEAKER -->
-          <rect x="4" y="15" width="58" height="65" rx="6" fill="#030710" stroke="#4fc3f7" stroke-width="1.4"/>
-          <circle cx="33" cy="47" r="23" fill="#040b18" stroke="#4fc3f7" stroke-width="1" opacity="0.9"/>
-          <circle cx="33" cy="47" r="15" fill="#060e20" stroke="#4fc3f7" stroke-width="0.7" opacity="0.7"/>
-          <circle cx="33" cy="47" r="8"  fill="#091428" stroke="#4fc3f7" stroke-width="0.5" opacity="0.9"/>
-          <circle id="bb-led-l" cx="33" cy="47" r="3.5" fill="#4fc3f7" opacity="0.2"/>
-          <circle cx="11" cy="21" r="2" fill="#4fc3f7" opacity="0.2"/>
-          <circle cx="55" cy="21" r="2" fill="#4fc3f7" opacity="0.2"/>
-          <circle cx="11" cy="73" r="2" fill="#4fc3f7" opacity="0.2"/>
-          <circle cx="55" cy="73" r="2" fill="#4fc3f7" opacity="0.2"/>
-          <!-- RIGHT SPEAKER -->
-          <rect x="138" y="15" width="58" height="65" rx="6" fill="#060410" stroke="#c678dd" stroke-width="1.4"/>
-          <circle cx="167" cy="47" r="23" fill="#0a0618" stroke="#c678dd" stroke-width="1" opacity="0.9"/>
-          <circle cx="167" cy="47" r="15" fill="#0d0820" stroke="#c678dd" stroke-width="0.7" opacity="0.7"/>
-          <circle cx="167" cy="47" r="8"  fill="#110b28" stroke="#c678dd" stroke-width="0.5" opacity="0.9"/>
-          <circle cx="167" cy="47" r="3.5" fill="#c678dd" opacity="0.2"/>
-          <circle cx="145" cy="21" r="2" fill="#c678dd" opacity="0.2"/>
-          <circle cx="189" cy="21" r="2" fill="#c678dd" opacity="0.2"/>
-          <circle cx="145" cy="73" r="2" fill="#c678dd" opacity="0.2"/>
-          <circle cx="189" cy="73" r="2" fill="#c678dd" opacity="0.2"/>
-          <!-- CENTER DISPLAY -->
-          <rect x="65" y="15" width="70" height="65" rx="4" fill="#020308" stroke="#2a2d42" stroke-width="1"/>
-          <rect x="67" y="17" width="66" height="61" rx="3" fill="#030410" stroke="rgba(198,120,221,0.18)" stroke-width="0.5"/>
-          <text x="100" y="33" font-family="'Inter',system-ui,sans-serif" font-size="14" font-weight="900" text-anchor="middle" fill="url(#bb-sf)" letter-spacing="3">SF</text>
-          <!-- EQ bars -->
-          <rect class="bb-eq" x="71"  y="56" width="6" height="15" rx="1.5" fill="#4fc3f7" opacity="0.9"/>
-          <rect class="bb-eq" x="80"  y="50" width="6" height="21" rx="1.5" fill="#72ccf5" opacity="0.9"/>
-          <rect class="bb-eq" x="89"  y="44" width="6" height="27" rx="1.5" fill="#c678dd" opacity="0.9"/>
-          <rect class="bb-eq" x="98"  y="48" width="6" height="23" rx="1.5" fill="#d48de6" opacity="0.9"/>
-          <rect class="bb-eq" x="107" y="53" width="6" height="18" rx="1.5" fill="#ffb74d" opacity="0.9"/>
-          <rect class="bb-eq" x="116" y="59" width="6" height="12" rx="1.5" fill="#ffd080" opacity="0.9"/>
-          <line x1="69" y1="72" x2="124" y2="72" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
-          <!-- Power button -->
-          <circle cx="127" cy="23" r="8" fill="#0d0a06" stroke="#ff6b35" stroke-width="1.5" opacity="0.9"/>
-          <circle cx="127" cy="23" r="5" fill="#ff6b35" opacity="0.35"/>
-          <path d="M127 18.5 L127 21.5" stroke="#ff6b35" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
-          <path d="M124.2 19.8 A4.2 4.2 0 1 0 129.8 19.8" stroke="#ff6b35" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.9"/>
-          <!-- Cassette slot -->
-          <rect x="70" y="74" width="50" height="5" rx="1.5" fill="#08090f" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
-          <rect x="84" y="75.5" width="22" height="2" rx="1" fill="rgba(255,255,255,0.05)"/>
-          <text x="100" y="86" font-family="monospace" font-size="5" text-anchor="middle" fill="rgba(198,120,221,0.4)" letter-spacing="1.5">STREAM FADER</text>
-        </svg>
-      </div>
-
-      <!-- AUDIO PLACEHOLDER — user drops music here -->
-      <div class="boombox-player" id="boombox-player">
-        ▷ &nbsp; INSERT MUSIC HERE
+    <div class="nameplate">
+      <div class="pedal-name">⚡ Lumi</div>
+      <div class="led-cluster">
+        <div class="led"></div>
+        <span class="led-label">ON</span>
+        <div class="led-pwr" style="margin-left:6px;"></div>
+        <span class="led-label">PWR</span>
       </div>
     </div>
 
-    <!-- CHALLENGE KNOB -->
-    <div class="challenge-section">
-      <div class="challenge-label">Challenge</div>
-
-      <div class="knob-wrap">
-        <div class="knob" id="knob" onclick="spinChallenge()" title="Spin for a new challenge"></div>
-        <div style="font-size:9px;color:var(--muted);letter-spacing:1px;">SPIN</div>
+    <div class="led-display">
+      <div class="led-ticker-wrap">
+        <span class="led-ticker">{{ fact }} &nbsp;&nbsp;✦&nbsp;&nbsp; {{ fact }}</span>
       </div>
+    </div>
 
-      <div class="challenge-text" id="challenge-text">{{ challenges[0].title }}</div>
+    <!-- LUMI BOOMBOX — purple / violet -->
+    <div class="boombox-wrap">
+      <div class="boombox-label">◈ Looms Beats</div>
+      <svg viewBox="0 0 200 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="ls-stripe" x1="0" y1="0" x2="200" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#a78bfa"/>
+            <stop offset="50%" stop-color="#c084fc"/>
+            <stop offset="100%" stop-color="#7c3aed"/>
+          </linearGradient>
+          <linearGradient id="ls-text" x1="72" y1="0" x2="128" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#a78bfa"/>
+            <stop offset="100%" stop-color="#c084fc"/>
+          </linearGradient>
+        </defs>
+        <!-- Body -->
+        <rect x="0.75" y="10" width="198.5" height="76" rx="9" fill="#07060f" stroke="#1e1a2e" stroke-width="1.5"/>
+        <!-- Top stripe -->
+        <rect x="0.75" y="10" width="198.5" height="4" rx="2" fill="url(#ls-stripe)"/>
+        <!-- Antenna -->
+        <line x1="168" y1="10" x2="184" y2="1" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="184" cy="1" r="2.5" fill="#a78bfa" opacity="0.85"/>
+        <!-- LEFT SPEAKER — purple -->
+        <rect x="4" y="15" width="58" height="65" rx="6" fill="#060414" stroke="#a78bfa" stroke-width="1.4"/>
+        <circle cx="33" cy="47" r="23" fill="#080518" stroke="#a78bfa" stroke-width="1" opacity="0.9"/>
+        <circle cx="33" cy="47" r="15" fill="#0a071e" stroke="#a78bfa" stroke-width="0.7" opacity="0.7"/>
+        <circle cx="33" cy="47" r="8"  fill="#0d0924" stroke="#a78bfa" stroke-width="0.5" opacity="0.9"/>
+        <circle class="lumi-eq-led" cx="33" cy="47" r="3.5" fill="#a78bfa" opacity="0.25"/>
+        <circle cx="11" cy="21" r="2" fill="#a78bfa" opacity="0.2"/>
+        <circle cx="55" cy="21" r="2" fill="#a78bfa" opacity="0.2"/>
+        <circle cx="11" cy="73" r="2" fill="#a78bfa" opacity="0.2"/>
+        <circle cx="55" cy="73" r="2" fill="#a78bfa" opacity="0.2"/>
+        <!-- RIGHT SPEAKER — violet -->
+        <rect x="138" y="15" width="58" height="65" rx="6" fill="#060410" stroke="#c084fc" stroke-width="1.4"/>
+        <circle cx="167" cy="47" r="23" fill="#080520" stroke="#c084fc" stroke-width="1" opacity="0.9"/>
+        <circle cx="167" cy="47" r="15" fill="#0a0628" stroke="#c084fc" stroke-width="0.7" opacity="0.7"/>
+        <circle cx="167" cy="47" r="8"  fill="#0d0830" stroke="#c084fc" stroke-width="0.5" opacity="0.9"/>
+        <circle cx="167" cy="47" r="3.5" fill="#c084fc" opacity="0.2"/>
+        <circle cx="145" cy="21" r="2" fill="#c084fc" opacity="0.2"/>
+        <circle cx="189" cy="21" r="2" fill="#c084fc" opacity="0.2"/>
+        <circle cx="145" cy="73" r="2" fill="#c084fc" opacity="0.2"/>
+        <circle cx="189" cy="73" r="2" fill="#c084fc" opacity="0.2"/>
+        <!-- CENTER DISPLAY -->
+        <rect x="65" y="15" width="70" height="65" rx="4" fill="#030206" stroke="#1e1a30" stroke-width="1"/>
+        <rect x="67" y="17" width="66" height="61" rx="3" fill="#040310" stroke="rgba(192,132,252,0.18)" stroke-width="0.5"/>
+        <!-- Name -->
+        <text x="100" y="33" font-family="'Inter',system-ui,sans-serif" font-size="12" font-weight="900" text-anchor="middle" fill="url(#ls-text)" letter-spacing="2">LUMI</text>
+        <!-- EQ bars -->
+        <rect class="lumi-eq" x="71"  y="56" width="6" height="15" rx="1.5" fill="#a78bfa" opacity="0.9"/>
+        <rect class="lumi-eq" x="80"  y="50" width="6" height="21" rx="1.5" fill="#b49dfa" opacity="0.9"/>
+        <rect class="lumi-eq" x="89"  y="44" width="6" height="27" rx="1.5" fill="#c084fc" opacity="0.9"/>
+        <rect class="lumi-eq" x="98"  y="48" width="6" height="23" rx="1.5" fill="#c893fc" opacity="0.9"/>
+        <rect class="lumi-eq" x="107" y="53" width="6" height="18" rx="1.5" fill="#d4adfc" opacity="0.9"/>
+        <rect class="lumi-eq" x="116" y="59" width="6" height="12" rx="1.5" fill="#7c3aed" opacity="0.9"/>
+        <line x1="69" y1="72" x2="124" y2="72" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
+        <!-- Power -->
+        <circle cx="127" cy="23" r="8" fill="#0d060a" stroke="#a78bfa" stroke-width="1.5" opacity="0.9"/>
+        <circle cx="127" cy="23" r="5" fill="#a78bfa" opacity="0.3"/>
+        <path d="M127 18.5 L127 21.5" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
+        <path d="M124.2 19.8 A4.2 4.2 0 1 0 129.8 19.8" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.9"/>
+        <!-- Cassette -->
+        <rect x="70" y="74" width="50" height="5" rx="1.5" fill="#08060f" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
+        <rect x="84" y="75.5" width="22" height="2" rx="1" fill="rgba(255,255,255,0.05)"/>
+        <text x="100" y="86" font-family="monospace" font-size="4.5" text-anchor="middle" fill="rgba(167,139,250,0.45)" letter-spacing="1">LOOMS BEATS</text>
+      </svg>
+      <div class="boombox-player">▷ &nbsp; INSERT MUSIC HERE</div>
+    </div>
 
-      <div class="stomp" onclick="completeChallenge()">DONE</div>
+    <!-- CHALLENGE -->
+    <div class="challenge-wrap">
+      <div class="knob" id="knob-lumi" onclick="spin('lumi')" title="Spin"></div>
+      <div class="challenge-right">
+        <div class="challenge-eyebrow">Today's Challenge</div>
+        <div class="challenge-text" id="ct-lumi">{{ challenges[0].title }}</div>
+      </div>
+    </div>
+    <div class="stomp-row">
+      <div class="stomp" onclick="complete('lumi')">DONE</div>
       <div class="stomp-label">STOMP TO COMPLETE</div>
     </div>
 
-  </div>
-
-  <!-- TWIN COLUMNS -->
-  <div class="hub">
-    <!-- TWIN 1 -->
-    <div class="twin-col">
-      <div class="col-header t1">
-        <div class="col-led t1"></div>
-        <span class="col-title t1">{{ twin1 }}</span>
-        <span style="font-size:10px;color:var(--muted);margin-left:auto;">{{ notes_1|length }}</span>
-      </div>
+    <!-- NOTES -->
+    <div class="notes-section">
+      <div class="notes-header">Lumi's Notes</div>
       <form class="post-form" method="POST" action="/post">
         <input type="hidden" name="author" value="{{ twin1 }}">
         <input type="text" name="content" placeholder="Drop a note or lyric…" maxlength="280" autocomplete="off">
-        <button type="submit" class="post-btn post-btn-t1">POST</button>
+        <button type="submit" class="post-btn">POST</button>
       </form>
       <div class="notes-list">
         {% for note in notes_1 %}
-        <div class="note-item t1">
+        <div class="note-item">
           <div>{{ note.content }}</div>
           <div class="note-time">{{ note.timestamp[:16].replace('T', ' ') }}</div>
         </div>
@@ -732,23 +510,133 @@
       </div>
     </div>
 
-    <div class="vs-divider"></div>
+    <div class="pedal-footer">
+      <div class="jack"><div class="jack-hole"></div> IN</div>
+      <button class="btn-clear" onclick="document.getElementById('clear-modal').classList.add('open')">🗑 CLEAR</button>
+      <div class="jack">OUT <div class="jack-hole"></div></div>
+    </div>
+    <div class="feet">
+      <div class="foot"></div><div class="foot"></div><div class="foot"></div><div class="foot"></div>
+    </div>
+  </div>
 
-    <!-- TWIN 2 -->
-    <div class="twin-col">
-      <div class="col-header t2">
-        <div class="col-led t2"></div>
-        <span class="col-title t2">{{ twin2 }}</span>
-        <span style="font-size:10px;color:var(--muted);margin-left:auto;">{{ notes_2|length }}</span>
+  <!-- ══════════════════════════════════ -->
+  <!--          SLOANY  PEDAL            -->
+  <!-- ══════════════════════════════════ -->
+  <div class="pedal pedal-sloany">
+    <div class="screw screw-tl"></div>
+    <div class="screw screw-tr"></div>
+    <div class="screw screw-bl"></div>
+    <div class="screw screw-br"></div>
+
+    <div class="nameplate">
+      <div class="pedal-name">⚡ Sloany</div>
+      <div class="led-cluster">
+        <div class="led"></div>
+        <span class="led-label">ON</span>
+        <div class="led-pwr" style="margin-left:6px;"></div>
+        <span class="led-label">PWR</span>
       </div>
+    </div>
+
+    <div class="led-display">
+      <div class="led-ticker-wrap">
+        <span class="led-ticker" style="animation-delay:-14s;">{{ fact }} &nbsp;&nbsp;✦&nbsp;&nbsp; {{ fact }}</span>
+      </div>
+    </div>
+
+    <!-- SLOANY BOOMBOX — blue / cyan -->
+    <div class="boombox-wrap">
+      <div class="boombox-label">◈ Sloany's Beats</div>
+      <svg viewBox="0 0 200 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="ss-stripe" x1="0" y1="0" x2="200" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#60a5fa"/>
+            <stop offset="50%" stop-color="#38bdf8"/>
+            <stop offset="100%" stop-color="#1d4ed8"/>
+          </linearGradient>
+          <linearGradient id="ss-text" x1="72" y1="0" x2="128" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#60a5fa"/>
+            <stop offset="100%" stop-color="#38bdf8"/>
+          </linearGradient>
+        </defs>
+        <!-- Body -->
+        <rect x="0.75" y="10" width="198.5" height="76" rx="9" fill="#01050f" stroke="#0e1a2e" stroke-width="1.5"/>
+        <!-- Top stripe -->
+        <rect x="0.75" y="10" width="198.5" height="4" rx="2" fill="url(#ss-stripe)"/>
+        <!-- Antenna -->
+        <line x1="168" y1="10" x2="184" y2="1" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="184" cy="1" r="2.5" fill="#38bdf8" opacity="0.85"/>
+        <!-- LEFT SPEAKER — blue -->
+        <rect x="4" y="15" width="58" height="65" rx="6" fill="#010810" stroke="#60a5fa" stroke-width="1.4"/>
+        <circle cx="33" cy="47" r="23" fill="#020b18" stroke="#60a5fa" stroke-width="1" opacity="0.9"/>
+        <circle cx="33" cy="47" r="15" fill="#030e20" stroke="#60a5fa" stroke-width="0.7" opacity="0.7"/>
+        <circle cx="33" cy="47" r="8"  fill="#041228" stroke="#60a5fa" stroke-width="0.5" opacity="0.9"/>
+        <circle cx="33" cy="47" r="3.5" fill="#60a5fa" opacity="0.25"/>
+        <circle cx="11" cy="21" r="2" fill="#60a5fa" opacity="0.2"/>
+        <circle cx="55" cy="21" r="2" fill="#60a5fa" opacity="0.2"/>
+        <circle cx="11" cy="73" r="2" fill="#60a5fa" opacity="0.2"/>
+        <circle cx="55" cy="73" r="2" fill="#60a5fa" opacity="0.2"/>
+        <!-- RIGHT SPEAKER — cyan -->
+        <rect x="138" y="15" width="58" height="65" rx="6" fill="#010910" stroke="#38bdf8" stroke-width="1.4"/>
+        <circle cx="167" cy="47" r="23" fill="#020c18" stroke="#38bdf8" stroke-width="1" opacity="0.9"/>
+        <circle cx="167" cy="47" r="15" fill="#030f20" stroke="#38bdf8" stroke-width="0.7" opacity="0.7"/>
+        <circle cx="167" cy="47" r="8"  fill="#041428" stroke="#38bdf8" stroke-width="0.5" opacity="0.9"/>
+        <circle cx="167" cy="47" r="3.5" fill="#38bdf8" opacity="0.2"/>
+        <circle cx="145" cy="21" r="2" fill="#38bdf8" opacity="0.2"/>
+        <circle cx="189" cy="21" r="2" fill="#38bdf8" opacity="0.2"/>
+        <circle cx="145" cy="73" r="2" fill="#38bdf8" opacity="0.2"/>
+        <circle cx="189" cy="73" r="2" fill="#38bdf8" opacity="0.2"/>
+        <!-- CENTER DISPLAY -->
+        <rect x="65" y="15" width="70" height="65" rx="4" fill="#010308" stroke="#0e1a30" stroke-width="1"/>
+        <rect x="67" y="17" width="66" height="61" rx="3" fill="#010410" stroke="rgba(56,189,248,0.18)" stroke-width="0.5"/>
+        <!-- Name -->
+        <text x="100" y="33" font-family="'Inter',system-ui,sans-serif" font-size="9" font-weight="900" text-anchor="middle" fill="url(#ss-text)" letter-spacing="2">SLOANY</text>
+        <!-- EQ bars -->
+        <rect class="sloany-eq" x="71"  y="56" width="6" height="15" rx="1.5" fill="#60a5fa" opacity="0.9"/>
+        <rect class="sloany-eq" x="80"  y="50" width="6" height="21" rx="1.5" fill="#7ab8fb" opacity="0.9"/>
+        <rect class="sloany-eq" x="89"  y="44" width="6" height="27" rx="1.5" fill="#38bdf8" opacity="0.9"/>
+        <rect class="sloany-eq" x="98"  y="48" width="6" height="23" rx="1.5" fill="#5ec9f9" opacity="0.9"/>
+        <rect class="sloany-eq" x="107" y="53" width="6" height="18" rx="1.5" fill="#93d8fb" opacity="0.9"/>
+        <rect class="sloany-eq" x="116" y="59" width="6" height="12" rx="1.5" fill="#1d4ed8" opacity="0.9"/>
+        <line x1="69" y1="72" x2="124" y2="72" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
+        <!-- Power -->
+        <circle cx="127" cy="23" r="8" fill="#010508" stroke="#60a5fa" stroke-width="1.5" opacity="0.9"/>
+        <circle cx="127" cy="23" r="5" fill="#60a5fa" opacity="0.3"/>
+        <path d="M127 18.5 L127 21.5" stroke="#60a5fa" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
+        <path d="M124.2 19.8 A4.2 4.2 0 1 0 129.8 19.8" stroke="#60a5fa" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.9"/>
+        <!-- Cassette -->
+        <rect x="70" y="74" width="50" height="5" rx="1.5" fill="#01060f" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
+        <rect x="84" y="75.5" width="22" height="2" rx="1" fill="rgba(255,255,255,0.05)"/>
+        <text x="100" y="86" font-family="monospace" font-size="4" text-anchor="middle" fill="rgba(96,165,250,0.45)" letter-spacing="1">SLOANY'S BEATS</text>
+      </svg>
+      <div class="boombox-player">▷ &nbsp; INSERT MUSIC HERE</div>
+    </div>
+
+    <!-- CHALLENGE -->
+    <div class="challenge-wrap">
+      <div class="knob" id="knob-sloany" onclick="spin('sloany')" title="Spin"></div>
+      <div class="challenge-right">
+        <div class="challenge-eyebrow">Today's Challenge</div>
+        <div class="challenge-text" id="ct-sloany">{{ challenges[1].title }}</div>
+      </div>
+    </div>
+    <div class="stomp-row">
+      <div class="stomp" onclick="complete('sloany')">DONE</div>
+      <div class="stomp-label">STOMP TO COMPLETE</div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="notes-section">
+      <div class="notes-header">Sloany's Notes</div>
       <form class="post-form" method="POST" action="/post">
         <input type="hidden" name="author" value="{{ twin2 }}">
         <input type="text" name="content" placeholder="Drop a note or lyric…" maxlength="280" autocomplete="off">
-        <button type="submit" class="post-btn post-btn-t2">POST</button>
+        <button type="submit" class="post-btn">POST</button>
       </form>
       <div class="notes-list">
         {% for note in notes_2 %}
-        <div class="note-item t2">
+        <div class="note-item">
           <div>{{ note.content }}</div>
           <div class="note-time">{{ note.timestamp[:16].replace('T', ' ') }}</div>
         </div>
@@ -757,31 +645,18 @@
         {% endfor %}
       </div>
     </div>
-  </div>
 
-  <!-- FOOTER JACKS -->
-  <div class="pedal-footer">
-    <div class="jack">
-      <div class="jack-hole"></div>
-      INPUT
+    <div class="pedal-footer">
+      <div class="jack"><div class="jack-hole"></div> IN</div>
+      <button class="btn-clear" onclick="document.getElementById('clear-modal').classList.add('open')">🗑 CLEAR</button>
+      <div class="jack">OUT <div class="jack-hole"></div></div>
     </div>
-    <button class="btn-clear" onclick="document.getElementById('clear-modal').classList.add('open')">
-      🗑 CLEAR ALL
-    </button>
-    <div class="jack">
-      OUTPUT
-      <div class="jack-hole"></div>
+    <div class="feet">
+      <div class="foot"></div><div class="foot"></div><div class="foot"></div><div class="foot"></div>
     </div>
   </div>
 
-  <!-- RUBBER FEET -->
-  <div class="feet">
-    <div class="foot"></div>
-    <div class="foot"></div>
-    <div class="foot"></div>
-    <div class="foot"></div>
-  </div>
-</div>
+</div><!-- /board -->
 
 <!-- CLEAR MODAL -->
 <div class="modal-overlay" id="clear-modal">
@@ -791,7 +666,7 @@
     <form method="POST" action="/clear">
       <input type="password" name="password" placeholder="Password" autofocus>
       <div class="modal-actions">
-        <button type="button" class="btn btn-outline" onclick="document.getElementById('clear-modal').classList.remove('open')">Cancel</button>
+        <button type="button" class="btn btn-mo" onclick="document.getElementById('clear-modal').classList.remove('open')">Cancel</button>
         <button type="submit" class="btn btn-gold">Clear</button>
       </div>
     </form>
@@ -805,78 +680,63 @@
     <h2>Challenge Complete!</h2>
     <p style="margin-top:6px;">That's what I'm talking about.</p>
     <div class="modal-actions">
-      <button class="btn btn-green" onclick="closeComplete()">Keep Going</button>
+      <button class="btn btn-go" id="complete-next-btn">Keep Going</button>
     </div>
   </div>
 </div>
 
 <script>
 const challenges = {{ challenges | tojson }};
-let currentIdx = 0;
+const idxState = { lumi: 0, sloany: 1 };
 
-function spinChallenge() {
-  const knob = document.getElementById('knob');
-  const el = document.getElementById('challenge-text');
-  let next;
-  do { next = Math.floor(Math.random() * challenges.length); } while (next === currentIdx && challenges.length > 1);
-  currentIdx = next;
-
+function spin(who) {
+  const knob = document.getElementById('knob-' + who);
+  const el = document.getElementById('ct-' + who);
+  let cur = idxState[who], next;
+  do { next = Math.floor(Math.random() * challenges.length); } while (next === cur && challenges.length > 1);
+  idxState[who] = next;
   knob.classList.remove('spinning');
-  void knob.offsetWidth; // reflow to restart animation
+  void knob.offsetWidth;
   knob.classList.add('spinning');
   knob.addEventListener('animationend', () => knob.classList.remove('spinning'), { once: true });
-
   el.style.opacity = '0';
-  setTimeout(() => {
-    el.textContent = challenges[currentIdx].title;
-    el.style.transition = 'opacity .2s';
-    el.style.opacity = '1';
-  }, 150);
+  setTimeout(() => { el.textContent = challenges[next].title; el.style.transition='opacity .2s'; el.style.opacity='1'; }, 150);
 }
 
-function completeChallenge() {
+let _completeWho = null;
+function complete(who) {
+  _completeWho = who;
   launchConfetti();
   document.getElementById('complete-modal').classList.add('open');
 }
-
-function closeComplete() {
+document.getElementById('complete-next-btn').addEventListener('click', () => {
   document.getElementById('complete-modal').classList.remove('open');
-  spinChallenge();
-}
+  if (_completeWho) spin(_completeWho);
+});
 
 function launchConfetti() {
-  const colors = ['#f0b429','#f59e0b','#a78bfa','#34d399','#f87171','#60a5fa','#fff','#39ff14'];
+  const colors = ['#a78bfa','#c084fc','#60a5fa','#38bdf8','#f0b429','#fff','#39ff14','#f87171'];
   for (let i = 0; i < 90; i++) {
     const p = document.createElement('div');
     p.className = 'confetti-piece';
-    const size = 6 + Math.random() * 8;
-    p.style.cssText = `
-      left:${Math.random()*100}vw;
-      background:${colors[Math.floor(Math.random()*colors.length)]};
-      animation-duration:${1.2+Math.random()*1.8}s;
-      animation-delay:${Math.random()*0.5}s;
-      width:${size}px; height:${size}px;
-      border-radius:${Math.random()>.5?'50%':'2px'};
-    `;
+    const s = 6 + Math.random() * 8;
+    p.style.cssText = `left:${Math.random()*100}vw;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${1.2+Math.random()*1.8}s;animation-delay:${Math.random()*.5}s;width:${s}px;height:${s}px;border-radius:${Math.random()>.5?'50%':'2px'};`;
     document.body.appendChild(p);
     p.addEventListener('animationend', () => p.remove());
   }
 }
 
-// Animate boombox EQ bars idly
-(function animateEQ() {
-  const bars = document.querySelectorAll('.bb-eq');
-  const heights = [15, 21, 27, 23, 18, 12];
+// Animate EQ bars on both boomboxes
+function animateEQ(selector) {
+  const bars = document.querySelectorAll(selector);
   function tick() {
-    bars.forEach((b, i) => {
-      const h = 8 + Math.random() * 24;
-      b.setAttribute('height', h);
-      b.setAttribute('y', 71 - h);
-    });
-    setTimeout(tick, 180 + Math.random() * 120);
+    bars.forEach(b => { const h = 8 + Math.random() * 25; b.setAttribute('height', h); b.setAttribute('y', 71 - h); });
+    setTimeout(tick, 160 + Math.random() * 140);
   }
   tick();
-})();
+}
+animateEQ('.lumi-eq');
+animateEQ('.sloany-eq');
 
 document.querySelectorAll('.modal-overlay').forEach(o => {
   o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });

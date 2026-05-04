@@ -10,8 +10,8 @@ DB_PATH = os.path.join(os.path.dirname(__file__), 'data', 'hub.db')
 DAILY_FACT_PATH = os.path.join(os.path.dirname(__file__), 'data', 'daily_fact.json')
 CHALLENGES_PATH = os.path.join(os.path.dirname(__file__), 'challenges.json')
 
-TWIN1_NAME = os.getenv('TWIN1_NAME', 'Aria')
-TWIN2_NAME = os.getenv('TWIN2_NAME', 'Zara')
+TWIN1_NAME = os.getenv('TWIN1_NAME', 'Lumi')
+TWIN2_NAME = os.getenv('TWIN2_NAME', 'Sloany')
 DAD_PASSWORD = os.getenv('DAD_PASSWORD', 'dad')
 
 
