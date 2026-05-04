@@ -8,7 +8,8 @@ app = Flask(__name__)
 
 DB_PATH = os.path.join(os.path.dirname(__file__), 'data', 'hub.db')
 DAILY_FACT_PATH = os.path.join(os.path.dirname(__file__), 'data', 'daily_fact.json')
-CHALLENGES_PATH = os.path.join(os.path.dirname(__file__), 'challenges.json')
+CHALLENGES_PATH      = os.path.join(os.path.dirname(__file__), 'challenges.json')
+CHALLENGES_CACHE_PATH = os.path.join(os.path.dirname(__file__), 'data', 'challenges_cache.json')
 
 TWIN1_NAME = os.getenv('TWIN1_NAME', 'Lumi')
 TWIN2_NAME = os.getenv('TWIN2_NAME', 'Sloany')
@@ -70,7 +71,47 @@ def get_daily_fact():
     with open(DAILY_FACT_PATH, 'w') as f:
         json.dump({'fact': fact, 'timestamp': time.time()}, f)
 
-    return fact
+
+def get_challenges():
+    os.makedirs(os.path.dirname(CHALLENGES_CACHE_PATH), exist_ok=True)
+
+    if os.path.exists(CHALLENGES_CACHE_PATH):
+        with open(CHALLENGES_CACHE_PATH) as f:
+            cached = json.load(f)
+        if time.time() - cached.get('timestamp', 0) < 86400:
+            return cached['challenges']
+
+    try:
+        import anthropic
+        client = anthropic.Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY'))
+        msg = client.messages.create(
+            model='claude-haiku-4-5-20251001',
+            max_tokens=600,
+            messages=[{
+                'role': 'user',
+                'content': (
+                    'Generate 20 fun, creative challenges for two 6th-grade girls (age 11-12). '
+                    'Mix it up: singing, dancing, drawing, writing, trivia, dares, games, '
+                    'impressions, storytelling, TikTok-style challenges — things tweens actually love. '
+                    'Keep every challenge short (under 12 words), action-oriented, and age-appropriate. '
+                    'Return ONLY a JSON array of strings, no numbering, no extra text. Example: '
+                    '["Do your best Sabrina Carpenter impression", "Draw your dream bedroom in 60 seconds"]'
+                )
+            }]
+        )
+        raw = msg.content[0].text.strip()
+        # parse just the array
+        start, end = raw.index('['), raw.rindex(']') + 1
+        titles = json.loads(raw[start:end])
+        challenges = [{'id': i + 1, 'title': t} for i, t in enumerate(titles[:20])]
+    except Exception:
+        with open(CHALLENGES_PATH) as f:
+            challenges = json.load(f)
+
+    with open(CHALLENGES_CACHE_PATH, 'w') as f:
+        json.dump({'challenges': challenges, 'timestamp': time.time()}, f)
+
+    return challenges
 
 
 @app.route('/')
@@ -85,18 +126,13 @@ def index():
             (TWIN2_NAME,)
         ).fetchall()
 
-    fact = get_daily_fact()
-
-    with open(CHALLENGES_PATH) as f:
-        challenges = json.load(f)
-
     return render_template('index.html',
         twin1=TWIN1_NAME,
         twin2=TWIN2_NAME,
         notes_1=notes_1,
         notes_2=notes_2,
-        fact=fact,
-        challenges=challenges
+        fact=get_daily_fact(),
+        challenges=get_challenges()
     )
 
 
@@ -130,10 +166,8 @@ def _pedal_ctx(who):
             'SELECT * FROM notes WHERE author = ? ORDER BY timestamp DESC LIMIT 30',
             (author,)
         ).fetchall()
-    with open(CHALLENGES_PATH) as f:
-        challenges = json.load(f)
     return dict(cfg=cfg, who=who, author=author, notes=notes,
-                challenges=challenges, fact=get_daily_fact())
+                challenges=get_challenges(), fact=get_daily_fact())
 
 
 @app.route('/lumi')
@@ -183,6 +217,13 @@ def refresh_fact():
     if os.path.exists(DAILY_FACT_PATH):
         os.remove(DAILY_FACT_PATH)
     return jsonify({'fact': get_daily_fact()})
+
+
+@app.route('/admin/refresh-challenges', methods=['POST'])
+def refresh_challenges():
+    if os.path.exists(CHALLENGES_CACHE_PATH):
+        os.remove(CHALLENGES_CACHE_PATH)
+    return jsonify({'challenges': get_challenges()})
 
 
 if __name__ == '__main__':

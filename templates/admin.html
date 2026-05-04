@@ -76,6 +76,14 @@
     <button class="btn btn-gold" id="refresh-btn" onclick="refreshFact()">🔄 Generate New Fact</button>
   </div>
 
+  <!-- CHALLENGES -->
+  <div class="card">
+    <div class="card-label">Daily Challenges</div>
+    <div class="card-title" style="margin-bottom:4px;">AI-Generated for 6th Graders</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:0;">20 new challenges generate every 24 hours automatically.</p>
+    <button class="btn btn-gold" id="refresh-challenges-btn" onclick="refreshChallenges()" style="margin-top:14px;">🔄 Generate New Challenges Now</button>
+  </div>
+
   <!-- ENV STATUS -->
   <div class="card">
     <div class="card-label">Environment Variables</div>
@@ -107,6 +115,19 @@
 </div>
 
 <script>
+async function refreshChallenges() {
+  const btn = document.getElementById('refresh-challenges-btn');
+  btn.disabled = true;
+  btn.textContent = 'Generating…';
+  try {
+    await fetch('/admin/refresh-challenges', { method: 'POST' });
+    btn.textContent = '✓ Done — reload the pedal pages to see them';
+  } catch(e) {
+    btn.textContent = 'Error — check ANTHROPIC_API_KEY';
+    btn.disabled = false;
+  }
+}
+
 async function refreshFact() {
   const btn = document.getElementById('refresh-btn');
   const factEl = document.getElementById('fact-text');
