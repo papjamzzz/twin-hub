@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>{{ cfg.name }}'s Hub</title>
+<style>
+  :root {
+    --p:  {{ cfg.p }};
+    --p2: {{ cfg.p2 }};
+    --p3: {{ cfg.p3 }};
+    --pg: {{ cfg.pg }};
+    --pd: {{ cfg.pd }};
+    --led-green: #39ff14;
+    --led-red:   #ff3b3b;
+    --gold: #f0b429;
+    --bg: #080808;
+    --border: #2e2e2e;
+    --text: #e5e7eb;
+    --muted: #5a5a6a;
+    --surface: #111;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background: var(--bg);
+    background-image: radial-gradient(circle, rgba(255,255,255,0.022) 1px, transparent 1px);
+    background-size: 18px 18px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: var(--text);
+    padding: 16px 14px 40px;
+  }
+
+  /* ═══ PEDAL ═══ */
+  .pedal {
+    max-width: 480px;
+    margin: 0 auto;
+    background: linear-gradient(165deg, #212121 0%, #191919 50%, #1e1e1e 100%);
+    border: 2px solid #343434;
+    border-radius: 26px;
+    padding: 18px 18px 20px;
+    position: relative;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.06),
+      inset 0 -2px 0 rgba(0,0,0,0.4),
+      0 0 0 1px #0d0d0d,
+      0 30px 80px rgba(0,0,0,0.85);
+  }
+  .pedal::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 26px; right: 26px; height: 3px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05) 20%, rgba(255,255,255,0.10) 50%, rgba(255,255,255,0.05) 80%, transparent);
+    border-radius: 0 0 3px 3px;
+  }
+
+  /* SCREWS */
+  .screw {
+    position: absolute; width: 18px; height: 18px;
+    background: radial-gradient(circle at 38% 32%, #555, #222);
+    border-radius: 50%; border: 1px solid #444;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08);
+    z-index: 5;
+  }
+  .screw::before, .screw::after {
+    content: ''; position: absolute; top: 50%; left: 50%; background: #333;
+  }
+  .screw::before { width: 11px; height: 2px; transform: translate(-50%,-50%); }
+  .screw::after  { width: 2px; height: 11px; transform: translate(-50%,-50%); }
+  .screw-tl { top: 11px; left: 12px; }
+  .screw-tr { top: 11px; right: 12px; }
+  .screw-bl { bottom: 14px; left: 12px; }
+  .screw-br { bottom: 14px; right: 12px; }
+
+  /* NAMEPLATE */
+  .nameplate {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 4px 28px 12px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .pedal-name {
+    font-size: 28px; font-weight: 900; letter-spacing: 6px;
+    text-transform: uppercase; font-style: italic;
+    color: var(--p);
+    text-shadow: 0 0 24px var(--pg), 0 0 50px var(--pg);
+  }
+  .led-cluster { display: flex; gap: 6px; align-items: center; }
+  .led {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--p); box-shadow: 0 0 7px var(--p);
+    animation: blink 2s ease-in-out infinite;
+  }
+  .led-pwr {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--led-red); box-shadow: 0 0 6px var(--led-red);
+    animation: blink 1.8s ease-in-out infinite;
+    margin-left: 6px;
+  }
+  .led-label { font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  /* LED TICKER */
+  .led-display {
+    background: #050505; border: 1px solid #1c1c00; border-radius: 5px;
+    padding: 7px 12px; overflow: hidden; margin-bottom: 12px;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.6);
+    position: relative;
+  }
+  .led-display::before {
+    content: '🔥'; position: absolute; left: 12px; top: 50%;
+    transform: translateY(-50%); font-size: 11px;
+  }
+  .led-ticker-wrap { overflow: hidden; padding-left: 80px; }
+  .led-ticker {
+    display: inline-block; white-space: nowrap;
+    font-family: 'Courier New', monospace; font-size: 11px; font-weight: 700;
+    color: var(--led-green); text-shadow: 0 0 7px var(--led-green);
+    animation: ticker 28s linear infinite; letter-spacing: 0.5px;
+  }
+  @keyframes ticker { 0%{transform:translateX(50vw)} 100%{transform:translateX(-100%)} }
+
+  /* BOOMBOX */
+  .boombox-wrap {
+    background: var(--pd); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px; padding: 12px 12px 8px; margin-bottom: 12px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .boombox-label {
+    font-size: 8px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--muted); text-align: center;
+  }
+  .boombox-wrap svg {
+    width: 100%; max-width: 260px; height: auto;
+    filter: drop-shadow(0 4px 14px var(--pg));
+  }
+  .boombox-player {
+    width: 100%; background: rgba(0,0,0,0.5);
+    border: 1px dashed rgba(255,255,255,0.1); border-radius: 6px;
+    padding: 8px; text-align: center; font-size: 10px;
+    color: rgba(255,255,255,0.25); font-family: monospace;
+    letter-spacing: 1px; min-height: 34px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* CHALLENGE */
+  .challenge-wrap {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 16px; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .knob {
+    flex-shrink: 0; width: 58px; height: 58px;
+    background: radial-gradient(circle at 38% 30%, #484848, #181818 70%);
+    border-radius: 50%; border: 2px solid #383838;
+    box-shadow: 0 5px 14px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08);
+    cursor: pointer; position: relative; transition: transform .1s;
+  }
+  .knob:active { transform: scale(0.93); }
+  .knob.spinning { animation: kspin .35s cubic-bezier(.4,2,.6,1); }
+  @keyframes kspin { to { transform: rotate(115deg); } }
+  .knob::after {
+    content: ''; position: absolute; top: 7px; left: 50%; transform: translateX(-50%);
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--p); box-shadow: 0 0 6px var(--p);
+  }
+  .challenge-right { flex: 1; }
+  .challenge-eyebrow {
+    font-size: 9px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--p); opacity: .7; margin-bottom: 5px;
+  }
+  .challenge-text { font-size: 13px; font-weight: 700; line-height: 1.4; transition: opacity .15s; }
+
+  /* STOMP */
+  .stomp-row { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 14px; }
+  .stomp {
+    width: 70px; height: 70px;
+    background: radial-gradient(circle at 40% 30%, var(--p2), var(--p3));
+    border-radius: 50%; border: 3px solid var(--p3);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.5), 0 8px 20px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.25);
+    cursor: pointer; font-size: 9px; font-weight: 900; letter-spacing: 1px;
+    text-transform: uppercase; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    transition: all .1s; display: flex; align-items: center; justify-content: center;
+    user-select: none;
+  }
+  .stomp:active { transform: translateY(5px); box-shadow: 0 1px 0 rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15); }
+  .stomp-label { font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+
+  /* NOTES */
+  .notes-section {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .notes-header {
+    font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--p); opacity: .7; border-bottom: 1px solid var(--border); padding-bottom: 8px;
+  }
+  .post-form { display: flex; gap: 7px; }
+  .post-form input[type="text"] {
+    flex: 1; background: #0e0e0e; border: 1px solid var(--border); border-radius: 7px;
+    color: var(--text); font-size: 14px; padding: 10px 12px; outline: none;
+    transition: border-color .2s; font-family: inherit;
+    -webkit-appearance: none;
+  }
+  .post-form input[type="text"]:focus { border-color: var(--p); }
+  .post-btn {
+    padding: 10px 16px; border: none; border-radius: 7px;
+    font-size: 11px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; background: var(--p); color: #000;
+    box-shadow: 0 3px 0 var(--p3); transition: all .1s;
+    -webkit-appearance: none;
+  }
+  .post-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--p3); }
+
+  .notes-list { display: flex; flex-direction: column; gap: 7px; }
+  .note-item {
+    background: #0d0d0d; border-radius: 6px; padding: 10px 12px;
+    font-size: 14px; line-height: 1.45; border-left: 2px solid var(--p);
+  }
+  .note-time { font-size: 10px; color: var(--muted); margin-top: 4px; font-family: monospace; }
+  .empty-state { color: var(--muted); font-size: 12px; text-align: center; padding: 20px 0; font-style: italic; }
+
+  /* FOOTER */
+  .pedal-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 28px 4px; border-top: 1px solid var(--border);
+  }
+  .jack { display: flex; align-items: center; gap: 5px; font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .jack-hole {
+    width: 13px; height: 13px; background: radial-gradient(circle, #030303, #161616);
+    border-radius: 50%; border: 2px solid #333; box-shadow: inset 0 1px 3px rgba(0,0,0,0.9);
+  }
+
+  /* RUBBER FEET */
+  .feet { display: flex; justify-content: space-between; padding: 10px 16px 0; }
+  .foot {
+    width: 32px; height: 9px;
+    background: radial-gradient(ellipse at 50% 20%, #252525, #0e0e0e);
+    border-radius: 5px; border: 1px solid #2a2a2a; box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  }
+
+  /* MODALS */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+    z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #1a1a1a; border: 1px solid var(--border); border-radius: 14px;
+    padding: 26px; max-width: 360px; width: 92%;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.9);
+  }
+  .modal h2 { font-size: 17px; margin-bottom: 6px; color: var(--gold); }
+  .modal p  { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+  #complete-modal .modal { text-align: center; border-color: var(--p); }
+  #complete-modal .trophy { font-size: 52px; margin-bottom: 6px; }
+  #complete-modal h2 { text-align: center; color: var(--p); font-size: 24px; }
+  .modal-actions { display: flex; gap: 10px; justify-content: center; margin-top: 16px; }
+  .btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; }
+  .btn-accent { background: var(--p); color: #000; }
+  .btn-gold { background: var(--gold); color: #000; }
+
+  /* CONFETTI */
+  .confetti-piece {
+    position: fixed; top: -20px; pointer-events: none; z-index: 300;
+    border-radius: 2px; animation: cffall linear forwards;
+  }
+  @keyframes cffall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+</style>
+</head>
+<body>
+
+<div class="pedal">
+  <div class="screw screw-tl"></div>
+  <div class="screw screw-tr"></div>
+  <div class="screw screw-bl"></div>
+  <div class="screw screw-br"></div>
+
+  <!-- NAMEPLATE -->
+  <div class="nameplate">
+    <div class="pedal-name">⚡ {{ cfg.name }}</div>
+    <div class="led-cluster">
+      <div class="led"></div>
+      <span class="led-label">ON</span>
+      <div class="led-pwr"></div>
+      <span class="led-label">PWR</span>
+    </div>
+  </div>
+
+  <!-- TICKER -->
+  <div class="led-display">
+    <div class="led-ticker-wrap">
+      <span class="led-ticker">{{ fact }} &nbsp;&nbsp;✦&nbsp;&nbsp; {{ fact }}</span>
+    </div>
+  </div>
+
+  <!-- BOOMBOX -->
+  <div class="boombox-wrap">
+    <div class="boombox-label">◈ {{ cfg.beats }}</div>
+    {% if who == 'lumi' %}
+    <svg viewBox="0 0 200 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ls-stripe" x1="0" y1="0" x2="200" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a78bfa"/>
+          <stop offset="50%" stop-color="#c084fc"/>
+          <stop offset="100%" stop-color="#7c3aed"/>
+        </linearGradient>
+        <linearGradient id="ls-text" x1="72" y1="0" x2="128" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a78bfa"/>
+          <stop offset="100%" stop-color="#c084fc"/>
+        </linearGradient>
+      </defs>
+      <rect x="0.75" y="10" width="198.5" height="76" rx="9" fill="#07060f" stroke="#1e1a2e" stroke-width="1.5"/>
+      <rect x="0.75" y="10" width="198.5" height="4" rx="2" fill="url(#ls-stripe)"/>
+      <line x1="168" y1="10" x2="184" y2="1" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="184" cy="1" r="2.5" fill="#a78bfa" opacity="0.85"/>
+      <rect x="4" y="15" width="58" height="65" rx="6" fill="#060414" stroke="#a78bfa" stroke-width="1.4"/>
+      <circle cx="33" cy="47" r="23" fill="#080518" stroke="#a78bfa" stroke-width="1" opacity="0.9"/>
+      <circle cx="33" cy="47" r="15" fill="#0a071e" stroke="#a78bfa" stroke-width="0.7" opacity="0.7"/>
+      <circle cx="33" cy="47" r="8"  fill="#0d0924" stroke="#a78bfa" stroke-width="0.5" opacity="0.9"/>
+      <circle cx="33" cy="47" r="3.5" fill="#a78bfa" opacity="0.25"/>
+      <circle cx="11" cy="21" r="2" fill="#a78bfa" opacity="0.2"/><circle cx="55" cy="21" r="2" fill="#a78bfa" opacity="0.2"/>
+      <circle cx="11" cy="73" r="2" fill="#a78bfa" opacity="0.2"/><circle cx="55" cy="73" r="2" fill="#a78bfa" opacity="0.2"/>
+      <rect x="138" y="15" width="58" height="65" rx="6" fill="#060410" stroke="#c084fc" stroke-width="1.4"/>
+      <circle cx="167" cy="47" r="23" fill="#080520" stroke="#c084fc" stroke-width="1" opacity="0.9"/>
+      <circle cx="167" cy="47" r="15" fill="#0a0628" stroke="#c084fc" stroke-width="0.7" opacity="0.7"/>
+      <circle cx="167" cy="47" r="8"  fill="#0d0830" stroke="#c084fc" stroke-width="0.5" opacity="0.9"/>
+      <circle cx="167" cy="47" r="3.5" fill="#c084fc" opacity="0.2"/>
+      <circle cx="145" cy="21" r="2" fill="#c084fc" opacity="0.2"/><circle cx="189" cy="21" r="2" fill="#c084fc" opacity="0.2"/>
+      <circle cx="145" cy="73" r="2" fill="#c084fc" opacity="0.2"/><circle cx="189" cy="73" r="2" fill="#c084fc" opacity="0.2"/>
+      <rect x="65" y="15" width="70" height="65" rx="4" fill="#030206" stroke="#1e1a30" stroke-width="1"/>
+      <rect x="67" y="17" width="66" height="61" rx="3" fill="#040310" stroke="rgba(192,132,252,0.18)" stroke-width="0.5"/>
+      <text x="100" y="33" font-family="'Inter',system-ui,sans-serif" font-size="12" font-weight="900" text-anchor="middle" fill="url(#ls-text)" letter-spacing="2">LUMI</text>
+      <rect class="peq" x="71"  y="56" width="6" height="15" rx="1.5" fill="#a78bfa" opacity="0.9"/>
+      <rect class="peq" x="80"  y="50" width="6" height="21" rx="1.5" fill="#b49dfa" opacity="0.9"/>
+      <rect class="peq" x="89"  y="44" width="6" height="27" rx="1.5" fill="#c084fc" opacity="0.9"/>
+      <rect class="peq" x="98"  y="48" width="6" height="23" rx="1.5" fill="#c893fc" opacity="0.9"/>
+      <rect class="peq" x="107" y="53" width="6" height="18" rx="1.5" fill="#d4adfc" opacity="0.9"/>
+      <rect class="peq" x="116" y="59" width="6" height="12" rx="1.5" fill="#7c3aed" opacity="0.9"/>
+      <line x1="69" y1="72" x2="124" y2="72" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
+      <circle cx="127" cy="23" r="8" fill="#0d060a" stroke="#a78bfa" stroke-width="1.5" opacity="0.9"/>
+      <circle cx="127" cy="23" r="5" fill="#a78bfa" opacity="0.3"/>
+      <path d="M127 18.5 L127 21.5" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
+      <path d="M124.2 19.8 A4.2 4.2 0 1 0 129.8 19.8" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.9"/>
+      <rect x="70" y="74" width="50" height="5" rx="1.5" fill="#08060f" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
+      <rect x="84" y="75.5" width="22" height="2" rx="1" fill="rgba(255,255,255,0.05)"/>
+      <text x="100" y="86" font-family="monospace" font-size="4.5" text-anchor="middle" fill="rgba(167,139,250,0.45)" letter-spacing="1">LOOMS BEATS</text>
+    </svg>
+    {% else %}
+    <svg viewBox="0 0 200 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ss-stripe" x1="0" y1="0" x2="200" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#60a5fa"/>
+          <stop offset="50%" stop-color="#38bdf8"/>
+          <stop offset="100%" stop-color="#1d4ed8"/>
+        </linearGradient>
+        <linearGradient id="ss-text" x1="72" y1="0" x2="128" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#60a5fa"/>
+          <stop offset="100%" stop-color="#38bdf8"/>
+        </linearGradient>
+      </defs>
+      <rect x="0.75" y="10" width="198.5" height="76" rx="9" fill="#01050f" stroke="#0e1a2e" stroke-width="1.5"/>
+      <rect x="0.75" y="10" width="198.5" height="4" rx="2" fill="url(#ss-stripe)"/>
+      <line x1="168" y1="10" x2="184" y2="1" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="184" cy="1" r="2.5" fill="#38bdf8" opacity="0.85"/>
+      <rect x="4" y="15" width="58" height="65" rx="6" fill="#010810" stroke="#60a5fa" stroke-width="1.4"/>
+      <circle cx="33" cy="47" r="23" fill="#020b18" stroke="#60a5fa" stroke-width="1" opacity="0.9"/>
+      <circle cx="33" cy="47" r="15" fill="#030e20" stroke="#60a5fa" stroke-width="0.7" opacity="0.7"/>
+      <circle cx="33" cy="47" r="8"  fill="#041228" stroke="#60a5fa" stroke-width="0.5" opacity="0.9"/>
+      <circle cx="33" cy="47" r="3.5" fill="#60a5fa" opacity="0.25"/>
+      <circle cx="11" cy="21" r="2" fill="#60a5fa" opacity="0.2"/><circle cx="55" cy="21" r="2" fill="#60a5fa" opacity="0.2"/>
+      <circle cx="11" cy="73" r="2" fill="#60a5fa" opacity="0.2"/><circle cx="55" cy="73" r="2" fill="#60a5fa" opacity="0.2"/>
+      <rect x="138" y="15" width="58" height="65" rx="6" fill="#010910" stroke="#38bdf8" stroke-width="1.4"/>
+      <circle cx="167" cy="47" r="23" fill="#020c18" stroke="#38bdf8" stroke-width="1" opacity="0.9"/>
+      <circle cx="167" cy="47" r="15" fill="#030f20" stroke="#38bdf8" stroke-width="0.7" opacity="0.7"/>
+      <circle cx="167" cy="47" r="8"  fill="#041428" stroke="#38bdf8" stroke-width="0.5" opacity="0.9"/>
+      <circle cx="167" cy="47" r="3.5" fill="#38bdf8" opacity="0.2"/>
+      <circle cx="145" cy="21" r="2" fill="#38bdf8" opacity="0.2"/><circle cx="189" cy="21" r="2" fill="#38bdf8" opacity="0.2"/>
+      <circle cx="145" cy="73" r="2" fill="#38bdf8" opacity="0.2"/><circle cx="189" cy="73" r="2" fill="#38bdf8" opacity="0.2"/>
+      <rect x="65" y="15" width="70" height="65" rx="4" fill="#010308" stroke="#0e1a30" stroke-width="1"/>
+      <rect x="67" y="17" width="66" height="61" rx="3" fill="#010410" stroke="rgba(56,189,248,0.18)" stroke-width="0.5"/>
+      <text x="100" y="33" font-family="'Inter',system-ui,sans-serif" font-size="9" font-weight="900" text-anchor="middle" fill="url(#ss-text)" letter-spacing="2">SLOANY</text>
+      <rect class="peq" x="71"  y="56" width="6" height="15" rx="1.5" fill="#60a5fa" opacity="0.9"/>
+      <rect class="peq" x="80"  y="50" width="6" height="21" rx="1.5" fill="#7ab8fb" opacity="0.9"/>
+      <rect class="peq" x="89"  y="44" width="6" height="27" rx="1.5" fill="#38bdf8" opacity="0.9"/>
+      <rect class="peq" x="98"  y="48" width="6" height="23" rx="1.5" fill="#5ec9f9" opacity="0.9"/>
+      <rect class="peq" x="107" y="53" width="6" height="18" rx="1.5" fill="#93d8fb" opacity="0.9"/>
+      <rect class="peq" x="116" y="59" width="6" height="12" rx="1.5" fill="#1d4ed8" opacity="0.9"/>
+      <line x1="69" y1="72" x2="124" y2="72" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
+      <circle cx="127" cy="23" r="8" fill="#010508" stroke="#60a5fa" stroke-width="1.5" opacity="0.9"/>
+      <circle cx="127" cy="23" r="5" fill="#60a5fa" opacity="0.3"/>
+      <path d="M127 18.5 L127 21.5" stroke="#60a5fa" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
+      <path d="M124.2 19.8 A4.2 4.2 0 1 0 129.8 19.8" stroke="#60a5fa" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.9"/>
+      <rect x="70" y="74" width="50" height="5" rx="1.5" fill="#01060f" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
+      <rect x="84" y="75.5" width="22" height="2" rx="1" fill="rgba(255,255,255,0.05)"/>
+      <text x="100" y="86" font-family="monospace" font-size="4" text-anchor="middle" fill="rgba(96,165,250,0.45)" letter-spacing="1">SLOANY'S BEATS</text>
+    </svg>
+    {% endif %}
+    <div class="boombox-player" id="boombox-player">▷ &nbsp; INSERT MUSIC HERE</div>
+  </div>
+
+  <!-- CHALLENGE -->
+  <div class="challenge-wrap">
+    <div class="knob" id="knob" onclick="spinChallenge()"></div>
+    <div class="challenge-right">
+      <div class="challenge-eyebrow">Today's Challenge</div>
+      <div class="challenge-text" id="challenge-text">{{ challenges[0].title }}</div>
+    </div>
+  </div>
+  <div class="stomp-row">
+    <div class="stomp" onclick="completeChallenge()">DONE</div>
+    <div class="stomp-label">STOMP TO COMPLETE</div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="notes-section">
+    <div class="notes-header">{{ cfg.name }}'s Notes</div>
+    <form class="post-form" method="POST" action="/post">
+      <input type="hidden" name="author" value="{{ author }}">
+      <input type="hidden" name="back" value="/{{ who }}">
+      <input type="text" name="content" placeholder="Drop a note or lyric…" maxlength="280" autocomplete="off">
+      <button type="submit" class="post-btn">POST</button>
+    </form>
+    <div class="notes-list">
+      {% for note in notes %}
+      <div class="note-item">
+        <div>{{ note.content }}</div>
+        <div class="note-time">{{ note.timestamp[:16].replace('T', ' ') }}</div>
+      </div>
+      {% else %}
+      <div class="empty-state">no notes yet — be first!</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="pedal-footer">
+    <div class="jack"><div class="jack-hole"></div> IN</div>
+    <div class="jack">OUT <div class="jack-hole"></div></div>
+  </div>
+  <div class="feet">
+    <div class="foot"></div><div class="foot"></div><div class="foot"></div><div class="foot"></div>
+  </div>
+</div>
+
+<!-- COMPLETE MODAL -->
+<div class="modal-overlay" id="complete-modal">
+  <div class="modal">
+    <div class="trophy">🏆</div>
+    <h2>Challenge Complete!</h2>
+    <p style="margin-top:6px;">That's what I'm talking about.</p>
+    <div class="modal-actions">
+      <button class="btn btn-accent" onclick="closeComplete()">Keep Going</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const challenges = {{ challenges | tojson }};
+let currentIdx = 0;
+
+function spinChallenge() {
+  const knob = document.getElementById('knob');
+  const el   = document.getElementById('challenge-text');
+  let next;
+  do { next = Math.floor(Math.random() * challenges.length); } while (next === currentIdx && challenges.length > 1);
+  currentIdx = next;
+  knob.classList.remove('spinning');
+  void knob.offsetWidth;
+  knob.classList.add('spinning');
+  knob.addEventListener('animationend', () => knob.classList.remove('spinning'), { once: true });
+  el.style.opacity = '0';
+  setTimeout(() => { el.textContent = challenges[next].title; el.style.transition='opacity .2s'; el.style.opacity='1'; }, 150);
+}
+
+function completeChallenge() {
+  launchConfetti();
+  document.getElementById('complete-modal').classList.add('open');
+}
+
+function closeComplete() {
+  document.getElementById('complete-modal').classList.remove('open');
+  spinChallenge();
+}
+
+function launchConfetti() {
+  const colors = ['{{ cfg.p }}','{{ cfg.p2 }}','#f0b429','#fff','#39ff14','#f87171'];
+  for (let i = 0; i < 80; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    const s = 6 + Math.random() * 8;
+    p.style.cssText = `left:${Math.random()*100}vw;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${1.2+Math.random()*1.8}s;animation-delay:${Math.random()*.5}s;width:${s}px;height:${s}px;border-radius:${Math.random()>.5?'50%':'2px'};`;
+    document.body.appendChild(p);
+    p.addEventListener('animationend', () => p.remove());
+  }
+}
+
+// EQ animation
+(function() {
+  const bars = document.querySelectorAll('.peq');
+  function tick() {
+    bars.forEach(b => { const h = 8 + Math.random()*26; b.setAttribute('height', h); b.setAttribute('y', 71-h); });
+    setTimeout(tick, 150 + Math.random()*150);
+  }
+  tick();
+})();
+
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+</script>
+</body>
+</html>

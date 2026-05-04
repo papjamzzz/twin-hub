@@ -100,24 +100,72 @@ def index():
     )
 
 
+TWIN_CONFIG = {
+    'lumi': {
+        'name': 'Lumi',
+        'beats': 'Looms Beats',
+        'p':  '#a78bfa',
+        'p2': '#c084fc',
+        'p3': '#7c3aed',
+        'pg': 'rgba(167,139,250,0.28)',
+        'pd': '#090614',
+    },
+    'sloany': {
+        'name': 'Sloany',
+        'beats': "Sloany's Beats",
+        'p':  '#60a5fa',
+        'p2': '#38bdf8',
+        'p3': '#1d4ed8',
+        'pg': 'rgba(96,165,250,0.28)',
+        'pd': '#010b18',
+    },
+}
+
+
+def _pedal_ctx(who):
+    cfg = TWIN_CONFIG[who]
+    author = TWIN1_NAME if who == 'lumi' else TWIN2_NAME
+    with get_db() as conn:
+        notes = conn.execute(
+            'SELECT * FROM notes WHERE author = ? ORDER BY timestamp DESC LIMIT 30',
+            (author,)
+        ).fetchall()
+    with open(CHALLENGES_PATH) as f:
+        challenges = json.load(f)
+    return dict(cfg=cfg, who=who, author=author, notes=notes,
+                challenges=challenges, fact=get_daily_fact())
+
+
+@app.route('/lumi')
+def lumi():
+    return render_template('pedal.html', **_pedal_ctx('lumi'))
+
+
+@app.route('/sloany')
+def sloany():
+    return render_template('pedal.html', **_pedal_ctx('sloany'))
+
+
 @app.route('/post', methods=['POST'])
 def post_note():
     author = request.form.get('author', '').strip()
     content = request.form.get('content', '').strip()
+    back   = request.form.get('back', '/')
     if author in [TWIN1_NAME, TWIN2_NAME] and content:
         with get_db() as conn:
             conn.execute('INSERT INTO notes (author, content) VALUES (?, ?)', (author, content))
             conn.commit()
-    return redirect(url_for('index'))
+    return redirect(back)
 
 
 @app.route('/clear', methods=['POST'])
 def clear_notes():
+    back = request.form.get('back', '/')
     if request.form.get('password', '') == DAD_PASSWORD:
         with get_db() as conn:
             conn.execute('DELETE FROM notes')
             conn.commit()
-    return redirect(url_for('index'))
+    return redirect(back)
 
 
 @app.route('/visualizer')
