@@ -8,441 +8,786 @@
   :root {
     --gold: #f0b429;
     --amber: #f59e0b;
-    --gold-dim: rgba(240,180,41,0.15);
-    --gold-glow: rgba(240,180,41,0.35);
-    --bg: #0d0d0d;
-    --surface: #161616;
-    --card: #1e1e1e;
-    --border: #2a2a2a;
-    --text: #e5e7eb;
-    --muted: #6b7280;
     --twin1: #a78bfa;
     --twin2: #34d399;
-    --twin1-dim: rgba(167,139,250,0.15);
-    --twin2-dim: rgba(52,211,153,0.15);
+    --led-green: #39ff14;
+    --led-red: #ff3b3b;
+    --pedal-bg: #1d1d1d;
+    --pedal-dark: #141414;
+    --metal: #2e2e2e;
+    --metal-hi: #3d3d3d;
+    --border: #393939;
+    --text: #e5e7eb;
+    --muted: #6b7280;
+    --screw: #4a4a4a;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  /* PEDALBOARD */
   body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Segoe UI', system-ui, sans-serif;
     min-height: 100vh;
+    background: #080808;
+    background-image:
+      radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 18px 18px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: var(--text);
+    padding: 24px 16px 48px;
   }
 
-  /* NAV */
+  /* NAV — looks like a rack unit above the pedal */
   nav {
+    max-width: 920px;
+    margin: 0 auto 16px;
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 10px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 28px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
   }
-
-  .nav-brand {
-    font-size: 22px;
-    font-weight: 900;
-    letter-spacing: 3px;
-    color: var(--gold);
-    text-shadow: 0 0 20px var(--gold-glow);
-    text-transform: uppercase;
+  .rack-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--muted);
   }
-
   .nav-links a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-left: 24px;
-    transition: color .2s;
+    color: var(--muted); text-decoration: none; font-size: 12px;
+    font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    margin-left: 20px; transition: color .2s;
   }
   .nav-links a:hover { color: var(--gold); }
 
-  /* FACT BANNER */
-  .fact-banner {
-    background: var(--gold-dim);
-    border-bottom: 1px solid var(--gold-glow);
-    padding: 10px 28px;
-    font-size: 13px;
-    color: var(--gold);
+  /* ─── THE PEDAL ─── */
+  .pedal {
+    max-width: 920px;
+    margin: 0 auto;
+    background: linear-gradient(165deg, #252525 0%, #1d1d1d 45%, #212121 100%);
+    border: 2px solid #3a3a3a;
+    border-radius: 28px;
+    padding: 20px 22px 24px;
+    position: relative;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.06),
+      inset 0 -2px 0 rgba(0,0,0,0.4),
+      0 0 0 1px #111,
+      0 40px 100px rgba(0,0,0,0.9),
+      0 8px 24px rgba(0,0,0,0.6);
+  }
+
+  /* Subtle brushed-metal stripe along the top */
+  .pedal::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 28px; right: 28px; height: 3px;
+    background: linear-gradient(90deg,
+      transparent, rgba(255,255,255,0.06) 20%,
+      rgba(255,255,255,0.12) 50%,
+      rgba(255,255,255,0.06) 80%, transparent);
+    border-radius: 0 0 3px 3px;
+  }
+
+  /* CORNER SCREWS */
+  .screw {
+    position: absolute;
+    width: 20px; height: 20px;
+    background: radial-gradient(circle at 38% 32%, #5a5a5a, #252525);
+    border-radius: 50%;
+    border: 1px solid #4a4a4a;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.1);
+    z-index: 5;
+  }
+  .screw::before, .screw::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    background: #3a3a3a;
+  }
+  .screw::before { width: 12px; height: 2px; transform: translate(-50%, -50%); }
+  .screw::after  { width: 2px; height: 12px; transform: translate(-50%, -50%); }
+  .screw-tl { top: 12px; left: 14px; }
+  .screw-tr { top: 12px; right: 14px; }
+  .screw-bl { bottom: 16px; left: 14px; }
+  .screw-br { bottom: 16px; right: 14px; }
+
+  /* NAMEPLATE */
+  .nameplate {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding: 6px 36px 14px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 14px;
+  }
+  .pedal-name {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(240,180,41,0.5), 0 0 60px rgba(240,180,41,0.2);
+    font-style: italic;
+  }
+  .led-cluster {
+    display: flex; gap: 8px; align-items: center;
+  }
+  .led {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .led-on-red   { background: var(--led-red);   color: var(--led-red);   animation: blink 1.8s ease-in-out infinite; }
+  .led-on-gold  { background: var(--gold);       color: var(--gold);      animation: blink 2.4s ease-in-out infinite; }
+  .led-on-twin1 { background: var(--twin1);      color: var(--twin1); }
+  .led-on-twin2 { background: var(--twin2);      color: var(--twin2); }
+  .led-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+
+  @keyframes blink {
+    0%,100% { opacity: 1; } 50% { opacity: 0.25; }
+  }
+
+  /* LED FACT DISPLAY */
+  .led-display {
+    background: #0a0a00;
+    border: 1px solid #2a2700;
+    border-radius: 6px;
+    padding: 8px 14px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.6), 0 0 12px rgba(57,255,20,0.05);
+    position: relative;
+  }
+  .led-display::before {
+    content: '🔥 POP CULTURE';
+    position: absolute;
+    left: 14px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(57,255,20,0.4);
+  }
+  .led-ticker-wrap {
+    overflow: hidden;
+    padding-left: 120px;
+  }
+  .led-ticker {
+    display: inline-block;
+    white-space: nowrap;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--led-green);
+    text-shadow: 0 0 8px var(--led-green);
+    animation: ticker 28s linear infinite;
+    letter-spacing: 0.5px;
+  }
+  @keyframes ticker {
+    0%   { transform: translateX(60vw); }
+    100% { transform: translateX(-100%); }
+  }
+
+  /* MID STRIP — boombox + challenge */
+  .mid-strip {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: stretch;
+  }
+
+  /* BOOMBOX SECTION */
+  .boombox-section {
+    background: var(--pedal-dark);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
   }
-  .fact-banner .fact-label {
+  .boombox-label {
+    font-size: 9px;
     font-weight: 700;
-    letter-spacing: 1px;
-    font-size: 10px;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    opacity: 0.7;
-    white-space: nowrap;
+    color: var(--muted);
+    text-align: center;
+  }
+  .boombox-svg-wrap {
+    display: flex;
+    justify-content: center;
+  }
+  .boombox-svg-wrap svg {
+    width: 220px;
+    height: auto;
+    cursor: pointer;
+    transition: filter .2s;
+    filter: drop-shadow(0 4px 12px rgba(79,195,247,0.15));
+  }
+  .boombox-svg-wrap svg:hover {
+    filter: drop-shadow(0 4px 20px rgba(79,195,247,0.35));
+  }
+  .boombox-player {
+    background: #080810;
+    border: 1px dashed rgba(79,195,247,0.25);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    font-size: 11px;
+    color: rgba(79,195,247,0.5);
+    font-family: monospace;
+    letter-spacing: 1px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* CHALLENGE SECTION */
   .challenge-section {
-    padding: 24px 28px 0;
-  }
-
-  .challenge-card {
-    background: var(--card);
+    background: var(--pedal-dark);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 20px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
-  .challenge-left {
+    padding: 14px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    flex: 1;
+    align-items: center;
+    gap: 10px;
+    min-width: 170px;
+  }
+  .challenge-label {
+    font-size: 9px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--muted);
   }
 
-  .challenge-eyebrow {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--gold);
-    opacity: 0.75;
+  /* KNOB */
+  .knob-wrap {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .knob {
+    width: 66px; height: 66px;
+    background: radial-gradient(circle at 38% 30%, #4a4a4a, #1a1a1a 70%);
+    border-radius: 50%;
+    border: 2px solid #3a3a3a;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.1);
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.35s cubic-bezier(.4,2,.6,1);
+  }
+  .knob:active { transform: scale(0.95); }
+  .knob.spinning { animation: knob-spin 0.35s cubic-bezier(.4,2,.6,1); }
+  @keyframes knob-spin { to { transform: rotate(120deg); } }
+
+  /* Indicator dot on knob */
+  .knob::after {
+    content: '';
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 6px var(--gold);
   }
 
-  #challenge-text {
-    font-size: 18px;
+  .challenge-text {
+    font-size: 12px;
     font-weight: 700;
     color: var(--text);
-    line-height: 1.35;
-  }
-
-  .challenge-btns {
+    text-align: center;
+    line-height: 1.4;
+    min-height: 52px;
     display: flex;
-    gap: 10px;
-    flex-shrink: 0;
+    align-items: center;
+    transition: opacity .2s;
   }
 
-  .btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+  /* STOMP BUTTON */
+  .stomp {
+    width: 62px; height: 62px;
+    background: radial-gradient(circle at 40% 30%, #6adb7a, #2a9a3a);
+    border-radius: 50%;
+    border: 3px solid #1e6e2a;
+    box-shadow:
+      0 6px 0 #145020,
+      0 8px 20px rgba(0,0,0,0.6),
+      inset 0 1px 0 rgba(255,255,255,0.3);
     cursor: pointer;
-    transition: all .15s;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    transition: all .1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+  .stomp:active {
+    transform: translateY(5px);
+    box-shadow: 0 1px 0 #145020, 0 3px 8px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .stomp-label {
+    font-size: 8px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--twin2); text-align: center;
   }
 
-  .btn-gold {
-    background: var(--gold);
-    color: #000;
-  }
-  .btn-gold:hover { background: var(--amber); transform: translateY(-1px); }
-
-  .btn-outline {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-  }
-  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
-
-  .btn-green {
-    background: var(--twin2);
-    color: #000;
-  }
-  .btn-green:hover { opacity: .85; transform: translateY(-1px); }
-
-  /* MAIN COLUMNS */
+  /* HUB — twin columns */
   .hub {
     display: grid;
     grid-template-columns: 1fr 1px 1fr;
     gap: 0;
-    padding: 24px 28px;
-    min-height: calc(100vh - 200px);
+    margin-bottom: 14px;
+    background: var(--pedal-dark);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
   }
 
-  .vs-divider {
-    background: var(--border);
-    margin: 0 4px;
-  }
+  .vs-divider { background: var(--border); }
 
   .twin-col {
-    padding: 0 20px;
+    padding: 14px 16px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
   }
 
   .col-header {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding-bottom: 12px;
+    gap: 10px;
+    padding-bottom: 10px;
     border-bottom: 2px solid var(--border);
   }
-
   .col-header.t1 { border-color: var(--twin1); }
   .col-header.t2 { border-color: var(--twin2); }
 
   .col-title {
-    font-size: 26px;
-    font-weight: 900;
-    letter-spacing: 1px;
+    font-size: 20px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
   }
-  .col-title.t1 { color: var(--twin1); }
-  .col-title.t2 { color: var(--twin2); }
+  .col-title.t1 { color: var(--twin1); text-shadow: 0 0 12px rgba(167,139,250,0.4); }
+  .col-title.t2 { color: var(--twin2); text-shadow: 0 0 12px rgba(52,211,153,0.4); }
 
-  .col-count {
-    font-size: 11px;
-    font-weight: 700;
-    background: var(--border);
-    color: var(--muted);
-    padding: 3px 8px;
-    border-radius: 20px;
-    letter-spacing: 1px;
+  .col-led {
+    width: 8px; height: 8px; border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
   }
+  .col-led.t1 { background: var(--twin1); color: var(--twin1); }
+  .col-led.t2 { background: var(--twin2); color: var(--twin2); }
 
-  /* POST FORM */
-  .post-form {
-    display: flex;
-    gap: 8px;
-  }
-
+  /* POST FORM — jack-plug input */
+  .post-form { display: flex; gap: 8px; }
   .post-form input[type="text"] {
     flex: 1;
-    background: var(--card);
+    background: #111;
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 6px;
     color: var(--text);
-    font-size: 14px;
-    padding: 10px 14px;
+    font-size: 13px;
+    padding: 8px 12px;
     outline: none;
     transition: border-color .2s;
+    font-family: inherit;
   }
   .post-form input[type="text"]:focus { border-color: var(--gold); }
 
-  .post-btn-t1 { background: var(--twin1); color: #000; }
-  .post-btn-t1:hover { opacity: .85; }
-  .post-btn-t2 { background: var(--twin2); color: #000; }
-  .post-btn-t2:hover { opacity: .85; }
-
-  /* NOTES LIST */
-  .notes-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    flex: 1;
+  .post-btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .1s;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.4);
   }
+  .post-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.4); }
+  .post-btn-t1 { background: var(--twin1); color: #000; box-shadow: 0 3px 0 #5b3fd8; }
+  .post-btn-t1:active { box-shadow: 0 1px 0 #5b3fd8; }
+  .post-btn-t2 { background: var(--twin2); color: #000; box-shadow: 0 3px 0 #1a7a52; }
+  .post-btn-t2:active { box-shadow: 0 1px 0 #1a7a52; }
+
+  /* NOTES — label tape look */
+  .notes-list { display: flex; flex-direction: column; gap: 7px; }
 
   .note-item {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 14px;
-    line-height: 1.5;
+    background: #111;
+    border-radius: 5px;
+    padding: 9px 12px;
+    font-size: 13px;
+    line-height: 1.45;
+    border-left: 3px solid var(--border);
     position: relative;
   }
-  .note-item.t1 { border-left: 3px solid var(--twin1); }
-  .note-item.t2 { border-left: 3px solid var(--twin2); }
+  .note-item.t1 { border-left-color: var(--twin1); }
+  .note-item.t2 { border-left-color: var(--twin2); }
 
   .note-time {
-    font-size: 11px;
+    font-size: 10px;
     color: var(--muted);
-    margin-top: 6px;
+    margin-top: 4px;
+    font-family: monospace;
+    letter-spacing: 0.5px;
   }
 
   .empty-state {
-    color: var(--muted);
-    font-size: 13px;
-    text-align: center;
-    padding: 32px 0;
-    font-style: italic;
+    color: var(--muted); font-size: 12px; text-align: center;
+    padding: 20px 0; font-style: italic; letter-spacing: 0.5px;
   }
 
-  /* CLEAR ALL SECTION */
-  .clear-section {
-    padding: 0 28px 32px;
+  /* FOOTER STRIP — jacks + clear */
+  .pedal-footer {
     display: flex;
-    justify-content: center;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 36px 4px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
   }
 
-  /* MODAL */
+  .jack {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 9px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .jack-hole {
+    width: 14px; height: 14px;
+    background: radial-gradient(circle, #050505, #1a1a1a);
+    border-radius: 50%;
+    border: 2px solid #3a3a3a;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.8);
+  }
+
+  .btn-clear {
+    padding: 8px 18px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-clear:hover { border-color: var(--led-red); color: var(--led-red); }
+
+  /* RUBBER FEET */
+  .feet {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 20px 0;
+  }
+  .foot {
+    width: 36px; height: 10px;
+    background: radial-gradient(ellipse at 50% 20%, #2a2a2a, #111);
+    border-radius: 5px;
+    border: 1px solid #333;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  }
+
+  /* ─── MODALS ─── */
   .modal-overlay {
     display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.75);
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.8);
     z-index: 200;
     align-items: center;
     justify-content: center;
+    backdrop-filter: blur(3px);
   }
   .modal-overlay.open { display: flex; }
 
   .modal {
-    background: var(--card);
+    background: #1d1d1d;
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 32px;
-    max-width: 440px;
+    padding: 28px;
+    max-width: 400px;
     width: 90%;
-    position: relative;
-    z-index: 201;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.9);
   }
-
-  .modal h2 { font-size: 20px; margin-bottom: 8px; color: var(--gold); }
-  .modal p { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+  .modal h2 { font-size: 18px; margin-bottom: 6px; color: var(--gold); }
+  .modal p  { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
 
   .modal input[type="password"] {
     width: 100%;
-    background: var(--surface);
+    background: #111;
     border: 1px solid var(--border);
     border-radius: 8px;
     color: var(--text);
     font-size: 16px;
-    padding: 12px 16px;
-    margin-bottom: 16px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
     outline: none;
   }
   .modal input[type="password"]:focus { border-color: var(--gold); }
-
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
 
-  /* CHALLENGE COMPLETE MODAL */
-  #complete-modal .modal { border-color: var(--gold); }
-  #complete-modal .complete-icon { font-size: 56px; text-align: center; margin-bottom: 8px; }
-  #complete-modal h2 { text-align: center; font-size: 28px; }
-  #complete-modal p { text-align: center; }
+  .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all .15s; }
+  .btn-gold { background: var(--gold); color: #000; }
+  .btn-gold:hover { background: var(--amber); }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* COMPLETE MODAL */
+  #complete-modal .modal { border-color: var(--twin2); text-align: center; }
+  #complete-modal .trophy { font-size: 52px; margin-bottom: 8px; }
+  #complete-modal h2 { text-align: center; color: var(--twin2); font-size: 24px; }
+  #complete-modal .modal-actions { justify-content: center; margin-top: 16px; }
+  .btn-green { background: var(--twin2); color: #000; }
+  .btn-green:hover { opacity: .85; }
 
   /* CONFETTI */
   .confetti-piece {
-    position: fixed;
-    width: 10px;
-    height: 10px;
-    top: -20px;
+    position: fixed; top: -20px;
     border-radius: 2px;
+    pointer-events: none; z-index: 300;
     animation: confetti-fall linear forwards;
-    pointer-events: none;
-    z-index: 300;
   }
   @keyframes confetti-fall {
     to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 680px) {
+    .mid-strip { grid-template-columns: 1fr; }
     .hub { grid-template-columns: 1fr; }
     .vs-divider { display: none; }
-    .twin-col { padding: 0; }
-    nav { padding: 12px 16px; }
-    .nav-brand { font-size: 18px; }
-    .challenge-section, .hub, .clear-section { padding-left: 16px; padding-right: 16px; }
+    .pedal { padding: 16px 14px 18px; }
+    .nameplate { padding: 6px 24px 12px; }
+    .pedal-footer { padding: 10px 20px 4px; }
   }
 </style>
 </head>
 <body>
 
+<!-- RACK UNIT NAV -->
 <nav>
-  <div class="nav-brand">⚡ Twin Hub</div>
+  <div class="rack-label">◉ Twin Hub — v1.0</div>
   <div class="nav-links">
     <a href="/visualizer">🎤 Visualizer</a>
-    <a href="/admin">⚙️ Admin</a>
+    <a href="/admin">⚙ Admin</a>
   </div>
 </nav>
 
-<div class="fact-banner">
-  <span class="fact-label">🔥 Pop Culture Fact</span>
-  <span>{{ fact }}</span>
-</div>
+<!-- THE PEDAL -->
+<div class="pedal">
 
-<!-- CHALLENGE -->
-<div class="challenge-section">
-  <div class="challenge-card">
-    <div class="challenge-left">
-      <div class="challenge-eyebrow">Today's Challenge</div>
-      <div id="challenge-text">{{ challenges[0].title }}</div>
-    </div>
-    <div class="challenge-btns">
-      <button class="btn btn-outline" onclick="spinChallenge()">🎲 New</button>
-      <button class="btn btn-green" onclick="completeChallenge()">✓ Done!</button>
+  <!-- Corner screws -->
+  <div class="screw screw-tl"></div>
+  <div class="screw screw-tr"></div>
+  <div class="screw screw-bl"></div>
+  <div class="screw screw-br"></div>
+
+  <!-- NAMEPLATE -->
+  <div class="nameplate">
+    <div class="pedal-name">⚡ Twin Hub</div>
+    <div class="led-cluster">
+      <div class="led led-on-twin1"></div>
+      <span class="led-label">{{ twin1 }}</span>
+      <div class="led led-on-twin2"></div>
+      <span class="led-label">{{ twin2 }}</span>
+      <div class="led led-on-red" style="margin-left:8px;"></div>
+      <span class="led-label">PWR</span>
     </div>
   </div>
-</div>
 
-<!-- HUB COLUMNS -->
-<div class="hub">
-  <!-- TWIN 1 -->
-  <div class="twin-col">
-    <div class="col-header t1">
-      <span class="col-title t1">{{ twin1 }}</span>
-      <span class="col-count">{{ notes_1|length }} notes</span>
+  <!-- LED TICKER -->
+  <div class="led-display">
+    <div class="led-ticker-wrap">
+      <span class="led-ticker">{{ fact }} &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp; {{ fact }}</span>
     </div>
+  </div>
 
-    <form class="post-form" method="POST" action="/post">
-      <input type="hidden" name="author" value="{{ twin1 }}">
-      <input type="text" name="content" placeholder="Drop a note or lyric snippet…" maxlength="280" autocomplete="off">
-      <button type="submit" class="btn post-btn-t1">Post</button>
-    </form>
+  <!-- MID STRIP: boombox + challenge knob -->
+  <div class="mid-strip">
 
-    <div class="notes-list">
-      {% for note in notes_1 %}
-      <div class="note-item t1">
-        <div>{{ note.content }}</div>
-        <div class="note-time">{{ note.timestamp[:16].replace('T', ' ') }}</div>
+    <!-- BOOMBOX -->
+    <div class="boombox-section">
+      <div class="boombox-label">◈ Boombox — SF Audio Unit</div>
+      <div class="boombox-svg-wrap">
+        <!-- StreamFader boombox SVG — drop music in below -->
+        <svg viewBox="0 0 200 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bb-stripe" x1="0" y1="0" x2="200" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#4fc3f7"/>
+              <stop offset="42%" stop-color="#c678dd"/>
+              <stop offset="100%" stop-color="#ffb74d"/>
+            </linearGradient>
+            <linearGradient id="bb-sf" x1="72" y1="0" x2="128" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#4fc3f7"/>
+              <stop offset="100%" stop-color="#c678dd"/>
+            </linearGradient>
+          </defs>
+          <!-- Body -->
+          <rect x="0.75" y="10" width="198.5" height="76" rx="9" fill="#07080f" stroke="#22253a" stroke-width="1.5"/>
+          <!-- Top stripe -->
+          <rect x="0.75" y="10" width="198.5" height="4" rx="2" fill="url(#bb-stripe)"/>
+          <!-- Antenna -->
+          <line x1="168" y1="10" x2="184" y2="1" stroke="#c678dd" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="184" cy="1" r="2.5" fill="#c678dd" opacity="0.85"/>
+          <!-- LEFT SPEAKER -->
+          <rect x="4" y="15" width="58" height="65" rx="6" fill="#030710" stroke="#4fc3f7" stroke-width="1.4"/>
+          <circle cx="33" cy="47" r="23" fill="#040b18" stroke="#4fc3f7" stroke-width="1" opacity="0.9"/>
+          <circle cx="33" cy="47" r="15" fill="#060e20" stroke="#4fc3f7" stroke-width="0.7" opacity="0.7"/>
+          <circle cx="33" cy="47" r="8"  fill="#091428" stroke="#4fc3f7" stroke-width="0.5" opacity="0.9"/>
+          <circle id="bb-led-l" cx="33" cy="47" r="3.5" fill="#4fc3f7" opacity="0.2"/>
+          <circle cx="11" cy="21" r="2" fill="#4fc3f7" opacity="0.2"/>
+          <circle cx="55" cy="21" r="2" fill="#4fc3f7" opacity="0.2"/>
+          <circle cx="11" cy="73" r="2" fill="#4fc3f7" opacity="0.2"/>
+          <circle cx="55" cy="73" r="2" fill="#4fc3f7" opacity="0.2"/>
+          <!-- RIGHT SPEAKER -->
+          <rect x="138" y="15" width="58" height="65" rx="6" fill="#060410" stroke="#c678dd" stroke-width="1.4"/>
+          <circle cx="167" cy="47" r="23" fill="#0a0618" stroke="#c678dd" stroke-width="1" opacity="0.9"/>
+          <circle cx="167" cy="47" r="15" fill="#0d0820" stroke="#c678dd" stroke-width="0.7" opacity="0.7"/>
+          <circle cx="167" cy="47" r="8"  fill="#110b28" stroke="#c678dd" stroke-width="0.5" opacity="0.9"/>
+          <circle cx="167" cy="47" r="3.5" fill="#c678dd" opacity="0.2"/>
+          <circle cx="145" cy="21" r="2" fill="#c678dd" opacity="0.2"/>
+          <circle cx="189" cy="21" r="2" fill="#c678dd" opacity="0.2"/>
+          <circle cx="145" cy="73" r="2" fill="#c678dd" opacity="0.2"/>
+          <circle cx="189" cy="73" r="2" fill="#c678dd" opacity="0.2"/>
+          <!-- CENTER DISPLAY -->
+          <rect x="65" y="15" width="70" height="65" rx="4" fill="#020308" stroke="#2a2d42" stroke-width="1"/>
+          <rect x="67" y="17" width="66" height="61" rx="3" fill="#030410" stroke="rgba(198,120,221,0.18)" stroke-width="0.5"/>
+          <text x="100" y="33" font-family="'Inter',system-ui,sans-serif" font-size="14" font-weight="900" text-anchor="middle" fill="url(#bb-sf)" letter-spacing="3">SF</text>
+          <!-- EQ bars -->
+          <rect class="bb-eq" x="71"  y="56" width="6" height="15" rx="1.5" fill="#4fc3f7" opacity="0.9"/>
+          <rect class="bb-eq" x="80"  y="50" width="6" height="21" rx="1.5" fill="#72ccf5" opacity="0.9"/>
+          <rect class="bb-eq" x="89"  y="44" width="6" height="27" rx="1.5" fill="#c678dd" opacity="0.9"/>
+          <rect class="bb-eq" x="98"  y="48" width="6" height="23" rx="1.5" fill="#d48de6" opacity="0.9"/>
+          <rect class="bb-eq" x="107" y="53" width="6" height="18" rx="1.5" fill="#ffb74d" opacity="0.9"/>
+          <rect class="bb-eq" x="116" y="59" width="6" height="12" rx="1.5" fill="#ffd080" opacity="0.9"/>
+          <line x1="69" y1="72" x2="124" y2="72" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
+          <!-- Power button -->
+          <circle cx="127" cy="23" r="8" fill="#0d0a06" stroke="#ff6b35" stroke-width="1.5" opacity="0.9"/>
+          <circle cx="127" cy="23" r="5" fill="#ff6b35" opacity="0.35"/>
+          <path d="M127 18.5 L127 21.5" stroke="#ff6b35" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/>
+          <path d="M124.2 19.8 A4.2 4.2 0 1 0 129.8 19.8" stroke="#ff6b35" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.9"/>
+          <!-- Cassette slot -->
+          <rect x="70" y="74" width="50" height="5" rx="1.5" fill="#08090f" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
+          <rect x="84" y="75.5" width="22" height="2" rx="1" fill="rgba(255,255,255,0.05)"/>
+          <text x="100" y="86" font-family="monospace" font-size="5" text-anchor="middle" fill="rgba(198,120,221,0.4)" letter-spacing="1.5">STREAM FADER</text>
+        </svg>
       </div>
-      {% else %}
-      <div class="empty-state">No notes yet — be the first!</div>
-      {% endfor %}
-    </div>
-  </div>
 
-  <div class="vs-divider"></div>
-
-  <!-- TWIN 2 -->
-  <div class="twin-col">
-    <div class="col-header t2">
-      <span class="col-title t2">{{ twin2 }}</span>
-      <span class="col-count">{{ notes_2|length }} notes</span>
-    </div>
-
-    <form class="post-form" method="POST" action="/post">
-      <input type="hidden" name="author" value="{{ twin2 }}">
-      <input type="text" name="content" placeholder="Drop a note or lyric snippet…" maxlength="280" autocomplete="off">
-      <button type="submit" class="btn post-btn-t2">Post</button>
-    </form>
-
-    <div class="notes-list">
-      {% for note in notes_2 %}
-      <div class="note-item t2">
-        <div>{{ note.content }}</div>
-        <div class="note-time">{{ note.timestamp[:16].replace('T', ' ') }}</div>
+      <!-- AUDIO PLACEHOLDER — user drops music here -->
+      <div class="boombox-player" id="boombox-player">
+        ▷ &nbsp; INSERT MUSIC HERE
       </div>
-      {% else %}
-      <div class="empty-state">No notes yet — be the first!</div>
-      {% endfor %}
+    </div>
+
+    <!-- CHALLENGE KNOB -->
+    <div class="challenge-section">
+      <div class="challenge-label">Challenge</div>
+
+      <div class="knob-wrap">
+        <div class="knob" id="knob" onclick="spinChallenge()" title="Spin for a new challenge"></div>
+        <div style="font-size:9px;color:var(--muted);letter-spacing:1px;">SPIN</div>
+      </div>
+
+      <div class="challenge-text" id="challenge-text">{{ challenges[0].title }}</div>
+
+      <div class="stomp" onclick="completeChallenge()">DONE</div>
+      <div class="stomp-label">STOMP TO COMPLETE</div>
+    </div>
+
+  </div>
+
+  <!-- TWIN COLUMNS -->
+  <div class="hub">
+    <!-- TWIN 1 -->
+    <div class="twin-col">
+      <div class="col-header t1">
+        <div class="col-led t1"></div>
+        <span class="col-title t1">{{ twin1 }}</span>
+        <span style="font-size:10px;color:var(--muted);margin-left:auto;">{{ notes_1|length }}</span>
+      </div>
+      <form class="post-form" method="POST" action="/post">
+        <input type="hidden" name="author" value="{{ twin1 }}">
+        <input type="text" name="content" placeholder="Drop a note or lyric…" maxlength="280" autocomplete="off">
+        <button type="submit" class="post-btn post-btn-t1">POST</button>
+      </form>
+      <div class="notes-list">
+        {% for note in notes_1 %}
+        <div class="note-item t1">
+          <div>{{ note.content }}</div>
+          <div class="note-time">{{ note.timestamp[:16].replace('T', ' ') }}</div>
+        </div>
+        {% else %}
+        <div class="empty-state">no notes yet</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="vs-divider"></div>
+
+    <!-- TWIN 2 -->
+    <div class="twin-col">
+      <div class="col-header t2">
+        <div class="col-led t2"></div>
+        <span class="col-title t2">{{ twin2 }}</span>
+        <span style="font-size:10px;color:var(--muted);margin-left:auto;">{{ notes_2|length }}</span>
+      </div>
+      <form class="post-form" method="POST" action="/post">
+        <input type="hidden" name="author" value="{{ twin2 }}">
+        <input type="text" name="content" placeholder="Drop a note or lyric…" maxlength="280" autocomplete="off">
+        <button type="submit" class="post-btn post-btn-t2">POST</button>
+      </form>
+      <div class="notes-list">
+        {% for note in notes_2 %}
+        <div class="note-item t2">
+          <div>{{ note.content }}</div>
+          <div class="note-time">{{ note.timestamp[:16].replace('T', ' ') }}</div>
+        </div>
+        {% else %}
+        <div class="empty-state">no notes yet</div>
+        {% endfor %}
+      </div>
     </div>
   </div>
-</div>
 
-<!-- CLEAR ALL -->
-<div class="clear-section">
-  <button class="btn btn-outline" onclick="document.getElementById('clear-modal').classList.add('open')">
-    🗑 Clear All Notes
-  </button>
+  <!-- FOOTER JACKS -->
+  <div class="pedal-footer">
+    <div class="jack">
+      <div class="jack-hole"></div>
+      INPUT
+    </div>
+    <button class="btn-clear" onclick="document.getElementById('clear-modal').classList.add('open')">
+      🗑 CLEAR ALL
+    </button>
+    <div class="jack">
+      OUTPUT
+      <div class="jack-hole"></div>
+    </div>
+  </div>
+
+  <!-- RUBBER FEET -->
+  <div class="feet">
+    <div class="foot"></div>
+    <div class="foot"></div>
+    <div class="foot"></div>
+    <div class="foot"></div>
+  </div>
 </div>
 
 <!-- CLEAR MODAL -->
 <div class="modal-overlay" id="clear-modal">
   <div class="modal">
     <h2>Clear All Notes</h2>
-    <p>Enter the Dad password to wipe the board.</p>
+    <p>Dad password to wipe the board.</p>
     <form method="POST" action="/clear">
       <input type="password" name="password" placeholder="Password" autofocus>
       <div class="modal-actions">
@@ -453,14 +798,14 @@
   </div>
 </div>
 
-<!-- CHALLENGE COMPLETE MODAL -->
+<!-- COMPLETE MODAL -->
 <div class="modal-overlay" id="complete-modal">
   <div class="modal">
-    <div class="complete-icon">🏆</div>
+    <div class="trophy">🏆</div>
     <h2>Challenge Complete!</h2>
-    <p style="margin-top:8px;">That's what I'm talking about.</p>
-    <div class="modal-actions" style="justify-content:center; margin-top:20px;">
-      <button class="btn btn-gold" onclick="closeComplete()">Keep Going</button>
+    <p style="margin-top:6px;">That's what I'm talking about.</p>
+    <div class="modal-actions">
+      <button class="btn btn-green" onclick="closeComplete()">Keep Going</button>
     </div>
   </div>
 </div>
@@ -470,17 +815,22 @@ const challenges = {{ challenges | tojson }};
 let currentIdx = 0;
 
 function spinChallenge() {
+  const knob = document.getElementById('knob');
+  const el = document.getElementById('challenge-text');
   let next;
   do { next = Math.floor(Math.random() * challenges.length); } while (next === currentIdx && challenges.length > 1);
   currentIdx = next;
-  const el = document.getElementById('challenge-text');
+
+  knob.classList.remove('spinning');
+  void knob.offsetWidth; // reflow to restart animation
+  knob.classList.add('spinning');
+  knob.addEventListener('animationend', () => knob.classList.remove('spinning'), { once: true });
+
   el.style.opacity = '0';
-  el.style.transform = 'translateY(-6px)';
   setTimeout(() => {
     el.textContent = challenges[currentIdx].title;
-    el.style.transition = 'all .25s';
+    el.style.transition = 'opacity .2s';
     el.style.opacity = '1';
-    el.style.transform = 'translateY(0)';
   }, 150);
 }
 
@@ -495,30 +845,41 @@ function closeComplete() {
 }
 
 function launchConfetti() {
-  const colors = ['#f0b429', '#f59e0b', '#a78bfa', '#34d399', '#f87171', '#60a5fa', '#fff'];
-  for (let i = 0; i < 80; i++) {
-    const piece = document.createElement('div');
-    piece.className = 'confetti-piece';
-    piece.style.cssText = `
-      left: ${Math.random() * 100}vw;
-      background: ${colors[Math.floor(Math.random() * colors.length)]};
-      animation-duration: ${1.2 + Math.random() * 1.8}s;
-      animation-delay: ${Math.random() * 0.6}s;
-      transform: rotate(${Math.random() * 360}deg);
-      width: ${6 + Math.random() * 8}px;
-      height: ${6 + Math.random() * 8}px;
-      border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+  const colors = ['#f0b429','#f59e0b','#a78bfa','#34d399','#f87171','#60a5fa','#fff','#39ff14'];
+  for (let i = 0; i < 90; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    const size = 6 + Math.random() * 8;
+    p.style.cssText = `
+      left:${Math.random()*100}vw;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${1.2+Math.random()*1.8}s;
+      animation-delay:${Math.random()*0.5}s;
+      width:${size}px; height:${size}px;
+      border-radius:${Math.random()>.5?'50%':'2px'};
     `;
-    document.body.appendChild(piece);
-    piece.addEventListener('animationend', () => piece.remove());
+    document.body.appendChild(p);
+    p.addEventListener('animationend', () => p.remove());
   }
 }
 
-// Close modals on overlay click
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) overlay.classList.remove('open');
-  });
+// Animate boombox EQ bars idly
+(function animateEQ() {
+  const bars = document.querySelectorAll('.bb-eq');
+  const heights = [15, 21, 27, 23, 18, 12];
+  function tick() {
+    bars.forEach((b, i) => {
+      const h = 8 + Math.random() * 24;
+      b.setAttribute('height', h);
+      b.setAttribute('y', 71 - h);
+    });
+    setTimeout(tick, 180 + Math.random() * 120);
+  }
+  tick();
+})();
+
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
 });
 </script>
 </body>
