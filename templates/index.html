@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Twin Hub</title>
+<style>
+  :root {
+    --gold: #f0b429;
+    --amber: #f59e0b;
+    --gold-dim: rgba(240,180,41,0.15);
+    --gold-glow: rgba(240,180,41,0.35);
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --card: #1e1e1e;
+    --border: #2a2a2a;
+    --text: #e5e7eb;
+    --muted: #6b7280;
+    --twin1: #a78bfa;
+    --twin2: #34d399;
+    --twin1-dim: rgba(167,139,250,0.15);
+    --twin2-dim: rgba(52,211,153,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-brand {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-shadow: 0 0 20px var(--gold-glow);
+    text-transform: uppercase;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-left: 24px;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* FACT BANNER */
+  .fact-banner {
+    background: var(--gold-dim);
+    border-bottom: 1px solid var(--gold-glow);
+    padding: 10px 28px;
+    font-size: 13px;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .fact-banner .fact-label {
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 10px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    white-space: nowrap;
+  }
+
+  /* CHALLENGE SECTION */
+  .challenge-section {
+    padding: 24px 28px 0;
+  }
+
+  .challenge-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .challenge-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .challenge-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.75;
+  }
+
+  #challenge-text {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.35;
+  }
+
+  .challenge-btns {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+
+  .btn-gold {
+    background: var(--gold);
+    color: #000;
+  }
+  .btn-gold:hover { background: var(--amber); transform: translateY(-1px); }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  .btn-green {
+    background: var(--twin2);
+    color: #000;
+  }
+  .btn-green:hover { opacity: .85; transform: translateY(-1px); }
+
+  /* MAIN COLUMNS */
+  .hub {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    gap: 0;
+    padding: 24px 28px;
+    min-height: calc(100vh - 200px);
+  }
+
+  .vs-divider {
+    background: var(--border);
+    margin: 0 4px;
+  }
+
+  .twin-col {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .col-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .col-header.t1 { border-color: var(--twin1); }
+  .col-header.t2 { border-color: var(--twin2); }
+
+  .col-title {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+  .col-title.t1 { color: var(--twin1); }
+  .col-title.t2 { color: var(--twin2); }
+
+  .col-count {
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--border);
+    color: var(--muted);
+    padding: 3px 8px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+
+  /* POST FORM */
+  .post-form {
+    display: flex;
+    gap: 8px;
+  }
+
+  .post-form input[type="text"] {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 14px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .post-form input[type="text"]:focus { border-color: var(--gold); }
+
+  .post-btn-t1 { background: var(--twin1); color: #000; }
+  .post-btn-t1:hover { opacity: .85; }
+  .post-btn-t2 { background: var(--twin2); color: #000; }
+  .post-btn-t2:hover { opacity: .85; }
+
+  /* NOTES LIST */
+  .notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .note-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    position: relative;
+  }
+  .note-item.t1 { border-left: 3px solid var(--twin1); }
+  .note-item.t2 { border-left: 3px solid var(--twin2); }
+
+  .note-time {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  .empty-state {
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+    padding: 32px 0;
+    font-style: italic;
+  }
+
+  /* CLEAR ALL SECTION */
+  .clear-section {
+    padding: 0 28px 32px;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.75);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 440px;
+    width: 90%;
+    position: relative;
+    z-index: 201;
+  }
+
+  .modal h2 { font-size: 20px; margin-bottom: 8px; color: var(--gold); }
+  .modal p { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+
+  .modal input[type="password"] {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 16px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    outline: none;
+  }
+  .modal input[type="password"]:focus { border-color: var(--gold); }
+
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+  /* CHALLENGE COMPLETE MODAL */
+  #complete-modal .modal { border-color: var(--gold); }
+  #complete-modal .complete-icon { font-size: 56px; text-align: center; margin-bottom: 8px; }
+  #complete-modal h2 { text-align: center; font-size: 28px; }
+  #complete-modal p { text-align: center; }
+
+  /* CONFETTI */
+  .confetti-piece {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    top: -20px;
+    border-radius: 2px;
+    animation: confetti-fall linear forwards;
+    pointer-events: none;
+    z-index: 300;
+  }
+  @keyframes confetti-fall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  @media (max-width: 640px) {
+    .hub { grid-template-columns: 1fr; }
+    .vs-divider { display: none; }
+    .twin-col { padding: 0; }
+    nav { padding: 12px 16px; }
+    .nav-brand { font-size: 18px; }
+    .challenge-section, .hub, .clear-section { padding-left: 16px; padding-right: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">⚡ Twin Hub</div>
+  <div class="nav-links">
+    <a href="/visualizer">🎤 Visualizer</a>
+    <a href="/admin">⚙️ Admin</a>
+  </div>
+</nav>
+
+<div class="fact-banner">
+  <span class="fact-label">🎭 Hamilton Fact</span>
+  <span>{{ fact }}</span>
+</div>
+
+<!-- CHALLENGE -->
+<div class="challenge-section">
+  <div class="challenge-card">
+    <div class="challenge-left">
+      <div class="challenge-eyebrow">Today's Challenge</div>
+      <div id="challenge-text">{{ challenges[0].title }}</div>
+    </div>
+    <div class="challenge-btns">
+      <button class="btn btn-outline" onclick="spinChallenge()">🎲 New</button>
+      <button class="btn btn-green" onclick="completeChallenge()">✓ Done!</button>
+    </div>
+  </div>
+</div>
+
+<!-- HUB COLUMNS -->
+<div class="hub">
+  <!-- TWIN 1 -->
+  <div class="twin-col">
+    <div class="col-header t1">
+      <span class="col-title t1">{{ twin1 }}</span>
+      <span class="col-count">{{ notes_1|length }} notes</span>
+    </div>
+
+    <form class="post-form" method="POST" action="/post">
+      <input type="hidden" name="author" value="{{ twin1 }}">
+      <input type="text" name="content" placeholder="Drop a note or lyric snippet…" maxlength="280" autocomplete="off">
+      <button type="submit" class="btn post-btn-t1">Post</button>
+    </form>
+
+    <div class="notes-list">
+      {% for note in notes_1 %}
+      <div class="note-item t1">
+        <div>{{ note.content }}</div>
+        <div class="note-time">{{ note.timestamp[:16].replace('T', ' ') }}</div>
+      </div>
+      {% else %}
+      <div class="empty-state">No notes yet — be the first!</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="vs-divider"></div>
+
+  <!-- TWIN 2 -->
+  <div class="twin-col">
+    <div class="col-header t2">
+      <span class="col-title t2">{{ twin2 }}</span>
+      <span class="col-count">{{ notes_2|length }} notes</span>
+    </div>
+
+    <form class="post-form" method="POST" action="/post">
+      <input type="hidden" name="author" value="{{ twin2 }}">
+      <input type="text" name="content" placeholder="Drop a note or lyric snippet…" maxlength="280" autocomplete="off">
+      <button type="submit" class="btn post-btn-t2">Post</button>
+    </form>
+
+    <div class="notes-list">
+      {% for note in notes_2 %}
+      <div class="note-item t2">
+        <div>{{ note.content }}</div>
+        <div class="note-time">{{ note.timestamp[:16].replace('T', ' ') }}</div>
+      </div>
+      {% else %}
+      <div class="empty-state">No notes yet — be the first!</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- CLEAR ALL -->
+<div class="clear-section">
+  <button class="btn btn-outline" onclick="document.getElementById('clear-modal').classList.add('open')">
+    🗑 Clear All Notes
+  </button>
+</div>
+
+<!-- CLEAR MODAL -->
+<div class="modal-overlay" id="clear-modal">
+  <div class="modal">
+    <h2>Clear All Notes</h2>
+    <p>Enter the Dad password to wipe the board.</p>
+    <form method="POST" action="/clear">
+      <input type="password" name="password" placeholder="Password" autofocus>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="document.getElementById('clear-modal').classList.remove('open')">Cancel</button>
+        <button type="submit" class="btn btn-gold">Clear</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- CHALLENGE COMPLETE MODAL -->
+<div class="modal-overlay" id="complete-modal">
+  <div class="modal">
+    <div class="complete-icon">🏆</div>
+    <h2>Challenge Complete!</h2>
+    <p style="margin-top:8px;">That's what I'm talking about.</p>
+    <div class="modal-actions" style="justify-content:center; margin-top:20px;">
+      <button class="btn btn-gold" onclick="closeComplete()">Keep Going</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const challenges = {{ challenges | tojson }};
+let currentIdx = 0;
+
+function spinChallenge() {
+  let next;
+  do { next = Math.floor(Math.random() * challenges.length); } while (next === currentIdx && challenges.length > 1);
+  currentIdx = next;
+  const el = document.getElementById('challenge-text');
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(-6px)';
+  setTimeout(() => {
+    el.textContent = challenges[currentIdx].title;
+    el.style.transition = 'all .25s';
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0)';
+  }, 150);
+}
+
+function completeChallenge() {
+  launchConfetti();
+  document.getElementById('complete-modal').classList.add('open');
+}
+
+function closeComplete() {
+  document.getElementById('complete-modal').classList.remove('open');
+  spinChallenge();
+}
+
+function launchConfetti() {
+  const colors = ['#f0b429', '#f59e0b', '#a78bfa', '#34d399', '#f87171', '#60a5fa', '#fff'];
+  for (let i = 0; i < 80; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.cssText = `
+      left: ${Math.random() * 100}vw;
+      background: ${colors[Math.floor(Math.random() * colors.length)]};
+      animation-duration: ${1.2 + Math.random() * 1.8}s;
+      animation-delay: ${Math.random() * 0.6}s;
+      transform: rotate(${Math.random() * 360}deg);
+      width: ${6 + Math.random() * 8}px;
+      height: ${6 + Math.random() * 8}px;
+      border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+    `;
+    document.body.appendChild(piece);
+    piece.addEventListener('animationend', () => piece.remove());
+  }
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>

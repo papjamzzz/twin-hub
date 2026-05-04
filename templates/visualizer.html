@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibe Visualizer — Twin Hub</title>
+<style>
+  :root {
+    --gold: #f0b429;
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --border: #2a2a2a;
+    --muted: #6b7280;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: #e5e7eb;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-brand {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(240,180,41,0.35);
+    text-transform: uppercase;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-left: 24px;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  .viz-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 24px;
+    position: relative;
+  }
+
+  canvas {
+    width: 100%;
+    max-width: 900px;
+    height: 280px;
+    border-radius: 16px;
+    background: #111;
+    border: 1px solid var(--border);
+    display: block;
+  }
+
+  #start-btn {
+    padding: 16px 40px;
+    background: var(--gold);
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all .15s;
+    text-transform: uppercase;
+  }
+  #start-btn:hover { background: #f59e0b; transform: translateY(-2px); }
+  #start-btn:disabled { opacity: .4; cursor: default; transform: none; }
+
+  #status {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+
+  .level-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.6;
+    margin-top: -12px;
+  }
+
+  #stop-btn {
+    padding: 10px 28px;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .15s;
+    display: none;
+  }
+  #stop-btn:hover { border-color: var(--gold); color: var(--gold); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">⚡ Twin Hub</div>
+  <div class="nav-links">
+    <a href="/">← Hub</a>
+    <a href="/admin">⚙️ Admin</a>
+  </div>
+</nav>
+
+<div class="viz-container">
+  <canvas id="viz-canvas" width="900" height="280"></canvas>
+  <div class="level-label">🎤 Sing into your mic</div>
+
+  <div id="status">Click the button and start singing — the bars react to your voice.</div>
+
+  <div style="display:flex;gap:12px;align-items:center;">
+    <button id="start-btn" onclick="startViz()">🎤 Start Visualizer</button>
+    <button id="stop-btn" onclick="stopViz()">■ Stop</button>
+  </div>
+</div>
+
+<script>
+let audioCtx, analyser, source, animId;
+
+async function startViz() {
+  const btn = document.getElementById('start-btn');
+  const stopBtn = document.getElementById('stop-btn');
+  const status = document.getElementById('status');
+
+  btn.disabled = true;
+  status.textContent = 'Asking for microphone permission…';
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+    source = audioCtx.createMediaStreamSource(stream);
+    source.connect(analyser);
+
+    status.textContent = 'Mic active — sing something!';
+    stopBtn.style.display = 'block';
+    btn.style.display = 'none';
+    draw();
+  } catch (e) {
+    btn.disabled = false;
+    status.textContent = 'Microphone permission denied. Try again.';
+  }
+}
+
+function stopViz() {
+  if (animId) cancelAnimationFrame(animId);
+  if (audioCtx) audioCtx.close();
+  document.getElementById('start-btn').style.display = 'block';
+  document.getElementById('start-btn').disabled = false;
+  document.getElementById('stop-btn').style.display = 'none';
+  document.getElementById('status').textContent = 'Click the button and start singing — the bars react to your voice.';
+
+  const canvas = document.getElementById('viz-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function draw() {
+  const canvas = document.getElementById('viz-canvas');
+  const ctx = canvas.getContext('2d');
+  const bufferLen = analyser.frequencyBinCount;
+  const dataArr = new Uint8Array(bufferLen);
+
+  function render() {
+    animId = requestAnimationFrame(render);
+    analyser.getByteFrequencyData(dataArr);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const barW = (canvas.width / bufferLen) * 2.2;
+    let x = 0;
+
+    for (let i = 0; i < bufferLen; i++) {
+      const v = dataArr[i] / 255;
+      const barH = v * canvas.height;
+
+      // Gold gradient based on intensity
+      const r = Math.floor(240 + (15 * v));
+      const g = Math.floor(100 + (80 * v));
+      const b = 20;
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+
+      // Glow effect for loud frequencies
+      if (v > 0.6) {
+        ctx.shadowColor = '#f0b429';
+        ctx.shadowBlur = 12 * v;
+      } else {
+        ctx.shadowBlur = 0;
+      }
+
+      ctx.fillRect(x, canvas.height - barH, barW - 1, barH);
+      x += barW;
+    }
+  }
+
+  render();
+}
+</script>
+</body>
+</html>

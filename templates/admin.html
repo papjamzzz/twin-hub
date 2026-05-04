@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Twin Hub</title>
+<style>
+  :root {
+    --gold: #f0b429;
+    --gold-dim: rgba(240,180,41,0.12);
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --card: #1e1e1e;
+    --border: #2a2a2a;
+    --muted: #6b7280;
+    --text: #e5e7eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; }
+
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 28px; background: var(--surface); border-bottom: 1px solid var(--border);
+  }
+  .nav-brand { font-size: 22px; font-weight: 900; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-left: 24px; transition: color .2s; }
+  .nav-links a:hover { color: var(--gold); }
+
+  .admin-body { max-width: 640px; margin: 40px auto; padding: 0 24px; display: flex; flex-direction: column; gap: 24px; }
+
+  .admin-title { font-size: 28px; font-weight: 900; color: var(--gold); }
+  .admin-sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px;
+  }
+  .card-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); opacity: .7; margin-bottom: 10px; }
+  .card-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+
+  #fact-text { font-size: 15px; line-height: 1.6; color: var(--text); background: var(--gold-dim); border-radius: 8px; padding: 14px 16px; border-left: 3px solid var(--gold); }
+
+  .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all .15s; }
+  .btn-gold { background: var(--gold); color: #000; margin-top: 14px; }
+  .btn-gold:hover { background: #f59e0b; }
+  .btn-gold:disabled { opacity: .5; cursor: default; }
+
+  .env-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .env-table th { text-align: left; color: var(--muted); font-weight: 600; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .env-table td { padding: 10px 0; border-bottom: 1px solid var(--border); color: var(--text); }
+  .env-table td:first-child { color: var(--gold); font-family: monospace; font-size: 12px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+  .badge-set { background: rgba(52,211,153,.15); color: #34d399; }
+  .badge-missing { background: rgba(248,113,113,.15); color: #f87171; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">⚡ Twin Hub</div>
+  <div class="nav-links">
+    <a href="/">← Hub</a>
+    <a href="/visualizer">🎤 Visualizer</a>
+  </div>
+</nav>
+
+<div class="admin-body">
+  <div>
+    <div class="admin-title">⚙️ Admin</div>
+    <div class="admin-sub">Dad-only controls. Not linked from the main hub.</div>
+  </div>
+
+  <!-- DAILY FACT -->
+  <div class="card">
+    <div class="card-label">Daily Hamilton Fact</div>
+    <div id="fact-text">{{ fact }}</div>
+    <button class="btn btn-gold" id="refresh-btn" onclick="refreshFact()">🔄 Generate New Fact</button>
+  </div>
+
+  <!-- ENV STATUS -->
+  <div class="card">
+    <div class="card-label">Environment Variables</div>
+    <div class="card-title" style="margin-bottom:16px;">Railway Config</div>
+    <table class="env-table">
+      <tr><th>Variable</th><th>Status</th><th>Used For</th></tr>
+      <tr>
+        <td>TWIN1_NAME</td>
+        <td><span class="badge badge-set">{{ twin1 }}</span></td>
+        <td>Left column name</td>
+      </tr>
+      <tr>
+        <td>TWIN2_NAME</td>
+        <td><span class="badge badge-set">{{ twin2 }}</span></td>
+        <td>Right column name</td>
+      </tr>
+      <tr>
+        <td>DAD_PASSWORD</td>
+        <td><span class="badge badge-set">set</span></td>
+        <td>Clear all notes gate</td>
+      </tr>
+      <tr>
+        <td>ANTHROPIC_API_KEY</td>
+        <td><span class="badge badge-set">set</span></td>
+        <td>Daily Hamilton fact</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<script>
+async function refreshFact() {
+  const btn = document.getElementById('refresh-btn');
+  const factEl = document.getElementById('fact-text');
+  btn.disabled = true;
+  btn.textContent = 'Generating…';
+  try {
+    const res = await fetch('/admin/refresh-fact', { method: 'POST' });
+    const data = await res.json();
+    factEl.textContent = data.fact;
+  } catch(e) {
+    factEl.textContent = 'Error generating fact. Check your ANTHROPIC_API_KEY.';
+  }
+  btn.disabled = false;
+  btn.textContent = '🔄 Generate New Fact';
+}
+</script>
+</body>
+</html>
