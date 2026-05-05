@@ -14,6 +14,8 @@ CHALLENGES_CACHE_PATH = os.path.join(os.path.dirname(__file__), 'data', 'challen
 TWIN1_NAME = os.getenv('TWIN1_NAME', 'Lumi')
 TWIN2_NAME = os.getenv('TWIN2_NAME', 'Sloany')
 DAD_PASSWORD = os.getenv('DAD_PASSWORD', 'dad')
+LUMI_SPOTIFY  = os.getenv('LUMI_SPOTIFY_PLAYLIST',  '2ujmymS9QJEMwHmcNXH2hn')
+SLOANY_SPOTIFY = os.getenv('SLOANY_SPOTIFY_PLAYLIST', '37i9dQZF1DX9tPFwDMOaN1')
 
 
 def get_db():
@@ -168,8 +170,10 @@ def _pedal_ctx(who):
             'SELECT * FROM notes WHERE author = ? ORDER BY timestamp DESC LIMIT 30',
             (author,)
         ).fetchall()
+    spotify = LUMI_SPOTIFY if who == 'lumi' else SLOANY_SPOTIFY
     return dict(cfg=cfg, who=who, author=author, notes=notes,
-                challenges=get_challenges(), fact=get_daily_fact())
+                challenges=get_challenges(), fact=get_daily_fact(),
+                spotify_id=spotify)
 
 
 @app.route('/lumi')
