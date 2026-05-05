@@ -232,7 +232,8 @@ def refresh_challenges():
     return jsonify({'challenges': get_challenges()})
 
 
+init_db()
+
 if __name__ == '__main__':
-    init_db()
     port = int(os.getenv('PORT', 5567))
     app.run(host='0.0.0.0', port=port, debug=os.getenv('FLASK_ENV') != 'production')
