@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>{{ cfg.name }}'s Pedal</title>
+<title>{{ cfg.name }}'s Pedal — Papito Pedals</title>
 <style>
 :root {
   --p:  {{ cfg.p }};
@@ -11,12 +11,12 @@
   --p3: {{ cfg.p3 }};
   --pg: {{ cfg.pg }};
   --pd: {{ cfg.pd }};
-  --gold: #f0b429;
-  --green: #39ff14;
-  --red: #ff3b3b;
-  --bg: #0a0a0a;
-  --text: #e5e7eb;
-  --muted: #5a5a6a;
+  --gold:   #f0b429;
+  --green:  #39ff14;
+  --red:    #ff3b3b;
+  --bg:     #0a0a0a;
+  --text:   #e5e7eb;
+  --muted:  #5a5a6a;
   --border: #2a2a2a;
   --surface: #111;
 }
@@ -28,26 +28,21 @@ body {
   background-size: 20px 20px;
   font-family: 'Segoe UI', system-ui, sans-serif;
   color: var(--text);
-  padding: 12px 10px 50px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 12px 10px 60px;
+  display: flex; flex-direction: column; align-items: center;
 }
 
-/* ═══════════════════════════════════
-   PEDAL BODY
-═══════════════════════════════════ */
+/* SVG sparkle filter */
+#svg-defs { position: absolute; width: 0; height: 0; }
+
+/* ── PEDAL BODY ──────────────────────────────────────── */
 .pedal {
-  width: 100%;
-  max-width: 430px;
-  position: relative;
-  border-radius: 22px;
-  padding: 14px 16px 18px;
-  /* Sparkle paint texture */
+  width: 100%; max-width: 430px;
+  position: relative; border-radius: 22px;
+  padding: 14px 16px 24px;
   background:
     radial-gradient(ellipse at 18% 25%, rgba(255,255,255,0.06) 0%, transparent 55%),
     radial-gradient(ellipse at 82% 70%, rgba(255,255,255,0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.02) 0%, transparent 80%),
     linear-gradient(148deg, {{ cfg.p3 }}cc 0%, {{ cfg.p3 }}88 30%, {{ cfg.p3 }}aa 60%, {{ cfg.p3 }}66 100%);
   border: 2px solid rgba(255,255,255,0.12);
   box-shadow:
@@ -58,19 +53,13 @@ body {
     0 0 40px {{ cfg.pg }};
   filter: url(#sparkle);
 }
-
-/* Noise overlay for paint texture */
 .pedal::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 22px;
+  content: ''; position: absolute; inset: 0; border-radius: 22px;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
+  pointer-events: none; z-index: 0;
 }
 
-/* SCREWS */
+/* ── SCREWS ───────────────────────────────────────────── */
 .screw {
   position: absolute; z-index: 10;
   width: 16px; height: 16px;
@@ -86,936 +75,1311 @@ body {
 .screw::after  { width: 1.5px; height: 10px; transform: translate(-50%,-50%); }
 .screw-tl { top: 10px; left: 10px; }
 .screw-tr { top: 10px; right: 10px; }
-.screw-bl { bottom: 12px; left: 10px; }
-.screw-br { bottom: 12px; right: 10px; }
+.screw-bl { bottom: 14px; left: 10px; }
+.screw-br { bottom: 14px; right: 10px; }
 
-/* TOP JACKS */
+/* ── JACKS ───────────────────────────────────────────── */
 .jack-row {
   position: relative; z-index: 5;
   display: flex; justify-content: space-between; align-items: center;
   padding: 0 30px; margin-bottom: 10px;
 }
-.jack-unit {
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
+.jack-unit { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.jack-barrel {
+  width: 22px; height: 28px;
+  background: radial-gradient(ellipse at 40% 20%, #555, #1a1a1a 80%);
+  border-radius: 4px 4px 2px 2px;
+  border: 1px solid #444;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1);
+  position: relative;
 }
-.jack-label { font-size: 8px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
-.jack-hole-outer {
-  width: 22px; height: 22px;
-  background: radial-gradient(circle at 35% 30%, #3a3a3a, #0a0a0a 70%);
-  border-radius: 50%; border: 2px solid #444;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.08);
-  display: flex; align-items: center; justify-content: center;
+.jack-barrel::after {
+  content: ''; position: absolute; left: 50%; top: 6px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #0a0a0a; border: 1px solid #333;
+  transform: translateX(-50%);
 }
-.jack-hole-inner {
-  width: 10px; height: 10px;
-  background: #050505; border-radius: 50%;
-  border: 1.5px solid #333;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,1);
-}
+.jack-label { font-size: 9px; font-weight: 700; letter-spacing: .05em; color: var(--muted); }
 .power-led {
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 8px var(--green), 0 0 20px rgba(57,255,20,0.4);
-  animation: glow 1.6s ease-in-out infinite;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff, var(--green) 60%);
+  box-shadow: 0 0 8px var(--green), 0 0 18px rgba(57,255,20,0.5);
+  animation: pulse-led 2s ease-in-out infinite;
 }
-@keyframes glow { 0%,100%{opacity:1} 50%{opacity:0.5} }
+@keyframes pulse-led { 0%,100%{opacity:1} 50%{opacity:0.6} }
 
-/* NAMEPLATE */
+/* ── NAMEPLATE ───────────────────────────────────────── */
 .nameplate {
   position: relative; z-index: 5;
-  text-align: center; margin-bottom: 8px;
-  padding: 4px 0;
+  text-align: center; margin-bottom: 12px;
 }
-.brand-name {
-  font-size: 9px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase;
-  color: rgba(255,255,255,0.5); margin-bottom: 1px;
+.brand {
+  font-size: 10px; font-weight: 800; letter-spacing: .25em;
+  text-transform: uppercase; color: var(--gold); opacity: 0.8;
 }
 .model-name {
-  font-size: 26px; font-weight: 900; letter-spacing: 8px; text-transform: uppercase;
-  font-style: italic; color: #fff;
-  text-shadow: 0 0 30px rgba(255,255,255,0.6), 0 2px 4px rgba(0,0,0,0.8);
+  font-size: 38px; font-weight: 900; font-style: italic;
+  letter-spacing: -.02em; line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 30px var(--p), 0 2px 4px rgba(0,0,0,0.8);
 }
 
-/* PANEL — content sits on a darker inset panel */
-.panel {
+/* ── SECTION WRAPPER ─────────────────────────────────── */
+.section {
   position: relative; z-index: 5;
-  background: rgba(0,0,0,0.35);
-  border: 1px solid rgba(0,0,0,0.5);
-  border-radius: 10px;
-  padding: 10px 12px;
-  margin-bottom: 10px;
-  backdrop-filter: blur(2px);
+  background: #0c0c0c;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+.section-label {
+  font-size: 9px; font-weight: 800; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 10px; display: block;
 }
 
-/* DAD MESSAGE */
-.dad-display {
-  background: #060400; border: 1px solid rgba(240,180,41,0.25);
-  border-radius: 5px; padding: 6px 12px; text-align: center;
-  box-shadow: inset 0 2px 6px rgba(0,0,0,0.7);
+/* ── MESSAGE DISPLAY ─────────────────────────────────── */
+.msg-display {
+  background: #050f06;
+  border: 1px solid #1a2e1a;
+  border-radius: 8px; padding: 10px 14px;
+  font-family: monospace; font-size: 13px;
+  color: var(--gold);
+  min-height: 38px;
+  display: flex; align-items: center; gap: 6px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.7);
+  margin-bottom: 12px; position: relative; z-index: 5;
 }
-.dad-label { font-size: 7px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(240,180,41,0.4); margin-bottom: 2px; }
-.dad-text  { font-size: 12px; font-weight: 700; color: var(--gold); text-shadow: 0 0 10px rgba(240,180,41,0.5); transition: opacity .6s; letter-spacing: .3px; }
+.msg-text { flex: 1; transition: opacity .5s; }
 
-/* LED TICKER */
-.ticker-display {
-  background: #030300; border: 1px solid #1a1a00; border-radius: 4px;
-  padding: 5px 10px; overflow: hidden; position: relative; margin-top: 6px;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+/* ── JOKE TELEPROMPTER ───────────────────────────────── */
+.joke-panel {
+  position: relative;
+  background: #060e06;
+  border: 1px solid #1a3020;
+  border-radius: 8px; padding: 10px 12px 8px;
+  margin-bottom: 12px; z-index: 5;
 }
-.ticker-display::before { content: '▶'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 8px; color: var(--green); opacity: 0.6; }
-.ticker-wrap { overflow: hidden; padding-left: 26px; }
-.ticker-text {
-  display: inline-block; white-space: nowrap;
-  font-family: 'Courier New', monospace; font-size: 10px; font-weight: 700;
-  color: var(--green); text-shadow: 0 0 6px var(--green);
-  animation: ticker 30s linear infinite; letter-spacing: .5px;
+.joke-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 6px;
 }
-@keyframes ticker { 0%{transform:translateX(60vw)} 100%{transform:translateX(-100%)} }
+.joke-label { font-size: 9px; font-weight: 800; letter-spacing: .18em; color: #3a8a3a; text-transform: uppercase; }
+.joke-refresh {
+  background: none; border: 1px solid #2a4a2a; border-radius: 4px;
+  color: #4aaa4a; font-size: 11px; padding: 2px 7px; cursor: pointer;
+}
+.joke-refresh:hover { background: #1a3a1a; }
+.joke-text {
+  font-family: 'Courier New', monospace; font-size: 13px;
+  color: #4aff4a; line-height: 1.4;
+  min-height: 38px; transition: opacity .6s;
+}
+.joke-timer-bar {
+  height: 2px; background: #1a2a1a; border-radius: 2px;
+  margin-top: 8px; overflow: hidden;
+}
+.joke-timer-fill {
+  height: 100%; background: #2a7a2a;
+  border-radius: 2px;
+  transition: width 1s linear;
+}
 
-/* ═══════════════════════════════════
-   KNOB SECTION — THE MAIN EVENT
-═══════════════════════════════════ */
-.knob-section {
-  position: relative; z-index: 5;
-  background: rgba(0,0,0,0.45);
-  border: 1px solid rgba(0,0,0,0.6);
-  border-radius: 10px;
-  padding: 16px 12px 12px;
-  margin-bottom: 10px;
-}
-.knob-section-label {
-  font-size: 8px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase;
-  color: rgba(255,255,255,0.25); text-align: center; margin-bottom: 14px;
-}
-.knob-row {
-  display: flex; justify-content: space-around; align-items: flex-start;
+/* ── KNOBS ───────────────────────────────────────────── */
+.knobs-row {
+  display: flex; justify-content: space-between; gap: 8px;
 }
 .knob-unit {
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-  min-width: 80px;
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
 }
-.knob-arc-wrap {
-  position: relative; width: 78px; height: 78px;
+.knob-wrap {
+  width: 70px; height: 70px; position: relative; cursor: ns-resize;
+  user-select: none; touch-action: none;
 }
-/* Arc track behind knob */
-.knob-arc-wrap svg.arc-svg {
-  position: absolute; top: -6px; left: -6px;
-  width: 90px; height: 90px; pointer-events: none;
-}
-
-/* The actual knob */
 .fx-knob {
-  position: absolute; top: 0; left: 0;
-  width: 78px; height: 78px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 38% 28%, #5a5a5a, #1c1c1c 60%, #0e0e0e 100%);
-  border: 2px solid #444;
-  box-shadow:
-    0 6px 18px rgba(0,0,0,0.9),
-    inset 0 1px 0 rgba(255,255,255,0.12),
-    inset 0 -2px 0 rgba(0,0,0,0.6);
-  cursor: ns-resize;
-  user-select: none;
-  touch-action: none;
+  /* sparkle filter applied only here */
+  filter: url(#knob-sparkle);
 }
-/* Knob pointer (the white line indicator) */
-.knob-pointer {
-  position: absolute;
-  bottom: 50%; left: 50%;
-  width: 3px; height: 30px;
-  margin-left: -1.5px;
-  transform-origin: bottom center;
-  background: linear-gradient(to top, rgba(255,255,255,0.1), #ffffff);
-  border-radius: 2px 2px 0 0;
-  transition: transform 0s;
+.knob-svg { width: 70px; height: 70px; }
+.knob-face {
+  fill: radial-gradient(circle at 40% 30%, #3a3a4a, #111 75%);
 }
-/* Knob center cap */
-.knob-cap {
-  position: absolute; top: 50%; left: 50%;
-  width: 16px; height: 16px; margin: -8px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 30%, #333, #111);
-  border: 1px solid #555;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.6);
-}
-/* Value readout */
-.knob-value {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 10px; font-weight: 700; font-family: monospace;
-  color: rgba(255,255,255,0.5); pointer-events: none;
-  margin-top: 10px;
-}
-
 .knob-name {
-  font-size: 9px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase;
-  color: rgba(255,255,255,0.7);
+  font-size: 9px; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--text);
 }
 .knob-range {
-  display: flex; gap: 40px;
-  font-size: 7px; font-weight: 700; letter-spacing: 1px;
-  color: rgba(255,255,255,0.25);
+  font-size: 8px; color: var(--muted); text-align: center; line-height: 1.3;
 }
 
-/* Tick marks around knob */
-.knob-arc-wrap svg.arc-svg path.arc-track { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 3; stroke-linecap: round; }
-.knob-arc-wrap svg.arc-svg path.arc-fill  { fill: none; stroke-width: 3; stroke-linecap: round; transition: stroke-dasharray .05s; }
-
-/* ═══════════════════════════════════
-   BEAT ENGINE + BYPASS
-═══════════════════════════════════ */
-.stomp-section {
-  position: relative; z-index: 5;
-  display: flex; justify-content: space-around; align-items: center;
-  margin-bottom: 10px; padding: 0 20px;
+/* ── TAP TEMPO ───────────────────────────────────────── */
+.tap-btn {
+  width: 100%; height: 60px; border-radius: 10px;
+  background: linear-gradient(180deg, #2a2a2a 0%, #111 60%, #0a0a0a 100%);
+  border: 2px solid #3a3a3a;
+  border-bottom: 4px solid #050505;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.08);
+  color: var(--text); font-size: 18px; font-weight: 800; letter-spacing: .08em;
+  cursor: pointer; transition: transform .05s, border-bottom-width .05s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-bottom: 10px;
 }
-.stomp-unit { display: flex; flex-direction: column; align-items: center; gap: 7px; }
-.stomp-label-top { font-size: 8px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
-
-.stomp-btn {
-  width: 72px; height: 72px;
-  border-radius: 50%;
-  cursor: pointer; position: relative;
-  user-select: none; touch-action: none;
-  display: flex; align-items: center; justify-content: center;
-  transition: transform .08s;
-}
-.stomp-btn:active { transform: translateY(4px); }
-
-/* Beat stomp */
-.stomp-beat {
-  background: radial-gradient(circle at 40% 32%, #2a2a2a, #111 60%, #080808);
-  border: 3px solid #383838;
-  box-shadow: 0 7px 0 rgba(0,0,0,0.7), 0 8px 20px rgba(0,0,0,0.6),
-              inset 0 1px 0 rgba(255,255,255,0.1);
-}
-.stomp-beat.active {
-  background: radial-gradient(circle at 40% 32%, {{ cfg.p2 }}, {{ cfg.p }} 50%, {{ cfg.p3 }});
-  border-color: {{ cfg.p3 }};
-  box-shadow: 0 7px 0 rgba(0,0,0,0.7), 0 8px 20px rgba(0,0,0,0.6),
-              0 0 20px {{ cfg.pg }}, inset 0 1px 0 rgba(255,255,255,0.2);
-}
-.stomp-beat-inner {
-  font-size: 10px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
-  color: rgba(255,255,255,0.4);
-}
-.stomp-beat.active .stomp-beat-inner { color: #000; }
-
-/* Bypass stomp */
-.stomp-bypass {
-  background: radial-gradient(circle at 40% 32%, #2a2a2a, #111 60%, #080808);
-  border: 3px solid #383838;
-  box-shadow: 0 7px 0 rgba(0,0,0,0.7), 0 8px 20px rgba(0,0,0,0.6),
-              inset 0 1px 0 rgba(255,255,255,0.1);
-}
-.stomp-bypass.bypassed {
-  border-color: #cc2222;
-  box-shadow: 0 7px 0 rgba(0,0,0,0.7), 0 8px 20px rgba(0,0,0,0.6),
-              0 0 15px rgba(255,50,50,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
-}
-
-/* LED indicators */
-.stomp-leds { display: flex; gap: 8px; align-items: center; }
-.s-led {
-  width: 9px; height: 9px; border-radius: 50%;
-}
-.s-led-beat  { background: var(--p); box-shadow: 0 0 7px var(--p); opacity: 0.3; transition: opacity .1s; }
-.s-led-beat.on  { opacity: 1; animation: beatpulse .2s ease-out; }
-@keyframes beatpulse { 0%{transform:scale(1.5)} 100%{transform:scale(1)} }
-.s-led-bypass-g { background: var(--green); box-shadow: 0 0 7px var(--green); }
-.s-led-bypass-r { background: var(--red);   box-shadow: 0 0 7px var(--red); opacity: 0.15; }
-.bypassed .s-led-bypass-g { opacity: 0.15; }
-.bypassed .s-led-bypass-r { opacity: 1; }
-
-.stomp-label-bot { font-size: 8px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
-
-/* BPM display */
+.tap-btn:active { transform: translateY(2px); border-bottom-width: 2px; }
 .bpm-display {
-  background: #050505; border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 5px; padding: 4px 10px; text-align: center;
-  font-family: 'Courier New', monospace; font-size: 11px; font-weight: 700;
-  color: var(--p); text-shadow: 0 0 8px var(--pg);
-  box-shadow: inset 0 1px 4px rgba(0,0,0,0.7);
+  font-family: 'Courier New', monospace; font-size: 28px; font-weight: 900;
+  color: var(--p); letter-spacing: .05em;
+  text-align: center;
+  text-shadow: 0 0 12px var(--p), 0 0 24px var(--pg);
+}
+.tap-sublabel {
+  font-size: 9px; letter-spacing: .15em; color: var(--muted);
+  text-transform: uppercase; text-align: center; margin-top: 4px;
 }
 
-/* ═══════════════════════════════════
-   BOOMBOX + SPOTIFY
-═══════════════════════════════════ */
-.boombox-section {
-  position: relative; z-index: 5;
-  background: var(--pd);
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 10px; padding: 10px; margin-bottom: 10px;
+/* ── STOMP SWITCHES ──────────────────────────────────── */
+.stomps-row { display: flex; gap: 12px; }
+.stomp-unit { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.stomp-btn {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: radial-gradient(circle at 38% 30%, #4a4a5a, #181818 70%);
+  border: 3px solid #444;
+  border-bottom: 5px solid #050505;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.08);
+  cursor: pointer;
+  transition: transform .06s, border-bottom-width .06s;
+  display: flex; align-items: center; justify-content: center;
 }
-.boombox-label { font-size: 8px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); text-align: center; margin-bottom: 8px; }
-.eq-bars { display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 22px; margin-bottom: 8px; }
-.eq-bar { width: 5px; border-radius: 2px 2px 0 0; background: var(--p); opacity: 0.9; transition: height .12s; }
+.stomp-btn:active { transform: translateY(3px); border-bottom-width: 2px; }
+.stomp-led {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #1a1a1a; border: 1px solid #333;
+  transition: background .2s, box-shadow .2s;
+}
+.stomp-led.on-green {
+  background: radial-gradient(circle at 35% 30%, #fff, var(--green));
+  box-shadow: 0 0 6px var(--green);
+}
+.stomp-led.on-red {
+  background: radial-gradient(circle at 35% 30%, #ffaaaa, var(--red));
+  box-shadow: 0 0 6px var(--red);
+}
+.stomp-name { font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.stomp-icon { font-size: 20px; pointer-events: none; }
 
-/* ═══════════════════════════════════
-   CHALLENGE
-═══════════════════════════════════ */
-.challenge-section {
-  position: relative; z-index: 5;
-  background: rgba(0,0,0,0.35); border: 1px solid rgba(0,0,0,0.5);
-  border-radius: 10px; padding: 12px 14px; margin-bottom: 10px;
-  display: flex; align-items: center; gap: 14px;
+/* ── BOOMBOX ─────────────────────────────────────────── */
+.eq-bars {
+  display: flex; align-items: flex-end; gap: 4px; height: 36px; margin-bottom: 10px;
+}
+.eq-bar {
+  flex: 1; border-radius: 2px 2px 0 0;
+  background: var(--p);
+  animation: eq-anim 0.5s ease-in-out infinite alternate;
+}
+.eq-bar:nth-child(1){ animation-delay:0s }
+.eq-bar:nth-child(2){ animation-delay:.07s }
+.eq-bar:nth-child(3){ animation-delay:.14s }
+.eq-bar:nth-child(4){ animation-delay:.21s }
+.eq-bar:nth-child(5){ animation-delay:.28s }
+.eq-bar:nth-child(6){ animation-delay:.35s }
+.eq-bar:nth-child(7){ animation-delay:.42s }
+.eq-bar:nth-child(8){ animation-delay:.49s }
+@keyframes eq-anim {
+  from { height: 20%; opacity: 0.5 }
+  to   { height: 90%; opacity: 1 }
+}
+.spotify-wrap iframe { border-radius: 10px; }
+
+/* ── IMPORTANT NUMBERS ───────────────────────────────── */
+.contacts-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+.contact-card {
+  background: #0e0e18;
+  border: 1px solid var(--p3);
+  border-radius: 10px; padding: 10px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.contact-name {
+  font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 5px;
+}
+.contact-btns { display: flex; gap: 6px; }
+.contact-btn {
+  flex: 1; padding: 6px 4px; border-radius: 6px; border: none;
+  font-size: 11px; font-weight: 700; cursor: pointer; text-decoration: none;
+  display: flex; align-items: center; justify-content: center; gap: 3px;
+}
+.btn-call { background: var(--p3); color: #fff; }
+.btn-text { background: #1a1a2e; color: var(--p); border: 1px solid var(--p3); }
+
+/* ── NOTES ───────────────────────────────────────────── */
+.notes-pills {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;
+}
+.cat-pill {
+  padding: 5px 14px; border-radius: 20px; border: none;
+  font-size: 11px; font-weight: 900; letter-spacing: .1em;
+  cursor: pointer; text-transform: uppercase;
+  background: #111; border: 2px solid transparent;
+  transition: all .2s;
+}
+.cat-pill[data-cat="School"]  { color: #FFD600; border-color: #3a3500; }
+.cat-pill[data-cat="School"].active  { background: #1a1700; box-shadow: 0 0 10px #FFD600aa; border-color: #FFD600; }
+.cat-pill[data-cat="People"]  { color: #FF4FC8; border-color: #3a0028; }
+.cat-pill[data-cat="People"].active  { background: #1f0014; box-shadow: 0 0 10px #FF4FC8aa; border-color: #FF4FC8; }
+.cat-pill[data-cat="Family"]  { color: #00E5FF; border-color: #003a3f; }
+.cat-pill[data-cat="Family"].active  { background: #001820; box-shadow: 0 0 10px #00E5FFaa; border-color: #00E5FF; }
+.cat-pill[data-cat="Me"]      { color: #BF5FFF; border-color: #3a0060; }
+.cat-pill[data-cat="Me"].active      { background: #1a0038; box-shadow: 0 0 10px #BF5FFFaa; border-color: #BF5FFF; }
+.cat-pill.locked { opacity: 0.5; }
+
+.notes-list { display: flex; flex-direction: column; gap: 6px; min-height: 40px; }
+.note-item {
+  background: #111; border-radius: 8px; padding: 8px 10px;
+  display: flex; align-items: flex-start; gap: 8px; border: 1px solid #1e1e1e;
+}
+.note-item.me-note { background: #1a0040; border-color: #5a2080; }
+.note-content { flex: 1; font-size: 13px; line-height: 1.4; }
+.note-time { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.note-delete {
+  background: none; border: none; color: var(--muted); cursor: pointer;
+  font-size: 14px; padding: 0 2px; line-height: 1;
+  flex-shrink: 0;
+}
+.note-delete:hover { color: var(--red); }
+.note-empty { color: var(--muted); font-size: 13px; text-align: center; padding: 12px 0; }
+
+.note-input-row { display: flex; gap: 8px; margin-top: 10px; }
+.note-input {
+  flex: 1; background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 8px;
+  padding: 8px 12px; color: var(--text); font-size: 13px;
+}
+.note-input:focus { outline: none; border-color: var(--p); }
+.note-post-btn {
+  background: var(--p3); border: none; border-radius: 8px;
+  color: #fff; font-weight: 800; font-size: 12px; padding: 0 14px;
+  cursor: pointer;
+}
+
+/* Me journal lock screen */
+.me-lock-screen {
+  text-align: center; padding: 16px 8px;
+}
+.me-lock-icon { font-size: 40px; margin-bottom: 8px; }
+.me-lock-title { font-size: 18px; font-weight: 800; margin-bottom: 6px; color: #BF5FFF; }
+.me-lock-sub { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+.me-pw-input {
+  width: 100%; background: #0a0a12; border: 1px solid #4a1a80; border-radius: 8px;
+  padding: 10px 14px; color: var(--text); font-size: 14px; margin-bottom: 8px;
+}
+.me-pw-input:focus { outline: none; border-color: #BF5FFF; }
+.me-hint-text { font-size: 11px; color: #BF5FFF; margin-bottom: 10px; cursor: pointer; }
+.me-hint-val { color: var(--gold); }
+.me-btn {
+  width: 100%; padding: 12px; border-radius: 8px; border: none;
+  background: #6a1aaa; color: #fff; font-weight: 900; font-size: 14px;
+  letter-spacing: .06em; cursor: pointer;
+}
+.me-btn:hover { background: #8a2acc; }
+.me-error { color: var(--red); font-size: 12px; margin-top: 6px; }
+.me-unlock-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+}
+.me-lock-btn {
+  background: none; border: 1px solid #4a1a80; border-radius: 6px;
+  color: #BF5FFF; font-size: 11px; padding: 4px 10px; cursor: pointer;
+}
+@keyframes shake {
+  0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)}
+}
+.shake { animation: shake .3s ease; }
+
+/* ── CHALLENGE SECTION ───────────────────────────────── */
+.challenge-section { text-align: center; }
+.challenge-knob-wrap {
+  position: relative; width: 100px; height: 100px;
+  margin: 0 auto 14px;
 }
 .challenge-knob {
-  flex-shrink: 0; width: 54px; height: 54px;
-  background: radial-gradient(circle at 38% 30%, #484848, #181818 70%);
-  border-radius: 50%; border: 2px solid #383838;
-  box-shadow: 0 5px 14px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08);
-  cursor: pointer; position: relative; transition: transform .1s;
+  width: 100px; height: 100px; border-radius: 50%;
+  background: radial-gradient(circle at 38% 30%, #4a3a6a, #1a0a2a 70%);
+  border: 3px solid var(--p3);
+  box-shadow: 0 0 20px var(--pg), inset 0 2px 0 rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; cursor: pointer;
+  transition: transform .1s;
 }
-.challenge-knob:active { transform: scale(0.92); }
-.challenge-knob.spinning { animation: cspin .35s cubic-bezier(.4,2,.6,1); }
-@keyframes cspin { to { transform: rotate(110deg); } }
-.challenge-knob::after {
-  content: ''; position: absolute; top: 7px; left: 50%; transform: translateX(-50%);
-  width: 5px; height: 5px; border-radius: 50%;
-  background: var(--p); box-shadow: 0 0 6px var(--p);
+.challenge-knob:active { transform: scale(0.95); }
+.challenge-display {
+  background: #0a0a0a; border: 1px solid var(--p3); border-radius: 10px;
+  padding: 14px; min-height: 60px; font-size: 15px; font-weight: 600;
+  line-height: 1.4; color: var(--text); margin-bottom: 12px;
+  display: flex; align-items: center; justify-content: center; text-align: center;
 }
-.challenge-content { flex: 1; }
-.challenge-eyebrow { font-size: 8px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--p); opacity: .7; margin-bottom: 5px; }
-.challenge-text { font-size: 13px; font-weight: 700; line-height: 1.4; transition: opacity .15s; }
+.done-btn {
+  width: 100%; height: 56px; border-radius: 10px;
+  background: linear-gradient(180deg, #1a2a1a, #0a140a);
+  border: 2px solid #2a5a2a; border-bottom: 4px solid #050a05;
+  color: var(--green); font-size: 16px; font-weight: 900; letter-spacing: .1em;
+  cursor: pointer; transition: transform .06s, border-bottom-width .06s;
+}
+.done-btn:active { transform: translateY(2px); border-bottom-width: 2px; }
 
-/* STOMP COMPLETE */
-.complete-row { position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 5px; margin-bottom: 10px; }
-.stomp-done {
-  width: 66px; height: 66px;
-  background: radial-gradient(circle at 40% 30%, {{ cfg.p2 }}, {{ cfg.p3 }});
-  border-radius: 50%; border: 3px solid {{ cfg.p3 }};
-  box-shadow: 0 6px 0 rgba(0,0,0,0.6), 0 8px 18px rgba(0,0,0,0.5),
-              inset 0 1px 0 rgba(255,255,255,0.2);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  font-size: 9px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
-  color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); user-select: none;
-  transition: all .08s;
-}
-.stomp-done:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1); }
-.stomp-done-label { font-size: 7px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
-
-/* ═══════════════════════════════════
-   NOTES
-═══════════════════════════════════ */
-.notes-section {
-  position: relative; z-index: 5;
-  background: rgba(0,0,0,0.35); border: 1px solid rgba(0,0,0,0.5);
-  border-radius: 10px; padding: 14px; margin-bottom: 14px;
-  display: flex; flex-direction: column; gap: 10px;
-}
-.notes-header {
-  font-size: 8px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase;
-  color: var(--p); opacity: .8; border-bottom: 1px solid rgba(255,255,255,0.07);
-  padding-bottom: 8px;
-}
-.post-form { display: flex; gap: 6px; }
-.post-form input[type="text"] {
-  flex: 1; background: #0c0c0c; border: 1px solid #2a2a2a; border-radius: 8px;
-  color: var(--text); font-size: 14px; padding: 10px 12px; outline: none;
-  font-family: inherit; transition: border-color .2s; -webkit-appearance: none;
-}
-.post-form input[type="text"]:focus { border-color: var(--p); }
-.post-btn {
-  padding: 10px 15px; border: none; border-radius: 8px;
-  font-size: 11px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
-  cursor: pointer; background: var(--p); color: #000;
-  box-shadow: 0 3px 0 {{ cfg.p3 }}; transition: all .08s; -webkit-appearance: none;
-}
-.post-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 {{ cfg.p3 }}; }
-.notes-list { display: flex; flex-direction: column; gap: 6px; }
-.note-item {
-  background: #0d0d0d; border-radius: 7px; padding: 10px 12px;
-  font-size: 14px; line-height: 1.45; border-left: 2px solid var(--p);
-}
-.note-time { font-size: 10px; color: var(--muted); margin-top: 3px; font-family: monospace; }
-.empty-state { color: var(--muted); font-size: 12px; text-align: center; padding: 18px 0; font-style: italic; }
-
-/* RUBBER FEET */
-.feet { position: relative; z-index: 5; display: flex; justify-content: space-between; padding: 10px 14px 0; }
-.foot {
-  width: 30px; height: 8px;
-  background: radial-gradient(ellipse at 50% 20%, #252525, #0e0e0e);
-  border-radius: 5px; border: 1px solid #222; box-shadow: 0 2px 4px rgba(0,0,0,0.6);
-}
-
-/* MODALS */
-.modal-overlay {
-  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88);
-  z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(5px);
-}
-.modal-overlay.open { display: flex; }
-.modal {
-  background: #1a1a1a; border: 1px solid #333; border-radius: 16px;
-  padding: 28px 24px; max-width: 340px; width: 92%;
-  box-shadow: 0 40px 100px rgba(0,0,0,0.95); text-align: center;
-  border-top: 2px solid var(--p);
-}
-.modal-trophy { font-size: 54px; margin-bottom: 8px; }
-.modal-title { font-size: 22px; font-weight: 900; color: var(--p); margin-bottom: 6px; }
-.modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
-.btn-accent {
-  padding: 12px 28px; border: none; border-radius: 9px;
-  font-size: 14px; font-weight: 900; background: var(--p); color: #000;
-  cursor: pointer; box-shadow: 0 4px 0 {{ cfg.p3 }};
-}
-
-/* CONFETTI */
+/* ── CONFETTI ─────────────────────────────────────────── */
 .confetti-piece {
-  position: fixed; top: -20px; pointer-events: none; z-index: 300;
-  border-radius: 2px; animation: cffall linear forwards;
+  position: fixed; width: 8px; height: 8px; border-radius: 2px;
+  pointer-events: none; z-index: 9999;
+  animation: confetti-fall 1.2s ease-in forwards;
 }
-@keyframes cffall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
-</style>
+@keyframes confetti-fall {
+  0%   { transform: translateY(-20px) rotate(0deg); opacity: 1 }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0 }
+}
 
-<!-- SVG sparkle filter -->
-<svg width="0" height="0" style="position:absolute">
-  <defs>
-    <filter id="sparkle" x="-5%" y="-5%" width="110%" height="110%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" result="noise"/>
-      <feColorMatrix type="saturate" values="0" in="noise" result="gray"/>
-      <feBlend in="SourceGraphic" in2="gray" mode="soft-light" result="blend"/>
-      <feComposite in="blend" in2="SourceGraphic" operator="in"/>
-    </filter>
-  </defs>
-</svg>
+/* ── RUBBER FEET ──────────────────────────────────────── */
+.rubber-feet {
+  display: flex; justify-content: space-between; padding: 0 20px;
+  margin-top: 14px; position: relative; z-index: 5;
+}
+.rubber-foot {
+  width: 32px; height: 14px; border-radius: 7px;
+  background: radial-gradient(ellipse at 40% 30%, #2a2a2a, #0a0a0a);
+  border: 1px solid #333;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.8);
+}
+</style>
 </head>
 <body>
 
+<!-- SVG filter definitions -->
+<svg id="svg-defs" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="sparkle" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" seed="2" result="noise"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 0.9  0 0 0 0 0.2  0 0 0 0.04 0" in="noise" result="gold"/>
+      <feComposite in="SourceGraphic" in2="gold" operator="over"/>
+    </filter>
+    <filter id="knob-sparkle" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="turbulence" baseFrequency="0.9" numOctaves="4" seed="7" result="noise"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.12 0" in="noise" result="sparkles"/>
+      <feComposite in="SourceGraphic" in2="sparkles" operator="over"/>
+    </filter>
+  </defs>
+</svg>
+
 <div class="pedal">
-  <!-- Corner screws -->
   <div class="screw screw-tl"></div>
   <div class="screw screw-tr"></div>
   <div class="screw screw-bl"></div>
   <div class="screw screw-br"></div>
 
-  <!-- TOP JACKS -->
+  <!-- 1. TOP JACKS -->
   <div class="jack-row">
     <div class="jack-unit">
-      <div class="jack-label">▲ OUT</div>
-      <div class="jack-hole-outer"><div class="jack-hole-inner"></div></div>
+      <div class="jack-barrel"></div>
+      <div class="jack-label">OUT</div>
     </div>
     <div class="power-led"></div>
     <div class="jack-unit">
-      <div class="jack-label">▼ IN</div>
-      <div class="jack-hole-outer"><div class="jack-hole-inner"></div></div>
+      <div class="jack-barrel"></div>
+      <div class="jack-label">IN</div>
     </div>
   </div>
 
-  <!-- NAMEPLATE -->
+  <!-- 2. NAMEPLATE -->
   <div class="nameplate">
-    <div class="brand-name">Papito Pedals</div>
-    <div class="model-name">{{ cfg.name }}</div>
+    <div class="brand">PAPITO PEDALS</div>
+    <div class="model-name">{{ cfg.name | upper }}</div>
   </div>
 
-  <!-- DAD MESSAGE + TICKER -->
-  <div class="panel">
-    <div class="dad-display">
-      <div class="dad-label">💛 from dad</div>
-      <div class="dad-text" id="dad-msg">You are perfect to me</div>
+  <!-- 3. MESSAGE DISPLAY -->
+  <div class="msg-display">
+    <span>💛</span>
+    <span class="msg-text" id="msgText">You are perfect to me</span>
+  </div>
+
+  <!-- 4. JOKE TELEPROMPTER -->
+  <div class="joke-panel">
+    <div class="joke-header">
+      <span class="joke-label">🎤 Joke Booth</span>
+      <button class="joke-refresh" onclick="refreshJokes()">🎲 new</button>
     </div>
-    <div class="ticker-display">
-      <div class="ticker-wrap">
-        <span class="ticker-text">{{ fact }} &nbsp;&nbsp;✦&nbsp;&nbsp; {{ fact }}</span>
-      </div>
+    <div class="joke-text" id="jokeText">Loading...</div>
+    <div class="joke-timer-bar">
+      <div class="joke-timer-fill" id="jokeTimerFill" style="width:100%"></div>
     </div>
   </div>
 
-  <!-- KNOB SECTION -->
-  <div class="knob-section">
-    <div class="knob-section-label">Effects Chain</div>
-    <div class="knob-row">
+  <!-- 5. FOUR KNOBS — FX CHAIN -->
+  <div class="section">
+    <span class="section-label">FX CHAIN</span>
+    <div class="knobs-row">
 
-      <!-- DRIVE knob -->
       <div class="knob-unit">
-        <div class="knob-arc-wrap">
-          <svg class="arc-svg" viewBox="0 0 90 90">
-            <path class="arc-track" d="M15,72 A36,36 0 1,1 75,72"/>
-            <path class="arc-fill" id="arc-drive" d="M15,72 A36,36 0 0,1 45,9" stroke="{{ cfg.p }}" stroke-dasharray="0 999"/>
+        <div class="knob-wrap fx-knob" id="knob-drive" data-knob="drive" data-val="0">
+          <svg class="knob-svg" viewBox="0 0 70 70">
+            <defs>
+              <radialGradient id="kgd" cx="40%" cy="30%">
+                <stop offset="0%" stop-color="#4a4a5a"/>
+                <stop offset="100%" stop-color="#111"/>
+              </radialGradient>
+            </defs>
+            <circle cx="35" cy="35" r="30" fill="url(#kgd)" stroke="#333" stroke-width="2"/>
+            <path id="arc-drive" d="" fill="none" stroke="{{ cfg.p }}" stroke-width="3" stroke-linecap="round"/>
+            <line id="line-drive" x1="35" y1="35" x2="35" y2="10" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
           </svg>
-          <div class="fx-knob" id="knob-drive" data-value="0.3" data-param="drive">
-            <div class="knob-pointer" id="ptr-drive"></div>
-            <div class="knob-cap"></div>
-          </div>
         </div>
         <div class="knob-name">Drive</div>
-        <div class="knob-range"><span>off</span><span>max</span></div>
+        <div class="knob-range">clean → crunch</div>
       </div>
 
-      <!-- FILTER knob -->
       <div class="knob-unit">
-        <div class="knob-arc-wrap">
-          <svg class="arc-svg" viewBox="0 0 90 90">
-            <path class="arc-track" d="M15,72 A36,36 0 1,1 75,72"/>
-            <path class="arc-fill" id="arc-filter" d="M15,72 A36,36 0 0,1 45,9" stroke="{{ cfg.p }}" stroke-dasharray="0 999"/>
+        <div class="knob-wrap fx-knob" id="knob-filter" data-knob="filter" data-val="0.5">
+          <svg class="knob-svg" viewBox="0 0 70 70">
+            <defs>
+              <radialGradient id="kgf" cx="40%" cy="30%">
+                <stop offset="0%" stop-color="#4a4a5a"/>
+                <stop offset="100%" stop-color="#111"/>
+              </radialGradient>
+            </defs>
+            <circle cx="35" cy="35" r="30" fill="url(#kgf)" stroke="#333" stroke-width="2"/>
+            <path id="arc-filter" d="" fill="none" stroke="{{ cfg.p }}" stroke-width="3" stroke-linecap="round"/>
+            <line id="line-filter" x1="35" y1="35" x2="35" y2="10" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
           </svg>
-          <div class="fx-knob" id="knob-filter" data-value="0.85" data-param="filter">
-            <div class="knob-pointer" id="ptr-filter"></div>
-            <div class="knob-cap"></div>
-          </div>
         </div>
         <div class="knob-name">Filter</div>
-        <div class="knob-range"><span>low</span><span>open</span></div>
+        <div class="knob-range">low → open</div>
       </div>
 
-      <!-- ENV knob -->
       <div class="knob-unit">
-        <div class="knob-arc-wrap">
-          <svg class="arc-svg" viewBox="0 0 90 90">
-            <path class="arc-track" d="M15,72 A36,36 0 1,1 75,72"/>
-            <path class="arc-fill" id="arc-env" d="M15,72 A36,36 0 0,1 45,9" stroke="{{ cfg.p }}" stroke-dasharray="0 999"/>
+        <div class="knob-wrap fx-knob" id="knob-sweep" data-knob="sweep" data-val="0">
+          <svg class="knob-svg" viewBox="0 0 70 70">
+            <defs>
+              <radialGradient id="kgs" cx="40%" cy="30%">
+                <stop offset="0%" stop-color="#4a4a5a"/>
+                <stop offset="100%" stop-color="#111"/>
+              </radialGradient>
+            </defs>
+            <circle cx="35" cy="35" r="30" fill="url(#kgs)" stroke="#333" stroke-width="2"/>
+            <path id="arc-sweep" d="" fill="none" stroke="{{ cfg.p }}" stroke-width="3" stroke-linecap="round"/>
+            <line id="line-sweep" x1="35" y1="35" x2="35" y2="10" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
           </svg>
-          <div class="fx-knob" id="knob-env" data-value="0.75" data-param="env">
-            <div class="knob-pointer" id="ptr-env"></div>
-            <div class="knob-cap"></div>
-          </div>
         </div>
-        <div class="knob-name">Reverb</div>
-        <div class="knob-range"><span>dry</span><span>wet</span></div>
+        <div class="knob-name">Sweep</div>
+        <div class="knob-range">dry → wah</div>
+      </div>
+
+      <div class="knob-unit">
+        <div class="knob-wrap fx-knob" id="knob-pitch" data-knob="pitch" data-val="0.5">
+          <svg class="knob-svg" viewBox="0 0 70 70">
+            <defs>
+              <radialGradient id="kgp" cx="40%" cy="30%">
+                <stop offset="0%" stop-color="#4a4a5a"/>
+                <stop offset="100%" stop-color="#111"/>
+              </radialGradient>
+            </defs>
+            <circle cx="35" cy="35" r="30" fill="url(#kgp)" stroke="#333" stroke-width="2"/>
+            <path id="arc-pitch" d="" fill="none" stroke="{{ cfg.p }}" stroke-width="3" stroke-linecap="round"/>
+            <line id="line-pitch" x1="35" y1="35" x2="35" y2="10" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="knob-name">Pitch</div>
+        <div class="knob-range">monster → chipmunk</div>
       </div>
 
     </div>
   </div>
 
-  <!-- STOMP SWITCHES -->
-  <div class="stomp-section">
-
-    <!-- BEAT stomp -->
-    <div class="stomp-unit">
-      <div class="stomp-label-top">Beat</div>
-      <div class="stomp-btn stomp-beat" id="beat-stomp" onclick="toggleBeat()">
-        <div class="stomp-beat-inner" id="beat-label">ON</div>
-      </div>
-      <div class="stomp-leds">
-        <div class="s-led s-led-beat" id="beat-led"></div>
-        <div class="bpm-display" id="bpm-display">— BPM</div>
-      </div>
-      <div class="stomp-label-bot">Engine</div>
-    </div>
-
-    <!-- BYPASS stomp -->
-    <div class="stomp-unit">
-      <div class="stomp-label-top">FX</div>
-      <div class="stomp-btn stomp-bypass" id="bypass-stomp" onclick="toggleBypass()">
-        <svg width="28" height="28" viewBox="0 0 28 28">
-          <circle cx="14" cy="14" r="11" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-          <line x1="14" y1="6" x2="14" y2="10" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M9 9.5 A7 7 0 1 0 19 9.5" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="stomp-leds" id="bypass-leds">
-        <div class="s-led s-led-bypass-g"></div>
-        <div class="s-led s-led-bypass-r"></div>
-      </div>
-      <div class="stomp-label-bot">Bypass</div>
-    </div>
-
+  <!-- 6. TAP TEMPO -->
+  <div class="section">
+    <span class="section-label">TEMPO</span>
+    <button class="tap-btn" id="tapBtn" onclick="onTap()">
+      <span>👊</span> TAP
+    </button>
+    <div class="bpm-display" id="bpmDisplay">--- BPM</div>
+    <div class="tap-sublabel">TAP IN TIME WITH YOUR SONG</div>
   </div>
 
-  <!-- BOOMBOX + SPOTIFY -->
-  <div class="boombox-section">
-    <div class="boombox-label">◈ {{ cfg.beats }}</div>
-    <div class="eq-bars" id="eq-bars">
-      <div class="eq-bar" style="height:10px"></div>
-      <div class="eq-bar" style="height:16px"></div>
-      <div class="eq-bar" style="height:20px"></div>
-      <div class="eq-bar" style="height:14px"></div>
-      <div class="eq-bar" style="height:18px"></div>
-      <div class="eq-bar" style="height:12px"></div>
-      <div class="eq-bar" style="height:22px"></div>
-      <div class="eq-bar" style="height:9px"></div>
-    </div>
-    <iframe
-      src="https://open.spotify.com/embed/playlist/{{ spotify_id }}?utm_source=generator&theme=0"
-      width="100%" height="152" frameBorder="0"
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-      loading="lazy" style="border-radius:8px;display:block;">
-    </iframe>
-  </div>
-
-  <!-- CHALLENGE -->
-  <div class="challenge-section">
-    <div class="challenge-knob" id="challenge-knob" onclick="spinChallenge()"></div>
-    <div class="challenge-content">
-      <div class="challenge-eyebrow">Today's Challenge</div>
-      <div class="challenge-text" id="challenge-text">{{ challenges[0].title }}</div>
-    </div>
-  </div>
-  <div class="complete-row">
-    <div class="stomp-done" onclick="completeChallenge()">DONE</div>
-    <div class="stomp-done-label">Stomp to Complete</div>
-  </div>
-
-  <!-- NOTES -->
-  <div class="notes-section">
-    <div class="notes-header">{{ cfg.name }}'s Notes</div>
-    <form class="post-form" method="POST" action="/post">
-      <input type="hidden" name="author" value="{{ author }}">
-      <input type="hidden" name="back" value="/{{ who }}">
-      <input type="text" name="content" placeholder="Drop a note or lyric…" maxlength="280" autocomplete="off">
-      <button type="submit" class="post-btn">Post</button>
-    </form>
-    <div class="notes-list">
-      {% for note in notes %}
-      <div class="note-item">
-        <div>{{ note.content }}</div>
-        <div class="note-time">{{ note.timestamp[:16].replace('T',' ') }}</div>
+  <!-- 7. STOMP SWITCHES -->
+  <div class="section">
+    <div class="stomps-row">
+      <div class="stomp-unit">
+        <button class="stomp-btn" id="beatBtn" onclick="toggleBeat()">
+          <span class="stomp-icon">🥁</span>
+        </button>
+        <div class="stomp-led" id="beatLed"></div>
+        <div class="stomp-name">Beat Engine</div>
       </div>
-      {% else %}
-      <div class="empty-state">no notes yet — be first!</div>
+      <div class="stomp-unit">
+        <button class="stomp-btn" id="bypassBtn" onclick="toggleBypass()">
+          <span class="stomp-icon">⚡</span>
+        </button>
+        <div class="stomp-led on-green" id="bypassLed"></div>
+        <div class="stomp-name">Bypass</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. BOOMBOX -->
+  <div class="section">
+    <span class="section-label">{{ cfg.beats }}</span>
+    <div class="eq-bars">
+      <div class="eq-bar" style="height:60%"></div>
+      <div class="eq-bar" style="height:80%"></div>
+      <div class="eq-bar" style="height:45%"></div>
+      <div class="eq-bar" style="height:90%"></div>
+      <div class="eq-bar" style="height:55%"></div>
+      <div class="eq-bar" style="height:75%"></div>
+      <div class="eq-bar" style="height:40%"></div>
+      <div class="eq-bar" style="height:65%"></div>
+    </div>
+    <div class="spotify-wrap">
+      <iframe src="https://open.spotify.com/embed/playlist/{{ spotify_id }}?utm_source=generator&theme=0"
+        width="100%" height="152" frameBorder="0" allowfullscreen=""
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <!-- 9. IMPORTANT NUMBERS -->
+  <div class="section">
+    <span class="section-label">IMPORTANT NUMBERS</span>
+    <div class="contacts-grid">
+      {% for c in contacts %}
+      <div class="contact-card">
+        <div class="contact-name">{{ c.emoji }} {{ c.name }}</div>
+        <div class="contact-btns">
+          <a class="contact-btn btn-call" href="tel:+1{{ c.number }}">📞 CALL</a>
+          <a class="contact-btn btn-text" href="sms:+1{{ c.number }}">💬 TEXT</a>
+        </div>
+      </div>
       {% endfor %}
     </div>
   </div>
 
-  <!-- RUBBER FEET -->
-  <div class="feet">
-    <div class="foot"></div><div class="foot"></div>
-    <div class="foot"></div><div class="foot"></div>
-  </div>
-</div>
+  <!-- 10. NOTES -->
+  <div class="section" id="notesSection">
+    <span class="section-label">NOTES</span>
+    <div class="notes-pills">
+      <button class="cat-pill active" data-cat="School" onclick="switchCat('School')">SCHOOL</button>
+      <button class="cat-pill" data-cat="People" onclick="switchCat('People')">PEOPLE</button>
+      <button class="cat-pill" data-cat="Family" onclick="switchCat('Family')">FAMILY</button>
+      <button class="cat-pill locked" data-cat="Me" onclick="switchCat('Me')">ME 🔒</button>
+    </div>
 
-<!-- COMPLETE MODAL -->
-<div class="modal-overlay" id="complete-modal">
-  <div class="modal">
-    <div class="modal-trophy">🏆</div>
-    <div class="modal-title">Challenge Complete!</div>
-    <div class="modal-sub">That's what I'm talking about.</div>
-    <button class="btn-accent" onclick="closeComplete()">Keep Going</button>
+    <!-- Notes content area -->
+    <div id="notesCatContent">
+      <!-- Normal notes view -->
+      <div id="normalNotesView">
+        <div class="notes-list" id="notesList"></div>
+        <div class="note-input-row">
+          <input class="note-input" id="noteInput" type="text" placeholder="Write something..." maxlength="280">
+          <button class="note-post-btn" onclick="postNote()">POST</button>
+        </div>
+      </div>
+
+      <!-- Me: set password screen -->
+      <div id="meSetPwScreen" style="display:none">
+        <div class="me-lock-screen">
+          <div class="me-lock-icon">🔒</div>
+          <div class="me-lock-title">YOUR SECRET SPACE</div>
+          <div class="me-lock-sub">This journal is just for you. Set a password only you know.</div>
+          <input class="me-pw-input" id="meSetPwInput" type="password" placeholder="Choose a password">
+          <input class="me-pw-input" id="meSetHintInput" type="text" placeholder="Password hint (optional)">
+          <button class="me-btn" onclick="meSetPassword()">LOCK IT IN ✨</button>
+          <div class="me-error" id="meSetError"></div>
+        </div>
+      </div>
+
+      <!-- Me: unlock screen -->
+      <div id="meUnlockScreen" style="display:none">
+        <div class="me-lock-screen">
+          <div class="me-lock-icon">🔒</div>
+          <div class="me-lock-title">YOUR JOURNAL</div>
+          <div class="me-lock-sub">Enter your password</div>
+          <input class="me-pw-input" id="meUnlockPwInput" type="password" placeholder="Password">
+          <div class="me-hint-text" id="meHintToggle" onclick="toggleHint()" style="display:none">Show hint 👁</div>
+          <div class="me-hint-val" id="meHintVal" style="display:none"></div>
+          <button class="me-btn" onclick="meCheckPassword()">UNLOCK ✨</button>
+          <div class="me-error" id="meUnlockError"></div>
+        </div>
+      </div>
+
+      <!-- Me: unlocked journal view -->
+      <div id="meUnlockedView" style="display:none">
+        <div class="me-unlock-header">
+          <span style="font-size:12px;color:#BF5FFF;font-weight:700">✨ Your private journal</span>
+          <button class="me-lock-btn" onclick="meLock()">🔒 LOCK</button>
+        </div>
+        <div class="notes-list" id="meNotesList"></div>
+        <div class="note-input-row">
+          <input class="note-input" id="meNoteInput" type="text" placeholder="Write something private..." maxlength="280" style="border-color:#4a1a80">
+          <button class="note-post-btn" style="background:#6a1aaa" onclick="postMeNote()">POST</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. CHALLENGE -->
+  <div class="section challenge-section">
+    <span class="section-label">CHALLENGE</span>
+    <div class="challenge-knob-wrap">
+      <div class="challenge-knob" onclick="spinChallenge()">🎰</div>
+    </div>
+    <div class="challenge-display" id="challengeDisplay">Spin to get a challenge!</div>
+    <button class="done-btn" onclick="doneChallenge()">✅ DONE — NEXT CHALLENGE</button>
+  </div>
+
+  <!-- 12. RUBBER FEET -->
+  <div class="rubber-feet">
+    <div class="rubber-foot"></div>
+    <div class="rubber-foot"></div>
+    <div class="rubber-foot"></div>
+    <div class="rubber-foot"></div>
   </div>
 </div>
 
 <script>
-// ═══════════════════════════════════
+// ══════════════════════════════════════════════════
+// CONSTANTS
+// ══════════════════════════════════════════════════
+const WHO = '{{ who }}';
+const AUTHOR = '{{ author }}';
+const CHALLENGES = {{ challenges | tojson }};
+let jokesPool = {{ jokes | tojson }};
+
+// ══════════════════════════════════════════════════
+// MESSAGES
+// ══════════════════════════════════════════════════
+const MESSAGES = [
+  "You are perfect to me",
+  "You are magico to papito",
+  "I love you to the universe and back",
+  "You make me so proud every single day",
+  "You are my whole heart",
+  "The world is better with you in it",
+  "You are braver than you know",
+  "Nothing could ever change how much I love you",
+  "You are one of my greatest gifts",
+  "Always and forever, no matter what",
+];
+let msgIdx = 0;
+function rotateMsg() {
+  const el = document.getElementById('msgText');
+  el.style.opacity = '0';
+  setTimeout(() => {
+    msgIdx = (msgIdx + 1) % MESSAGES.length;
+    el.textContent = MESSAGES[msgIdx];
+    el.style.opacity = '1';
+  }, 500);
+}
+setInterval(rotateMsg, 4000);
+
+// ══════════════════════════════════════════════════
+// JOKE TELEPROMPTER
+// ══════════════════════════════════════════════════
+let jokeIdx = 0;
+let jokeTick = 0;
+const JOKE_SECS = 8;
+
+function showJoke(idx) {
+  const el = document.getElementById('jokeText');
+  el.style.opacity = '0';
+  setTimeout(() => {
+    el.textContent = jokesPool[idx % jokesPool.length];
+    el.style.opacity = '1';
+    jokeTick = JOKE_SECS;
+    document.getElementById('jokeTimerFill').style.width = '100%';
+  }, 300);
+}
+showJoke(0);
+
+setInterval(() => {
+  jokeTick--;
+  const pct = Math.max(0, jokeTick / JOKE_SECS * 100);
+  document.getElementById('jokeTimerFill').style.width = pct + '%';
+  if (jokeTick <= 0) {
+    jokeIdx = (jokeIdx + 1) % jokesPool.length;
+    showJoke(jokeIdx);
+  }
+}, 1000);
+
+async function refreshJokes() {
+  const btn = document.querySelector('.joke-refresh');
+  btn.textContent = '⏳';
+  try {
+    const res = await fetch('/api/jokes');
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0) {
+      jokesPool = data;
+      jokeIdx = 0;
+      showJoke(0);
+    }
+  } catch(e) {}
+  btn.textContent = '🎲 new';
+}
+
+// ══════════════════════════════════════════════════
 // WEB AUDIO ENGINE
-// ═══════════════════════════════════
-let audioCtx, distNode, filterNode, reverbNode, reverbGain, dryGain, masterGain;
-let isAudioReady = false;
-let isBypassed = false;
+// ══════════════════════════════════════════════════
+let audioCtx = null;
+let waveShaper, lowpassFilter, bandpassFilter, masterGain;
+let beatPitchMult = 1.0;
 let isBeatOn = false;
-let beatScheduler, nextBeatTime, beatStep;
-const BPM = 100;
-const STEP = (60 / BPM) / 2;
+let beatTimeout = null;
+let currentBPM = 90;
+let isBypassed = false;
 
 function initAudio() {
-  if (isAudioReady) return;
+  if (audioCtx) return;
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-  // Distortion
-  distNode = audioCtx.createWaveShaper();
-  distNode.oversample = '4x';
+  waveShaper = audioCtx.createWaveShaper();
+  waveShaper.curve = makeDistortionCurve(0);
+  waveShaper.oversample = '4x';
 
-  // Filter
-  filterNode = audioCtx.createBiquadFilter();
-  filterNode.type = 'lowpass';
-  filterNode.Q.value = 2;
+  lowpassFilter = audioCtx.createBiquadFilter();
+  lowpassFilter.type = 'lowpass';
+  lowpassFilter.frequency.value = 5000;
+  lowpassFilter.Q.value = 1;
 
-  // Reverb (simple convolver with white noise impulse)
-  reverbNode = audioCtx.createConvolver();
-  buildImpulse(1.5);
+  bandpassFilter = audioCtx.createBiquadFilter();
+  bandpassFilter.type = 'bandpass';
+  bandpassFilter.frequency.value = 1000;
+  bandpassFilter.Q.value = 8;
 
-  reverbGain = audioCtx.createGain();
-  dryGain    = audioCtx.createGain();
   masterGain = audioCtx.createGain();
+  masterGain.gain.value = isBypassed ? 0.7 : 1.0;
 
-  reverbGain.gain.value = 0.4;
-  dryGain.gain.value    = 1.0;
-  masterGain.gain.value = 1.0;
-
-  // Chain: dist → filter → dry + reverb → master → out
-  distNode.connect(filterNode);
-  filterNode.connect(dryGain);
-  filterNode.connect(reverbNode);
-  reverbNode.connect(reverbGain);
-  dryGain.connect(masterGain);
-  reverbGain.connect(masterGain);
+  // Chain: waveShaper → lowpass → bandpass → masterGain → dest
+  waveShaper.connect(lowpassFilter);
+  lowpassFilter.connect(bandpassFilter);
+  bandpassFilter.connect(masterGain);
   masterGain.connect(audioCtx.destination);
-
-  isAudioReady = true;
-
-  // Apply initial knob values
-  const knobs = document.querySelectorAll('.fx-knob');
-  knobs.forEach(k => applyParam(k.dataset.param, parseFloat(k.dataset.value)));
 }
 
-function buildImpulse(duration) {
-  const sr = audioCtx.sampleRate;
-  const len = sr * duration;
-  const buf = audioCtx.createBuffer(2, len, sr);
-  for (let c = 0; c < 2; c++) {
-    const d = buf.getChannelData(c);
-    for (let i = 0; i < len; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 2);
-  }
-  reverbNode.buffer = buf;
-}
-
-function makeDistCurve(amount) {
-  const n = 512;
-  const curve = new Float32Array(n);
+function makeDistortionCurve(amount) {
+  const n = 256, curve = new Float32Array(n);
+  const k = amount;
   for (let i = 0; i < n; i++) {
     const x = (i * 2) / n - 1;
-    if (amount < 1) { curve[i] = x; continue; }
-    curve[i] = (Math.PI + amount) * x / (Math.PI + amount * Math.abs(x));
+    if (k === 0) { curve[i] = x; }
+    else { curve[i] = (Math.PI + k) * x / (Math.PI + k * Math.abs(x)); }
   }
   return curve;
 }
 
-function applyParam(param, val) {
-  if (!isAudioReady) return;
-  if (param === 'drive') {
-    const amt = val * 350;
-    distNode.curve = makeDistCurve(amt);
-  } else if (param === 'filter') {
-    const minF = Math.log(300), maxF = Math.log(18000);
-    filterNode.frequency.setTargetAtTime(
-      Math.exp(minF + val * (maxF - minF)), audioCtx.currentTime, 0.02
-    );
-  } else if (param === 'env') {
-    reverbGain.gain.setTargetAtTime(val * 0.9, audioCtx.currentTime, 0.02);
-    dryGain.gain.setTargetAtTime(1 - val * 0.6, audioCtx.currentTime, 0.02);
-  }
+function applyDrive(val) {
+  if (!audioCtx) return;
+  waveShaper.curve = makeDistortionCurve(val * 350);
+}
+function applyFilter(val) {
+  if (!audioCtx) return;
+  const freq = 200 * Math.pow(18000 / 200, val);
+  lowpassFilter.frequency.value = freq;
+}
+function applySweep(val) {
+  if (!audioCtx) return;
+  const freq = 200 * Math.pow(8000 / 200, val);
+  bandpassFilter.frequency.value = freq;
+}
+function applyPitch(val) {
+  const semitones = val * 24 - 12;
+  beatPitchMult = Math.pow(2, semitones / 12);
 }
 
-function toggleBypass() {
-  if (!isAudioReady) initAudio();
-  isBypassed = !isBypassed;
-  const btn = document.getElementById('bypass-stomp');
-  const leds = document.getElementById('bypass-leds');
-  btn.classList.toggle('bypassed', isBypassed);
-  leds.classList.toggle('bypassed', isBypassed);
-  masterGain.gain.setTargetAtTime(isBypassed ? 0 : 1, audioCtx.currentTime, 0.02);
-}
-
-// ═══════════════════════════════════
-// BEAT ENGINE
-// ═══════════════════════════════════
-const PAT = {
-  kick:  [1,0,0,0, 1,0,0,0, 1,0,1,0, 1,0,0,0],
-  snare: [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0],
-  hat:   [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,1,1,0]
-};
-
+// ── Beat Engine ────────────────────────────────────────────
 function playKick(t) {
   const osc = audioCtx.createOscillator();
-  const g   = audioCtx.createGain();
-  osc.connect(g); g.connect(distNode);
-  osc.frequency.setValueAtTime(140, t);
-  osc.frequency.exponentialRampToValueAtTime(0.001, t + 0.45);
-  g.gain.setValueAtTime(1.2, t);
-  g.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
-  osc.start(t); osc.stop(t + 0.45);
+  const gain = audioCtx.createGain();
+  osc.frequency.setValueAtTime(120 * beatPitchMult, t);
+  osc.frequency.exponentialRampToValueAtTime(40 * beatPitchMult, t + 0.15);
+  gain.gain.setValueAtTime(1.2, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+  osc.connect(gain); gain.connect(masterGain);
+  osc.start(t); osc.stop(t + 0.3);
 }
-
 function playSnare(t) {
-  const len = Math.round(audioCtx.sampleRate * 0.18);
-  const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
-  const d = buf.getChannelData(0);
-  for (let i = 0; i < len; i++) d[i] = Math.random()*2-1;
+  const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.15, audioCtx.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
   const src = audioCtx.createBufferSource();
+  const gain = audioCtx.createGain();
   src.buffer = buf;
-  const g = audioCtx.createGain();
-  src.connect(g); g.connect(distNode);
-  g.gain.setValueAtTime(0.7, t);
-  g.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
-  src.start(t);
+  gain.gain.setValueAtTime(0.7, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+  src.connect(gain); gain.connect(masterGain);
+  src.start(t); src.stop(t + 0.2);
 }
-
-function playHat(t) {
-  const len = Math.round(audioCtx.sampleRate * 0.06);
-  const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
-  const d = buf.getChannelData(0);
-  for (let i = 0; i < len; i++) d[i] = Math.random()*2-1;
+function playHihat(t) {
+  const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.05, audioCtx.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
   const src = audioCtx.createBufferSource();
-  src.buffer = buf;
-  const hpf = audioCtx.createBiquadFilter();
-  hpf.type = 'highpass'; hpf.frequency.value = 8000;
-  const g = audioCtx.createGain();
-  src.connect(hpf); hpf.connect(g); g.connect(distNode);
-  g.gain.setValueAtTime(0.28, t);
-  g.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
-  src.start(t);
+  const filt = audioCtx.createBiquadFilter();
+  const gain = audioCtx.createGain();
+  filt.type = 'highpass'; filt.frequency.value = 7000;
+  gain.gain.setValueAtTime(0.4, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+  src.connect(filt); filt.connect(gain); gain.connect(masterGain);
+  src.start(t); src.stop(t + 0.06);
 }
 
-function schedule() {
-  const LOOK = 0.12;
-  while (nextBeatTime < audioCtx.currentTime + LOOK) {
-    const s = beatStep % 16;
-    if (PAT.kick[s])  playKick(nextBeatTime);
-    if (PAT.snare[s]) playSnare(nextBeatTime);
-    if (PAT.hat[s])   playHat(nextBeatTime);
-    if (s % 2 === 0) flashBeatLed();
-    beatStep++;
-    nextBeatTime += STEP;
-  }
-  beatScheduler = setTimeout(schedule, 25);
-}
+// Pattern: kick snare hihat
+const BEAT_PATTERN = [
+  [1,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0], // kick
+  [0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0], // snare
+  [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0], // hihat
+];
 
-function flashBeatLed() {
-  const led = document.getElementById('beat-led');
-  led.classList.add('on');
-  setTimeout(() => led.classList.remove('on'), 80);
+let beatStep = 0;
+function scheduleBeat() {
+  if (!isBeatOn || !audioCtx) return;
+  const stepDur = (60 / currentBPM) / 4;
+  const now = audioCtx.currentTime;
+  if (BEAT_PATTERN[0][beatStep]) playKick(now);
+  if (BEAT_PATTERN[1][beatStep]) playSnare(now);
+  if (BEAT_PATTERN[2][beatStep]) playHihat(now);
+  beatStep = (beatStep + 1) % 16;
+  beatTimeout = setTimeout(scheduleBeat, stepDur * 1000);
 }
-
-function toggleBeat() {
+function startBeat() {
   initAudio();
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  isBeatOn = !isBeatOn;
-  const stomp = document.getElementById('beat-stomp');
-  const label = document.getElementById('beat-label');
-  const bpmEl = document.getElementById('bpm-display');
-  if (isBeatOn) {
-    beatStep = 0;
-    nextBeatTime = audioCtx.currentTime + 0.05;
-    schedule();
-    stomp.classList.add('active');
-    label.textContent = 'OFF';
-    bpmEl.textContent = BPM + ' BPM';
-    animateEQ(true);
-  } else {
-    clearTimeout(beatScheduler);
-    stomp.classList.remove('active');
-    label.textContent = 'ON';
-    bpmEl.textContent = '— BPM';
-    animateEQ(false);
+  isBeatOn = true; beatStep = 0;
+  document.getElementById('beatLed').className = 'stomp-led on-green';
+  scheduleBeat();
+}
+function stopBeat() {
+  isBeatOn = false;
+  clearTimeout(beatTimeout);
+  document.getElementById('beatLed').className = 'stomp-led';
+}
+function restartBeat() {
+  stopBeat(); startBeat();
+}
+function toggleBeat() {
+  if (isBeatOn) stopBeat(); else startBeat();
+}
+function toggleBypass() {
+  isBypassed = !isBypassed;
+  if (audioCtx) masterGain.gain.value = isBypassed ? 0.0 : 1.0;
+  const led = document.getElementById('bypassLed');
+  led.className = isBypassed ? 'stomp-led on-red' : 'stomp-led on-green';
+}
+
+// ══════════════════════════════════════════════════
+// TAP TEMPO
+// ══════════════════════════════════════════════════
+let tapTimes = [];
+let tapTimeoutId;
+
+function onTap() {
+  const now = Date.now();
+  clearTimeout(tapTimeoutId);
+  tapTimeoutId = setTimeout(() => { tapTimes = []; }, 3000);
+  tapTimes.push(now);
+  if (tapTimes.length < 2) { updateBPMDisplay('TAP...'); return; }
+  if (tapTimes.length > 8) tapTimes.shift();
+  const intervals = [];
+  for (let i = 1; i < tapTimes.length; i++) intervals.push(tapTimes[i] - tapTimes[i-1]);
+  const avg = intervals.reduce((a,b) => a+b, 0) / intervals.length;
+  const bpm = Math.round(60000 / avg);
+  if (bpm >= 50 && bpm <= 220) {
+    currentBPM = bpm;
+    updateBPMDisplay(bpm + ' BPM');
+    if (isBeatOn) restartBeat();
+  }
+}
+function updateBPMDisplay(text) {
+  document.getElementById('bpmDisplay').textContent = text;
+}
+
+// ══════════════════════════════════════════════════
+// KNOBS
+// ══════════════════════════════════════════════════
+const knobState = { drive: 0, filter: 0.5, sweep: 0, pitch: 0.5 };
+
+function drawKnob(name, val) {
+  const minAngle = -140 * Math.PI / 180;
+  const maxAngle = 140 * Math.PI / 180;
+  const angle = minAngle + val * (maxAngle - minAngle);
+  const cx = 35, cy = 35, r = 24;
+
+  // Indicator line
+  const lx = cx + Math.sin(angle) * 20;
+  const ly = cy - Math.cos(angle) * 20;
+  const line = document.getElementById('line-' + name);
+  if (line) { line.setAttribute('x2', lx); line.setAttribute('y2', ly); }
+
+  // Arc
+  const startAngle = minAngle;
+  const endAngle = angle;
+  const sx = cx + Math.sin(startAngle) * r;
+  const sy = cy - Math.cos(startAngle) * r;
+  const ex = cx + Math.sin(endAngle) * r;
+  const ey = cy - Math.cos(endAngle) * r;
+  const largeArc = (endAngle - startAngle) > Math.PI ? 1 : 0;
+  const path = document.getElementById('arc-' + name);
+  if (path && val > 0) {
+    path.setAttribute('d', `M ${sx} ${sy} A ${r} ${r} 0 ${largeArc} 1 ${ex} ${ey}`);
+  } else if (path) {
+    path.setAttribute('d', '');
   }
 }
 
-// ═══════════════════════════════════
-// ROTARY KNOBS
-// ═══════════════════════════════════
-const ARC_TOTAL = 226; // px of SVG arc at viewBox scale
+function initKnobs() {
+  Object.keys(knobState).forEach(name => drawKnob(name, knobState[name]));
 
-function valToDeg(val) { return -135 + val * 270; }
+  document.querySelectorAll('.knob-wrap').forEach(el => {
+    const name = el.dataset.knob;
+    let startY, startVal;
 
-function updateKnobVisual(knobId, val) {
-  const ptr = document.getElementById('ptr-' + knobId);
-  const arc = document.getElementById('arc-' + knobId);
-  ptr.style.transform = `translateX(-50%) rotate(${valToDeg(val)}deg)`;
-  // Arc fill: 0 to ARC_TOTAL
-  const filled = val * ARC_TOTAL;
-  arc.style.strokeDasharray = `${filled} 999`;
+    const onStart = (clientY) => {
+      initAudio();
+      startY = clientY;
+      startVal = knobState[name];
+    };
+    const onMove = (clientY) => {
+      const delta = (startY - clientY) / 200;
+      knobState[name] = Math.max(0, Math.min(1, startVal + delta));
+      drawKnob(name, knobState[name]);
+      dispatchKnob(name, knobState[name]);
+    };
+    const onEnd = () => {
+      document.removeEventListener('mousemove', mouseMove);
+      document.removeEventListener('mouseup', mouseUp);
+      document.removeEventListener('touchmove', touchMove);
+      document.removeEventListener('touchend', touchEnd);
+    };
+    const mouseMove = (e) => onMove(e.clientY);
+    const mouseUp   = () => onEnd();
+    const touchMove = (e) => { e.preventDefault(); onMove(e.touches[0].clientY); };
+    const touchEnd  = () => onEnd();
+
+    el.addEventListener('mousedown', e => {
+      onStart(e.clientY);
+      document.addEventListener('mousemove', mouseMove);
+      document.addEventListener('mouseup', mouseUp);
+    });
+    el.addEventListener('touchstart', e => {
+      e.preventDefault();
+      onStart(e.touches[0].clientY);
+      document.addEventListener('touchmove', touchMove, {passive: false});
+      document.addEventListener('touchend', touchEnd);
+    });
+  });
 }
 
-function setupKnob(el) {
-  let startY, startVal;
-  const RANGE = 220;
-  const id = el.id.replace('knob-', '');
-  const param = el.dataset.param;
-
-  // Initialize visual
-  updateKnobVisual(id, parseFloat(el.dataset.value));
-
-  function onStart(e) {
-    initAudio();
-    startY = e.touches ? e.touches[0].clientY : e.clientY;
-    startVal = parseFloat(el.dataset.value);
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onEnd);
-    window.addEventListener('touchmove', onMove, {passive: false});
-    window.addEventListener('touchend', onEnd);
-  }
-  function onMove(e) {
-    e.preventDefault();
-    const y = e.touches ? e.touches[0].clientY : e.clientY;
-    const delta = (startY - y) / RANGE;
-    const val = Math.min(1, Math.max(0, startVal + delta));
-    el.dataset.value = val;
-    updateKnobVisual(id, val);
-    applyParam(param, val);
-  }
-  function onEnd() {
-    window.removeEventListener('mousemove', onMove);
-    window.removeEventListener('mouseup', onEnd);
-    window.removeEventListener('touchmove', onMove);
-    window.removeEventListener('touchend', onEnd);
-  }
-  el.addEventListener('mousedown', onStart);
-  el.addEventListener('touchstart', onStart, {passive: false});
+function dispatchKnob(name, val) {
+  if (name === 'drive')  applyDrive(val);
+  if (name === 'filter') applyFilter(val);
+  if (name === 'sweep')  applySweep(val);
+  if (name === 'pitch')  applyPitch(val);
 }
 
-document.querySelectorAll('.fx-knob').forEach(setupKnob);
+// Draw initial positions
+document.addEventListener('DOMContentLoaded', () => {
+  initKnobs();
+  loadNotes('School');
+});
 
-// ═══════════════════════════════════
-// EQ BARS
-// ═══════════════════════════════════
-let eqAnimFrame;
-function animateEQ(active) {
-  cancelAnimationFrame(eqAnimFrame);
-  const bars = document.querySelectorAll('#eq-bars .eq-bar');
-  if (!active) { bars.forEach(b => b.style.height = '4px'); return; }
-  function tick() {
-    bars.forEach(b => { b.style.height = (4 + Math.random() * 18) + 'px'; });
-    setTimeout(() => { eqAnimFrame = requestAnimationFrame(tick); }, 120 + Math.random()*80);
+// ══════════════════════════════════════════════════
+// NOTES — AJAX
+// ══════════════════════════════════════════════════
+let currentCategory = 'School';
+
+function switchCat(cat) {
+  currentCategory = cat;
+  document.querySelectorAll('.cat-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.cat === cat);
+  });
+
+  if (cat === 'Me') {
+    document.getElementById('normalNotesView').style.display = 'none';
+    handleMeCategory();
+    return;
   }
-  tick();
+  document.getElementById('normalNotesView').style.display = 'block';
+  document.getElementById('meSetPwScreen').style.display = 'none';
+  document.getElementById('meUnlockScreen').style.display = 'none';
+  document.getElementById('meUnlockedView').style.display = 'none';
+  loadNotes(cat);
 }
-animateEQ(false);
 
-// ═══════════════════════════════════
-// CHALLENGES
-// ═══════════════════════════════════
-const challenges = {{ challenges | tojson }};
-let currentIdx = 0;
+async function loadNotes(category) {
+  const listEl = document.getElementById('notesList');
+  listEl.innerHTML = '<div class="note-empty">Loading...</div>';
+  try {
+    const res = await fetch(`/api/notes/${WHO}/${category}`);
+    if (res.status === 403) { listEl.innerHTML = '<div class="note-empty">🔒 locked</div>'; return; }
+    const notes = await res.json();
+    renderNotesList(listEl, notes, false);
+  } catch(e) {
+    listEl.innerHTML = '<div class="note-empty">Could not load notes.</div>';
+  }
+}
+
+function renderNotesList(listEl, notes, isMe) {
+  if (!notes.length) {
+    listEl.innerHTML = '<div class="note-empty">nothing here yet 📝</div>';
+    return;
+  }
+  listEl.innerHTML = '';
+  notes.forEach(n => listEl.appendChild(makeNoteEl(n, isMe)));
+}
+
+function makeNoteEl(note, isMe) {
+  const div = document.createElement('div');
+  div.className = 'note-item' + (isMe ? ' me-note' : '');
+  div.id = 'note-' + note.id;
+  div.innerHTML = `
+    <div style="flex:1">
+      <div class="note-content">${escHtml(note.content)}</div>
+      <div class="note-time">${note.timestamp || 'just now'}</div>
+    </div>
+    <button class="note-delete" onclick="deleteNote(${note.id}, ${isMe})">✕</button>
+  `;
+  return div;
+}
+
+async function postNote() {
+  const input = document.getElementById('noteInput');
+  const content = input.value.trim();
+  if (!content) return;
+  try {
+    const res = await fetch(`/api/notes/${WHO}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ content, category: currentCategory })
+    });
+    if (!res.ok) return;
+    const note = await res.json();
+    const listEl = document.getElementById('notesList');
+    const empty = listEl.querySelector('.note-empty');
+    if (empty) empty.remove();
+    listEl.prepend(makeNoteEl(note, false));
+    input.value = '';
+  } catch(e) {}
+}
+
+async function deleteNote(id, isMe) {
+  try {
+    await fetch(`/api/notes/${id}/delete`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ who: WHO })
+    });
+    const el = document.getElementById('note-' + id);
+    if (el) el.remove();
+  } catch(e) {}
+}
+
+// ── Me Journal ──────────────────────────────────────────────
+let meUnlocked = false;
+let meHint = '';
+
+async function handleMeCategory() {
+  try {
+    const res = await fetch(`/api/me/status/${WHO}`);
+    const data = await res.json();
+    if (data.unlocked) {
+      showMeUnlocked();
+    } else if (data.has_password) {
+      showMeUnlock();
+    } else {
+      showMeSetPassword();
+    }
+  } catch(e) {
+    showMeSetPassword();
+  }
+}
+
+function showMeSetPassword() {
+  document.getElementById('meSetPwScreen').style.display = 'block';
+  document.getElementById('meUnlockScreen').style.display = 'none';
+  document.getElementById('meUnlockedView').style.display = 'none';
+}
+function showMeUnlock() {
+  document.getElementById('meSetPwScreen').style.display = 'none';
+  document.getElementById('meUnlockScreen').style.display = 'block';
+  document.getElementById('meUnlockedView').style.display = 'none';
+}
+async function showMeUnlocked() {
+  document.getElementById('meSetPwScreen').style.display = 'none';
+  document.getElementById('meUnlockScreen').style.display = 'none';
+  document.getElementById('meUnlockedView').style.display = 'block';
+  meUnlocked = true;
+  const meList = document.getElementById('meNotesList');
+  meList.innerHTML = '<div class="note-empty">Loading...</div>';
+  try {
+    const res = await fetch(`/api/notes/${WHO}/Me`);
+    const notes = await res.json();
+    renderNotesList(meList, notes, true);
+  } catch(e) {
+    meList.innerHTML = '<div class="note-empty">Could not load.</div>';
+  }
+}
+
+async function meSetPassword() {
+  const pw   = document.getElementById('meSetPwInput').value;
+  const hint = document.getElementById('meSetHintInput').value;
+  const errEl = document.getElementById('meSetError');
+  if (!pw) { errEl.textContent = 'Please enter a password'; return; }
+  try {
+    const res = await fetch(`/api/me/set-password/${WHO}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ password: pw, hint })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      errEl.textContent = '';
+      showMeUnlocked();
+    } else {
+      errEl.textContent = 'Something went wrong, try again';
+    }
+  } catch(e) { errEl.textContent = 'Error, try again'; }
+}
+
+async function meCheckPassword() {
+  const pw    = document.getElementById('meUnlockPwInput').value;
+  const errEl = document.getElementById('meUnlockError');
+  try {
+    const res = await fetch(`/api/me/check-password/${WHO}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ password: pw })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      errEl.textContent = '';
+      showMeUnlocked();
+    } else {
+      errEl.textContent = 'Wrong password — try again';
+      if (data.hint && !meHint) {
+        meHint = data.hint;
+        document.getElementById('meHintToggle').style.display = 'block';
+        document.getElementById('meHintVal').textContent = meHint;
+      }
+      const form = document.getElementById('meUnlockScreen');
+      form.classList.remove('shake');
+      void form.offsetWidth;
+      form.classList.add('shake');
+    }
+  } catch(e) { errEl.textContent = 'Error, try again'; }
+}
+
+function toggleHint() {
+  const val = document.getElementById('meHintVal');
+  val.style.display = val.style.display === 'none' ? 'block' : 'none';
+  document.getElementById('meHintToggle').textContent =
+    val.style.display === 'none' ? 'Show hint 👁' : 'Hide hint';
+}
+
+async function meLock() {
+  meUnlocked = false;
+  try {
+    await fetch(`/api/me/lock/${WHO}`, { method: 'POST' });
+  } catch(e) {}
+  document.getElementById('meUnlockedView').style.display = 'none';
+  // Switch back to School
+  switchCat('School');
+  document.querySelectorAll('.cat-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.cat === 'School');
+  });
+}
+
+async function postMeNote() {
+  const input = document.getElementById('meNoteInput');
+  const content = input.value.trim();
+  if (!content) return;
+  try {
+    const res = await fetch(`/api/notes/${WHO}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ content, category: 'Me' })
+    });
+    if (!res.ok) return;
+    const note = await res.json();
+    const listEl = document.getElementById('meNotesList');
+    const empty = listEl.querySelector('.note-empty');
+    if (empty) empty.remove();
+    listEl.prepend(makeNoteEl(note, true));
+    input.value = '';
+  } catch(e) {}
+}
+
+// Note input enter key
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('noteInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') postNote();
+  });
+  document.getElementById('meNoteInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') postMeNote();
+  });
+  document.getElementById('meUnlockPwInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') meCheckPassword();
+  });
+  document.getElementById('meSetPwInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') meSetPassword();
+  });
+});
+
+// ══════════════════════════════════════════════════
+// CHALLENGE SPINNER
+// ══════════════════════════════════════════════════
+let challengeIdx = Math.floor(Math.random() * CHALLENGES.length);
+let challengeUsed = new Set();
 
 function spinChallenge() {
-  const knob = document.getElementById('challenge-knob');
-  const el = document.getElementById('challenge-text');
-  let next;
-  do { next = Math.floor(Math.random() * challenges.length); } while (next === currentIdx && challenges.length > 1);
-  currentIdx = next;
-  knob.classList.remove('spinning');
-  void knob.offsetWidth;
-  knob.classList.add('spinning');
-  knob.addEventListener('animationend', () => knob.classList.remove('spinning'), {once:true});
-  el.style.opacity = '0';
-  setTimeout(() => { el.textContent = challenges[next].title; el.style.opacity = '1'; }, 150);
+  const knob = document.querySelector('.challenge-knob');
+  const display = document.getElementById('challengeDisplay');
+  let spins = 0;
+  const maxSpins = 10 + Math.floor(Math.random() * 8);
+  const interval = setInterval(() => {
+    let idx;
+    do { idx = Math.floor(Math.random() * CHALLENGES.length); }
+    while (challengeUsed.has(idx) && challengeUsed.size < CHALLENGES.length);
+    display.textContent = CHALLENGES[idx].title;
+    challengeIdx = idx;
+    spins++;
+    if (spins >= maxSpins) {
+      clearInterval(interval);
+      challengeUsed.add(challengeIdx);
+    }
+  }, 80);
 }
 
-function completeChallenge() {
-  launchConfetti();
-  document.getElementById('complete-modal').classList.add('open');
-}
-function closeComplete() {
-  document.getElementById('complete-modal').classList.remove('open');
-  spinChallenge();
+function doneChallenge() {
+  spawnConfetti();
+  setTimeout(spinChallenge, 600);
 }
 
-function launchConfetti() {
-  const colors = ['{{ cfg.p }}','{{ cfg.p2 }}','#f0b429','#fff','#39ff14','#f87171'];
-  for (let i = 0; i < 80; i++) {
+function spawnConfetti() {
+  const colors = ['#a78bfa','#60a5fa','#f0b429','#ff4fc8','#39ff14','#ff3b3b'];
+  for (let i = 0; i < 40; i++) {
     const p = document.createElement('div');
     p.className = 'confetti-piece';
-    const s = 6 + Math.random() * 8;
-    p.style.cssText = `left:${Math.random()*100}vw;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${1.2+Math.random()*1.8}s;animation-delay:${Math.random()*.5}s;width:${s}px;height:${s}px;border-radius:${Math.random()>.5?'50%':'2px'};`;
+    p.style.cssText = `
+      left: ${Math.random() * 100}vw;
+      top: ${Math.random() * 30}vh;
+      background: ${colors[Math.floor(Math.random() * colors.length)]};
+      transform: rotate(${Math.random() * 360}deg);
+      animation-duration: ${0.8 + Math.random() * 0.8}s;
+      animation-delay: ${Math.random() * 0.3}s;
+    `;
     document.body.appendChild(p);
-    p.addEventListener('animationend', () => p.remove());
+    setTimeout(() => p.remove(), 2000);
   }
 }
 
-// ═══════════════════════════════════
-// DAD MESSAGES
-// ═══════════════════════════════════
-(function() {
-  const msgs = [
-    "You are perfect to me",
-    "You are magico to papito",
-    "You make me so happy",
-    "Live, Laugh, Love, Learn",
-    "You make each day better than the last",
-    "I wuv ewww 🥰",
-    "The world is better with you in it",
-    "You are my greatest adventure"
-  ];
-  let i = 0;
-  const el = document.getElementById('dad-msg');
-  setInterval(() => {
-    el.style.opacity = '0';
-    setTimeout(() => { i = (i+1) % msgs.length; el.textContent = msgs[i]; el.style.opacity = '1'; }, 600);
-  }, 4000);
-})();
-
-document.querySelectorAll('.modal-overlay').forEach(o => {
-  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
-});
+// ══════════════════════════════════════════════════
+// UTILITY
+// ══════════════════════════════════════════════════
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 </script>
 </body>
 </html>

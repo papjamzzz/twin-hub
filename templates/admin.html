@@ -5,143 +5,353 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Twin Hub</title>
 <style>
-  :root {
-    --gold: #f0b429;
-    --gold-dim: rgba(240,180,41,0.12);
-    --bg: #0d0d0d;
-    --surface: #161616;
-    --card: #1e1e1e;
-    --border: #2a2a2a;
-    --muted: #6b7280;
-    --text: #e5e7eb;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; }
+:root {
+  --gold:    #f0b429;
+  --gold-d:  rgba(240,180,41,0.12);
+  --bg:      #0a0a0a;
+  --surface: #111;
+  --border:  #222;
+  --text:    #e5e7eb;
+  --muted:   #5a5a6a;
+  --green:   #39ff14;
+  --red:     #ff3b3b;
+  --purple:  #BF5FFF;
+  --p1:      #a78bfa;
+  --p2:      #60a5fa;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: var(--text); min-height: 100vh;
+  padding: 24px 16px 60px;
+}
+.container { max-width: 860px; margin: 0 auto; }
 
-  nav {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 28px; background: var(--surface); border-bottom: 1px solid var(--border);
-  }
-  .nav-brand { font-size: 22px; font-weight: 900; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; }
-  .nav-links a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-left: 24px; transition: color .2s; }
-  .nav-links a:hover { color: var(--gold); }
+h1 {
+  font-size: 22px; font-weight: 900; letter-spacing: .08em;
+  color: var(--gold); margin-bottom: 4px;
+}
+.access-note {
+  font-size: 11px; color: var(--muted); margin-bottom: 28px;
+  font-family: monospace;
+}
 
-  .admin-body { max-width: 640px; margin: 40px auto; padding: 0 24px; display: flex; flex-direction: column; gap: 24px; }
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px; margin-bottom: 18px;
+}
+.card-title {
+  font-size: 12px; font-weight: 800; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
+  border-bottom: 1px solid var(--border); padding-bottom: 8px;
+}
 
-  .admin-title { font-size: 28px; font-weight: 900; color: var(--gold); }
-  .admin-sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+/* Tabs */
+.tab-row { display: flex; gap: 8px; margin-bottom: 14px; }
+.tab-btn {
+  padding: 6px 18px; border-radius: 8px; border: 1px solid var(--border);
+  background: #0a0a0a; color: var(--muted); font-weight: 700; font-size: 12px;
+  cursor: pointer; letter-spacing: .06em;
+}
+.tab-btn.active { background: var(--gold-d); color: var(--gold); border-color: var(--gold); }
 
-  .card {
-    background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px;
-  }
-  .card-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); opacity: .7; margin-bottom: 10px; }
-  .card-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+/* Notes */
+.note-group { margin-bottom: 14px; }
+.note-group-label {
+  font-size: 10px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+}
+.badge {
+  background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px;
+  padding: 1px 7px; font-size: 10px; color: var(--text);
+}
+.note-row {
+  background: #0c0c0c; border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 12px; margin-bottom: 4px; font-size: 13px; line-height: 1.4;
+}
+.note-row .ts { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.note-empty { color: var(--muted); font-size: 13px; padding: 8px 0; }
+.me-private {
+  background: #0e0010; border: 1px solid #3a0060; border-radius: 8px;
+  padding: 12px; color: var(--purple); font-size: 13px; text-align: center;
+}
 
-  #fact-text { font-size: 15px; line-height: 1.6; color: var(--text); background: var(--gold-dim); border-radius: 8px; padding: 14px 16px; border-left: 3px solid var(--gold); }
+/* ME password reset */
+.pw-reset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 540px) { .pw-reset-grid { grid-template-columns: 1fr; } }
+.pw-reset-card {
+  background: #0c0c18; border: 1px solid #2a2a40; border-radius: 10px; padding: 14px;
+}
+.pw-reset-who { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+.pw-reset-who.lumi  { color: var(--p1); }
+.pw-reset-who.sloany { color: var(--p2); }
+.pw-status { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+.pw-status .set   { color: var(--green); }
+.pw-status .unset { color: var(--red); }
+.form-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; display: block; }
+.form-input {
+  width: 100%; background: #0a0a0a; border: 1px solid var(--border); border-radius: 7px;
+  padding: 8px 12px; color: var(--text); font-size: 13px; margin-bottom: 8px;
+}
+.form-input:focus { outline: none; border-color: var(--gold); }
+.form-btn {
+  width: 100%; padding: 9px; border-radius: 8px; border: none;
+  background: #2a2000; border: 1px solid var(--gold); color: var(--gold);
+  font-weight: 800; font-size: 12px; letter-spacing: .06em; cursor: pointer;
+}
+.form-btn:hover { background: #3a3000; }
 
-  .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all .15s; }
-  .btn-gold { background: var(--gold); color: #000; margin-top: 14px; }
-  .btn-gold:hover { background: #f59e0b; }
-  .btn-gold:disabled { opacity: .5; cursor: default; }
+/* Refresh buttons */
+.refresh-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.refresh-btn {
+  padding: 9px 18px; border-radius: 8px; border: 1px solid var(--border);
+  background: #0a0a0a; color: var(--text); font-weight: 700; font-size: 12px;
+  cursor: pointer;
+}
+.refresh-btn:hover { border-color: var(--gold); color: var(--gold); }
+.refresh-result { font-size: 11px; color: var(--green); margin-top: 6px; display: none; }
 
-  .env-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .env-table th { text-align: left; color: var(--muted); font-weight: 600; padding: 8px 0; border-bottom: 1px solid var(--border); }
-  .env-table td { padding: 10px 0; border-bottom: 1px solid var(--border); color: var(--text); }
-  .env-table td:first-child { color: var(--gold); font-family: monospace; font-size: 12px; }
-  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
-  .badge-set { background: rgba(52,211,153,.15); color: #34d399; }
-  .badge-missing { background: rgba(248,113,113,.15); color: #f87171; }
+/* Env table */
+.env-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.env-table th {
+  text-align: left; padding: 6px 10px; color: var(--muted); font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; border-bottom: 1px solid var(--border);
+}
+.env-table td { padding: 7px 10px; border-bottom: 1px solid #1a1a1a; }
+.env-set   { color: var(--green); font-weight: 700; }
+.env-unset { color: var(--red); }
+.env-val   { font-family: monospace; color: var(--muted); font-size: 11px; }
+
+/* Contacts table */
+.contacts-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.contacts-table th {
+  text-align: left; padding: 6px 10px; color: var(--muted); font-size: 10px;
+  font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+.contacts-table td { padding: 8px 10px; border-bottom: 1px solid #1a1a1a; }
+.contacts-table tr:last-child td { border-bottom: none; }
 </style>
 </head>
 <body>
+<div class="container">
 
-<nav>
-  <div class="nav-brand">⚡ Twin Hub</div>
-  <div class="nav-links">
-    <a href="/">← Hub</a>
-    <a href="/visualizer">🎤 Visualizer</a>
-  </div>
-</nav>
+  <h1>⚙ TWIN HUB ADMIN</h1>
+  <div class="access-note">Access: /admin?key={{ admin_key }} &nbsp;|&nbsp; Read-only notes view &nbsp;|&nbsp; Me notes are always private</div>
 
-<div class="admin-body">
-  <div>
-    <div class="admin-title">⚙️ Admin</div>
-    <div class="admin-sub">Dad-only controls. Not linked from the main hub.</div>
-  </div>
-
-  <!-- DAILY FACT -->
+  <!-- ── NOTES VIEWER ─────────────────────────────────────── -->
   <div class="card">
-    <div class="card-label">Daily Pop Culture Fact</div>
-    <div id="fact-text">{{ fact }}</div>
-    <button class="btn btn-gold" id="refresh-btn" onclick="refreshFact()">🔄 Generate New Fact</button>
+    <div class="card-title">📋 Notes Viewer</div>
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="showTab('lumi')" id="tab-lumi">{{ twin1 }}</button>
+      <button class="tab-btn" onclick="showTab('sloany')" id="tab-sloany">{{ twin2 }}</button>
+    </div>
+
+    <!-- Lumi notes -->
+    <div id="panel-lumi">
+      {% set cats = ['School', 'People', 'Family'] %}
+      {% for cat in cats %}
+        {% set cat_notes = notes_lumi | selectattr('category', 'equalto', cat) | list %}
+        <div class="note-group">
+          <div class="note-group-label">
+            {{ cat }} <span class="badge">{{ cat_notes | length }}</span>
+          </div>
+          {% if cat_notes %}
+            {% for n in cat_notes %}
+            <div class="note-row">
+              {{ n.content }}
+              <div class="ts">{{ n.timestamp[:16] if n.timestamp else '' }}</div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div class="note-empty">No {{ cat | lower }} notes yet.</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <div class="me-private">🔒 Me notes are private — only {{ twin1 }} can see them</div>
+    </div>
+
+    <!-- Sloany notes -->
+    <div id="panel-sloany" style="display:none">
+      {% for cat in cats %}
+        {% set cat_notes = notes_sloany | selectattr('category', 'equalto', cat) | list %}
+        <div class="note-group">
+          <div class="note-group-label">
+            {{ cat }} <span class="badge">{{ cat_notes | length }}</span>
+          </div>
+          {% if cat_notes %}
+            {% for n in cat_notes %}
+            <div class="note-row">
+              {{ n.content }}
+              <div class="ts">{{ n.timestamp[:16] if n.timestamp else '' }}</div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div class="note-empty">No {{ cat | lower }} notes yet.</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <div class="me-private">🔒 Me notes are private — only {{ twin2 }} can see them</div>
+    </div>
   </div>
 
-  <!-- CHALLENGES -->
+  <!-- ── ME PASSWORD RESET ─────────────────────────────────── -->
   <div class="card">
-    <div class="card-label">Daily Challenges</div>
-    <div class="card-title" style="margin-bottom:4px;">AI-Generated for 6th Graders</div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:0;">20 new challenges generate every 24 hours automatically.</p>
-    <button class="btn btn-gold" id="refresh-challenges-btn" onclick="refreshChallenges()" style="margin-top:14px;">🔄 Generate New Challenges Now</button>
+    <div class="card-title">🔒 Me Journal — Password Reset</div>
+    <div class="pw-reset-grid">
+
+      <!-- Lumi -->
+      <div class="pw-reset-card">
+        <div class="pw-reset-who lumi">{{ twin1 }}</div>
+        <div class="pw-status">
+          Password:
+          {% if settings.lumi and settings.lumi.me_password_hash %}
+            <span class="set">SET ✓</span>
+            {% if settings.lumi.me_hint %}
+              &nbsp;— Hint: <em>{{ settings.lumi.me_hint }}</em>
+            {% endif %}
+          {% else %}
+            <span class="unset">NOT SET</span>
+          {% endif %}
+        </div>
+        <form method="POST" action="/admin/reset-me-password/lumi">
+          <label class="form-label">New Password</label>
+          <input class="form-input" type="password" name="new_password" placeholder="New password" required>
+          <label class="form-label">Password Hint (optional)</label>
+          <input class="form-input" type="text" name="hint" placeholder="Hint for {{ twin1 }}">
+          <label class="form-label">Admin Password (confirm)</label>
+          <input class="form-input" type="password" name="admin_password" placeholder="Your admin password" required>
+          <button class="form-btn" type="submit">RESET {{ twin1 | upper }}'S PASSWORD</button>
+        </form>
+      </div>
+
+      <!-- Sloany -->
+      <div class="pw-reset-card">
+        <div class="pw-reset-who sloany">{{ twin2 }}</div>
+        <div class="pw-status">
+          Password:
+          {% if settings.sloany and settings.sloany.me_password_hash %}
+            <span class="set">SET ✓</span>
+            {% if settings.sloany.me_hint %}
+              &nbsp;— Hint: <em>{{ settings.sloany.me_hint }}</em>
+            {% endif %}
+          {% else %}
+            <span class="unset">NOT SET</span>
+          {% endif %}
+        </div>
+        <form method="POST" action="/admin/reset-me-password/sloany">
+          <label class="form-label">New Password</label>
+          <input class="form-input" type="password" name="new_password" placeholder="New password" required>
+          <label class="form-label">Password Hint (optional)</label>
+          <input class="form-input" type="text" name="hint" placeholder="Hint for {{ twin2 }}">
+          <label class="form-label">Admin Password (confirm)</label>
+          <input class="form-input" type="password" name="admin_password" placeholder="Your admin password" required>
+          <button class="form-btn" type="submit">RESET {{ twin2 | upper }}'S PASSWORD</button>
+        </form>
+      </div>
+
+    </div>
   </div>
 
-  <!-- ENV STATUS -->
+  <!-- ── REFRESH CONTROLS ──────────────────────────────────── -->
   <div class="card">
-    <div class="card-label">Environment Variables</div>
-    <div class="card-title" style="margin-bottom:16px;">Railway Config</div>
+    <div class="card-title">🔄 Refresh Controls</div>
+    <div class="refresh-row">
+      <button class="refresh-btn" onclick="doRefresh('challenges')">Refresh Challenges</button>
+      <button class="refresh-btn" onclick="doRefresh('jokes')">Refresh Jokes</button>
+    </div>
+    <div class="refresh-result" id="refreshResult"></div>
+  </div>
+
+  <!-- ── ENVIRONMENT STATUS ────────────────────────────────── -->
+  <div class="card">
+    <div class="card-title">🔧 Environment Variables</div>
     <table class="env-table">
-      <tr><th>Variable</th><th>Status</th><th>Used For</th></tr>
-      <tr>
-        <td>TWIN1_NAME</td>
-        <td><span class="badge badge-set">{{ twin1 }}</span></td>
-        <td>Left column name</td>
-      </tr>
-      <tr>
-        <td>TWIN2_NAME</td>
-        <td><span class="badge badge-set">{{ twin2 }}</span></td>
-        <td>Right column name</td>
-      </tr>
-      <tr>
-        <td>DAD_PASSWORD</td>
-        <td><span class="badge badge-set">set</span></td>
-        <td>Clear all notes gate</td>
-      </tr>
-      <tr>
-        <td>ANTHROPIC_API_KEY</td>
-        <td><span class="badge badge-set">set</span></td>
-        <td>Daily Hamilton fact</td>
-      </tr>
+      <thead>
+        <tr><th>Variable</th><th>Status</th><th>Value</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>TWIN1_NAME</td>
+          <td><span class="env-set">SET</span></td>
+          <td class="env-val">{{ twin1 }}</td>
+        </tr>
+        <tr>
+          <td>TWIN2_NAME</td>
+          <td><span class="env-set">SET</span></td>
+          <td class="env-val">{{ twin2 }}</td>
+        </tr>
+        <tr>
+          <td>DAD_PASSWORD</td>
+          <td><span class="env-set">SET</span></td>
+          <td class="env-val">••••••</td>
+        </tr>
+        <tr>
+          <td>ANTHROPIC_API_KEY</td>
+          <td>
+            {% if anthropic_key_set %}
+              <span class="env-set">SET</span>
+            {% else %}
+              <span class="env-unset">NOT SET — jokes/challenges use fallbacks</span>
+            {% endif %}
+          </td>
+          <td class="env-val"></td>
+        </tr>
+        <tr>
+          <td>PORT</td>
+          <td><span class="env-set">SET</span></td>
+          <td class="env-val">5567 (default)</td>
+        </tr>
+      </tbody>
     </table>
   </div>
+
+  <!-- ── CONTACTS ──────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-title">📞 Hardcoded Contacts</div>
+    <table class="contacts-table">
+      <thead>
+        <tr><th>Emoji</th><th>Name</th><th>Number</th></tr>
+      </thead>
+      <tbody>
+        {% for c in contacts %}
+        <tr>
+          <td>{{ c.emoji }}</td>
+          <td>{{ c.name }}</td>
+          <td style="font-family:monospace">+1 ({{ c.number[:3] }}) {{ c.number[3:6] }}-{{ c.number[6:] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
 </div>
 
 <script>
-async function refreshChallenges() {
-  const btn = document.getElementById('refresh-challenges-btn');
-  btn.disabled = true;
-  btn.textContent = 'Generating…';
-  try {
-    await fetch('/admin/refresh-challenges', { method: 'POST' });
-    btn.textContent = '✓ Done — reload the pedal pages to see them';
-  } catch(e) {
-    btn.textContent = 'Error — check ANTHROPIC_API_KEY';
-    btn.disabled = false;
-  }
+function showTab(who) {
+  ['lumi','sloany'].forEach(w => {
+    document.getElementById('panel-' + w).style.display = (w === who) ? 'block' : 'none';
+    document.getElementById('tab-' + w).classList.toggle('active', w === who);
+  });
 }
 
-async function refreshFact() {
-  const btn = document.getElementById('refresh-btn');
-  const factEl = document.getElementById('fact-text');
-  btn.disabled = true;
-  btn.textContent = 'Generating…';
+async function doRefresh(type) {
+  const btn = event.target;
+  const result = document.getElementById('refreshResult');
+  btn.textContent = '⏳ Refreshing...';
+  result.style.display = 'none';
   try {
-    const res = await fetch('/admin/refresh-fact', { method: 'POST' });
+    const res = await fetch('/admin/refresh-' + type, { method: 'POST' });
     const data = await res.json();
-    factEl.textContent = data.fact;
+    result.textContent = '✓ ' + type + ' refreshed — ' +
+      (type === 'jokes' ? data.jokes.length + ' jokes loaded' : data.challenges.length + ' challenges loaded');
+    result.style.display = 'block';
   } catch(e) {
-    factEl.textContent = 'Error generating fact. Check your ANTHROPIC_API_KEY.';
+    result.textContent = 'Error refreshing ' + type;
+    result.style.display = 'block';
   }
-  btn.disabled = false;
-  btn.textContent = '🔄 Generate New Fact';
+  btn.textContent = 'Refresh ' + type.charAt(0).toUpperCase() + type.slice(1);
 }
 </script>
 </body>
