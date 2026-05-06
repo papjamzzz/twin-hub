@@ -842,7 +842,7 @@ async function refreshJokes() {
 // WEB AUDIO ENGINE
 // ══════════════════════════════════════════════════
 let audioCtx = null;
-let waveShaper, lowpassFilter, bandpassFilter, masterGain;
+let fxInput, waveShaper, lowpassFilter, bandpassFilter, sweepDryGain, sweepWetGain, masterGain;
 let beatPitchMult = 1.0;
 let isBeatOn = false;
 let beatTimeout = null;
@@ -853,27 +853,43 @@ function initAudio() {
   if (audioCtx) return;
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
+  // All sounds enter here → fx chain
+  fxInput = audioCtx.createGain();
+  fxInput.gain.value = 1.0;
+
   waveShaper = audioCtx.createWaveShaper();
   waveShaper.curve = makeDistortionCurve(0);
   waveShaper.oversample = '4x';
 
   lowpassFilter = audioCtx.createBiquadFilter();
   lowpassFilter.type = 'lowpass';
-  lowpassFilter.frequency.value = 5000;
+  lowpassFilter.frequency.value = 18000;
   lowpassFilter.Q.value = 1;
 
+  // Sweep = wah wet/dry blend
   bandpassFilter = audioCtx.createBiquadFilter();
   bandpassFilter.type = 'bandpass';
-  bandpassFilter.frequency.value = 1000;
-  bandpassFilter.Q.value = 8;
+  bandpassFilter.frequency.value = 2000;
+  bandpassFilter.Q.value = 6;
+
+  sweepDryGain = audioCtx.createGain();
+  sweepDryGain.gain.value = 1.0;
+
+  sweepWetGain = audioCtx.createGain();
+  sweepWetGain.gain.value = 0.0;
 
   masterGain = audioCtx.createGain();
-  masterGain.gain.value = isBypassed ? 0.7 : 1.0;
+  masterGain.gain.value = 1.0;
 
-  // Chain: waveShaper → lowpass → bandpass → masterGain → dest
+  // Chain: fxInput → waveShaper → lowpass → sweepDryGain → masterGain → dest
+  //                                        → bandpass    → sweepWetGain ↗
+  fxInput.connect(waveShaper);
   waveShaper.connect(lowpassFilter);
+  lowpassFilter.connect(sweepDryGain);
   lowpassFilter.connect(bandpassFilter);
-  bandpassFilter.connect(masterGain);
+  bandpassFilter.connect(sweepWetGain);
+  sweepDryGain.connect(masterGain);
+  sweepWetGain.connect(masterGain);
   masterGain.connect(audioCtx.destination);
 }
 
@@ -890,17 +906,21 @@ function makeDistortionCurve(amount) {
 
 function applyDrive(val) {
   if (!audioCtx) return;
-  waveShaper.curve = makeDistortionCurve(val * 350);
+  waveShaper.curve = makeDistortionCurve(val * 400);
 }
 function applyFilter(val) {
   if (!audioCtx) return;
+  // 0 = 200Hz (dark/closed), 1 = 18000Hz (fully open)
   const freq = 200 * Math.pow(18000 / 200, val);
   lowpassFilter.frequency.value = freq;
 }
 function applySweep(val) {
   if (!audioCtx) return;
-  const freq = 200 * Math.pow(8000 / 200, val);
+  // wet/dry wah blend: sweep up = more bandpass character
+  const freq = 300 * Math.pow(6000 / 300, val);
   bandpassFilter.frequency.value = freq;
+  sweepWetGain.gain.value = val * 0.9;
+  sweepDryGain.gain.value = 1 - val * 0.75;
 }
 function applyPitch(val) {
   const semitones = val * 24 - 12;
@@ -915,7 +935,7 @@ function playKick(t) {
   osc.frequency.exponentialRampToValueAtTime(40 * beatPitchMult, t + 0.15);
   gain.gain.setValueAtTime(1.2, t);
   gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
-  osc.connect(gain); gain.connect(masterGain);
+  osc.connect(gain); gain.connect(fxInput);
   osc.start(t); osc.stop(t + 0.3);
 }
 function playSnare(t) {
@@ -927,7 +947,7 @@ function playSnare(t) {
   src.buffer = buf;
   gain.gain.setValueAtTime(0.7, t);
   gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
-  src.connect(gain); gain.connect(masterGain);
+  src.connect(gain); gain.connect(fxInput);
   src.start(t); src.stop(t + 0.2);
 }
 function playHihat(t) {
@@ -940,7 +960,7 @@ function playHihat(t) {
   filt.type = 'highpass'; filt.frequency.value = 7000;
   gain.gain.setValueAtTime(0.4, t);
   gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
-  src.connect(filt); filt.connect(gain); gain.connect(masterGain);
+  src.connect(filt); filt.connect(gain); gain.connect(fxInput);
   src.start(t); src.stop(t + 0.06);
 }
 
@@ -1016,7 +1036,7 @@ function updateBPMDisplay(text) {
 // ══════════════════════════════════════════════════
 // KNOBS
 // ══════════════════════════════════════════════════
-const knobState = { drive: 0, filter: 0.5, sweep: 0, pitch: 0.5 };
+const knobState = { drive: 0, filter: 1.0, sweep: 0, pitch: 0.5 };
 
 function drawKnob(name, val) {
   const minAngle = -140 * Math.PI / 180;
@@ -1085,6 +1105,13 @@ function initKnobs() {
       onStart(e.touches[0].clientY);
       document.addEventListener('touchmove', touchMove, {passive: false});
       document.addEventListener('touchend', touchEnd);
+    });
+
+    const DEFAULTS = { drive: 0, filter: 1, sweep: 0, pitch: 0.5 };
+    el.addEventListener('dblclick', () => {
+      knobState[name] = DEFAULTS[name];
+      drawKnob(name, knobState[name]);
+      dispatchKnob(name, knobState[name]);
     });
   });
 }
