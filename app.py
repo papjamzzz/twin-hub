@@ -25,7 +25,7 @@ NOTE_CATEGORIES = ['School', 'People', 'Family', 'Me']
 
 CONTACTS = [
     {'name': 'Mama',        'number': '6177553846', 'emoji': '💕'},
-    {'name': 'Me',          'number': '4138345062', 'emoji': '⚡'},
+    {'name': 'Papi',        'number': '4138345062', 'emoji': '⚡'},
     {'name': 'Auntie Jennie', 'number': '6039233640', 'emoji': '✨'},
     {'name': 'Uncle Lysha', 'number': '4133256381', 'emoji': '🎸'},
 ]
