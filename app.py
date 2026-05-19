@@ -118,8 +118,9 @@ def get_jokes():
             messages=[{
                 'role': 'user',
                 'content': (
-                    'Generate 8 funny age-appropriate jokes for 6th-grade girls (age 11-12). '
-                    'Mix puns, school humor, pop culture, absurd humor. '
+                    'Generate 8 funny jokes for 7th-8th grade girls (age 13-14). '
+                    'Slightly edgy — sarcastic, self-aware, a little dark humor, dry wit, mild roasts, relatable teen life. '
+                    'Think "eye-roll but actually funny", not crude. School, boys, social media, family drama, existential dread done light. '
                     'Each joke 1-2 sentences max. '
                     'ONLY return a JSON array of strings, no numbering, no extra text.'
                 )
