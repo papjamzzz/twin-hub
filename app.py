@@ -99,14 +99,18 @@ def get_jokes():
             return cached['jokes']
 
     fallback = [
-        "Why did the math book look so sad? Because it had too many problems.",
-        "What do you call a fake noodle? An impasta.",
-        "Why don't scientists trust atoms? Because they make up everything.",
-        "What do you call cheese that isn't yours? Nacho cheese.",
-        "Why did the scarecrow win an award? He was outstanding in his field.",
-        "What do you call a sleeping dinosaur? A dino-snore.",
-        "Why can't you give Elsa a balloon? She'll let it go.",
-        "What do you call a fish without eyes? A fsh.",
+        "School prepares you for the real world, which is also mostly pointless busywork.",
+        "My sleep schedule is a cry for help disguised as a personality.",
+        "I'm not ignoring you, I'm just prioritizing literally anything else.",
+        "Why do they call it a crush? Because that's what it does to your self-esteem.",
+        "I have a love-hate relationship with Monday. I hate it. It doesn't care.",
+        "My GPA and my will to live are in a race to the bottom. It's close.",
+        "They said follow your dreams, so I went back to sleep.",
+        "Nothing humbles you like autocorrect sending 'I love you' to your teacher.",
+        "Group projects: one person does everything, everyone gets the same grade. Capitalism training.",
+        "I asked my crush what he was thinking. He said 'nothing.' Relatable honestly.",
+        "My parents ask why I'm always on my phone. Sir, I'm avoiding a conversation with you.",
+        "Being a teenager is just being tired but not being allowed to say you're tired.",
     ]
 
     try:
