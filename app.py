@@ -99,18 +99,18 @@ def get_jokes():
             return cached['jokes']
 
     fallback = [
-        "School prepares you for the real world, which is also mostly pointless busywork.",
-        "My sleep schedule is a cry for help disguised as a personality.",
-        "I'm not ignoring you, I'm just prioritizing literally anything else.",
-        "Why do they call it a crush? Because that's what it does to your self-esteem.",
-        "I have a love-hate relationship with Monday. I hate it. It doesn't care.",
-        "My GPA and my will to live are in a race to the bottom. It's close.",
-        "They said follow your dreams, so I went back to sleep.",
         "Nothing humbles you like autocorrect sending 'I love you' to your teacher.",
         "Group projects: one person does everything, everyone gets the same grade. Capitalism training.",
-        "I asked my crush what he was thinking. He said 'nothing.' Relatable honestly.",
-        "My parents ask why I'm always on my phone. Sir, I'm avoiding a conversation with you.",
-        "Being a teenager is just being tired but not being allowed to say you're tired.",
+        "I asked my crush what he was thinking. He said 'nothing.' Honestly iconic.",
+        "My parents say I'm on my phone too much. Sir, I'm building a social life.",
+        "They said dress for the job you want. I showed up in pajamas. Remote work.",
+        "I don't have a short attention span, I just — anyway did you see that dog?",
+        "My brain has two modes: overthinking everything and thinking about absolutely nothing.",
+        "History class is just spoiler alerts for things that already happened.",
+        "I study for hours and get a C. I guess at everything and get a B. Make it make sense.",
+        "Why is it called a crush if you're the one doing all the falling?",
+        "Some people wake up and choose violence. I wake up and choose snooze.",
+        "My playlist says a lot about me. Mostly that I have no consistent personality.",
     ]
 
     try:
@@ -123,8 +123,8 @@ def get_jokes():
                 'role': 'user',
                 'content': (
                     'Generate 8 funny jokes for 7th-8th grade girls (age 13-14). '
-                    'Slightly edgy — sarcastic, self-aware, a little dark humor, dry wit, mild roasts, relatable teen life. '
-                    'Think "eye-roll but actually funny", not crude. School, boys, social media, family drama, existential dread done light. '
+                    'Sarcastic, dry wit, relatable teen life — school, crushes, social media, parents, food, pop culture. '
+                    'Confident and clever, never self-deprecating or about being sad/tired/a loser. Think witty observations, not complaints. '
                     'Each joke 1-2 sentences max. '
                     'ONLY return a JSON array of strings, no numbering, no extra text.'
                 )
